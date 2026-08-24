@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
     BarChart3,
     Boxes,
     Car,
-    ChevronDown,
     LayoutDashboard,
     MapPin,
     Package,
@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { canAccessRoute } from "@/lib/auth/permissions";
+import type { UserRole } from "@/generated/prisma/enums";
 
 type NavigationItem = {
     label: string;
@@ -99,6 +101,22 @@ const navigation: NavigationSection[] = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { data: session } = useSession();
+
+    const role = session?.user?.role as UserRole | undefined;
+
+    const visibleSections = navigation
+        .map((section) => ({
+            ...section,
+            items: section.items.filter(
+                (item) =>
+                    role && canAccessRoute(item.href, role),
+            ),
+        }))
+        .filter((section) => section.items.length > 0);
+
+    const canAccessSettings =
+        role && canAccessRoute("/settings", role);
 
     return (
         <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
@@ -127,7 +145,7 @@ export function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto px-3 py-5">
                 <div className="space-y-6">
-                    {navigation.map((section) => (
+                    {visibleSections.map((section) => (
                         <div key={section.label}>
                             <div className="mb-2 px-2">
                                 <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -141,7 +159,9 @@ export function Sidebar() {
 
                                     const isActive =
                                         pathname === item.href ||
-                                        pathname.startsWith(`${item.href}/`);
+                                        pathname.startsWith(
+                                            `${item.href}/`,
+                                        );
 
                                     return (
                                         <Link
@@ -168,22 +188,22 @@ export function Sidebar() {
             </nav>
 
             {/* Settings */}
-            <div className="border-t border-slate-200 p-3">
-                <Link
-                    href="/settings"
-                    className={cn(
-                        "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium",
-                        "text-slate-600 transition-colors duration-150",
-                        "hover:bg-slate-50 hover:text-slate-900",
-                    )}
-                >
-                    <Settings className="h-4 w-4" />
+            {canAccessSettings && (
+                <div className="border-t border-slate-200 p-3">
+                    <Link
+                        href="/settings"
+                        className={cn(
+                            "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium",
+                            "text-slate-600 transition-colors duration-150",
+                            "hover:bg-slate-50 hover:text-slate-900",
+                        )}
+                    >
+                        <Settings className="h-4 w-4" />
 
-                    <span>Settings</span>
-
-                    <ChevronDown className="ml-auto h-3.5 w-3.5 rotate-[-90deg] text-slate-400" />
-                </Link>
-            </div>
+                        <span>Settings</span>
+                    </Link>
+                </div>
+            )}
         </aside>
     );
 }
