@@ -1,4 +1,5 @@
 import "dotenv/config";
+import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 
@@ -10,6 +11,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Starting database seed...");
+  const passwordHash = await bcrypt.hash("demo-password", 12);
 
   // Clean existing data
   await prisma.trackingEvent.deleteMany();
@@ -27,7 +29,7 @@ async function main() {
     data: {
       name: "Admin LogiTrack",
       email: "admin@logitrack.dev",
-      passwordHash: "demo-password",
+      passwordHash,
       role: "ADMIN",
     },
   });
@@ -36,8 +38,26 @@ async function main() {
     data: {
       name: "Operations Manager",
       email: "manager@logitrack.dev",
-      passwordHash: "demo-password",
+      passwordHash,
       role: "MANAGER",
+    },
+  });
+
+  const operator = await prisma.user.create({
+    data: {
+      name: "Operations Operator",
+      email: "operator@logitrack.dev",
+      passwordHash,
+      role: "OPERATOR",
+    },
+  });
+
+  const driver = await prisma.user.create({
+    data: {
+      name: "Delivery Driver",
+      email: "driver@logitrack.dev",
+      passwordHash,
+      role: "DRIVER",
     },
   });
 

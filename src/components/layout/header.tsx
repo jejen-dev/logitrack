@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut, useSession } from "next-auth/react";
 import {
     Bell,
     ChevronDown,
@@ -14,6 +15,23 @@ interface HeaderProps {
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
+    const { data: session } = useSession();
+    const handleLogout = () => {
+        signOut({
+            callbackUrl: "/login",
+        });
+    };
+
+    const userName = session?.user?.name ?? "User";
+    const userRole = session?.user?.role ?? "USER";
+
+    const initials = userName
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
     return (
         <header className="flex h-16 items-center border-b border-slate-200 bg-white px-4 md:px-6">
             {/* Mobile menu */}
@@ -57,26 +75,30 @@ export function Header({ onMenuClick }: HeaderProps) {
                 </Button>
 
                 {/* User */}
-                <button
-                    type="button"
-                    className="flex h-9 items-center gap-2 rounded-md px-2 transition-colors hover:bg-slate-50"
-                >
+                <div className="flex items-center gap-2">
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
-                        JD
+                        {initials}
                     </div>
 
                     <div className="hidden text-left sm:block">
                         <p className="text-xs font-medium text-slate-900">
-                            Jejen
+                            {userName}
                         </p>
 
                         <p className="text-[11px] text-slate-500">
-                            Admin
+                            {userRole}
                         </p>
                     </div>
 
-                    <ChevronDown className="hidden h-3.5 w-3.5 text-slate-400 sm:block" />
-                </button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="text-xs text-slate-600 hover:text-slate-900"
+                    >
+                        Logout
+                    </Button>
+                </div>
             </div>
         </header>
     );
