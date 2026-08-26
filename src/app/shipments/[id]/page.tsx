@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipmentById } from "@/lib/shipments/detail";
+import { StatusUpdate } from "./status-update";
 
 interface ShipmentDetailPageProps {
     params: Promise<{
@@ -251,6 +252,21 @@ export default async function ShipmentDetailPage({
                                 </CardTitle>
                             </CardHeader>
 
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>
+                                        Update Status
+                                    </CardTitle>
+                                </CardHeader>
+
+                                <CardContent>
+                                    <StatusUpdate
+                                        shipmentId={shipment.id}
+                                        currentStatus={shipment.status}
+                                    />
+                                </CardContent>
+                            </Card>
+
                             <CardContent className="space-y-4">
                                 <div>
                                     <p className="text-xs text-slate-500">
@@ -331,10 +347,10 @@ export default async function ShipmentDetailPage({
 
                                     {shipment.trackingEvents
                                         .length === 0 && (
-                                        <p className="text-sm text-slate-500">
-                                            No tracking events.
-                                        </p>
-                                    )}
+                                            <p className="text-sm text-slate-500">
+                                                No tracking events.
+                                            </p>
+                                        )}
                                 </div>
                             </CardContent>
                         </Card>
