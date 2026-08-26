@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipments } from "@/lib/shipments/queries";
+import Link from "next/link";
 
 import type {
     PaymentStatus,
@@ -171,7 +172,12 @@ export default async function ShipmentsPage({
                                             className="border-b border-slate-100 last:border-0"
                                         >
                                             <td className="whitespace-nowrap px-6 py-4 font-medium text-slate-900">
-                                                {shipment.trackingNumber}
+                                                <Link
+                                                    href={`/shipments/${shipment.id}`}
+                                                    className="text-blue-600 hover:text-blue-700 hover:underline"
+                                                >
+                                                    {shipment.trackingNumber}
+                                                </Link>
                                             </td>
 
                                             <td className="whitespace-nowrap px-6 py-4 text-slate-600">
