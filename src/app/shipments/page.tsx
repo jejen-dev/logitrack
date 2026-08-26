@@ -5,6 +5,11 @@ import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipments } from "@/lib/shipments/queries";
 
+import type {
+    PaymentStatus,
+    ShipmentStatus,
+} from "@/generated/prisma/enums";
+
 function getStatusVariant(
     status: string,
 ) {
@@ -26,8 +31,47 @@ function getStatusVariant(
     }
 }
 
-export default async function ShipmentsPage() {
-    const shipments = await getShipments();
+interface ShipmentsPageProps {
+    searchParams: Promise<{
+        search?: string;
+        status?: string;
+        payment?: string;
+    }>;
+}
+
+export default async function ShipmentsPage({
+    searchParams,
+}: ShipmentsPageProps) {
+    const params = await searchParams;
+
+    const search = params.search?.trim();
+
+    const status =
+        params.status &&
+            [
+                "PENDING",
+                "PICKED_UP",
+                "IN_TRANSIT",
+                "OUT_FOR_DELIVERY",
+                "DELIVERED",
+                "CANCELLED",
+            ].includes(params.status)
+            ? (params.status as ShipmentStatus)
+            : undefined;
+
+    const paymentStatus =
+        params.payment &&
+            ["UNPAID", "PAID", "REFUNDED"].includes(
+                params.payment,
+            )
+            ? (params.payment as PaymentStatus)
+            : undefined;
+
+    const shipments = await getShipments({
+        search,
+        status,
+        paymentStatus,
+    });
 
     return (
         <AppShell>
@@ -41,6 +85,52 @@ export default async function ShipmentsPage() {
                         </Button>
                     }
                 />
+
+                <div className="mb-4">
+                    <form
+                        method="GET"
+                        className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 md:flex-row"
+                    >
+                        <input
+                            type="search"
+                            name="search"
+                            defaultValue={search}
+                            placeholder="Search tracking number or customer..."
+                            className="h-9 flex-1 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                        />
+
+                        <select
+                            name="status"
+                            defaultValue={status ?? ""}
+                            className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="">All Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="PICKED_UP">Picked Up</option>
+                            <option value="IN_TRANSIT">In Transit</option>
+                            <option value="OUT_FOR_DELIVERY">
+                                Out for Delivery
+                            </option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+
+                        <select
+                            name="payment"
+                            defaultValue={paymentStatus ?? ""}
+                            className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="">All Payments</option>
+                            <option value="UNPAID">Unpaid</option>
+                            <option value="PAID">Paid</option>
+                            <option value="REFUNDED">Refunded</option>
+                        </select>
+
+                        <Button type="submit">
+                            Filter
+                        </Button>
+                    </form>
+                </div>
 
                 <Card>
                     <CardContent className="p-0">
