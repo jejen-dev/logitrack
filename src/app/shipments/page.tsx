@@ -81,9 +81,11 @@ export default async function ShipmentsPage({
                     title="Shipments"
                     description="Manage and monitor all shipments."
                     actions={
-                        <Button>
-                            Create Shipment
-                        </Button>
+                        <Link href="/shipments/new">
+                            <Button>
+                                Create Shipment
+                            </Button>
+                        </Link>
                     }
                 />
 
