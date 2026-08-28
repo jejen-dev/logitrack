@@ -9,10 +9,40 @@ import {
 } from "@/components/ui";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
-import { getInventoryItems } from "@/lib/inventory/queries";
+import { getInventoryItems, getInventoryWarehouses } from "@/lib/inventory/queries";
+import { InventoryFilters } from "./inventory-filters";
 
-export default async function InventoryPage() {
-    const inventoryItems = await getInventoryItems();
+interface InventoryPageProps {
+    searchParams: Promise<{
+        search?: string;
+        warehouseId?: string;
+        stockStatus?: string;
+    }>;
+}
+
+export default async function InventoryPage({
+    searchParams,
+}: InventoryPageProps) {
+    const params = await searchParams;
+
+    const search = params.search ?? "";
+    const warehouseId = params.warehouseId ?? "";
+
+    const stockStatus =
+        params.stockStatus === "LOW_STOCK" ||
+            params.stockStatus === "IN_STOCK"
+            ? params.stockStatus
+            : "ALL";
+
+    const [inventoryItems, warehouses] =
+        await Promise.all([
+            getInventoryItems({
+                search,
+                warehouseId,
+                stockStatus,
+            }),
+            getInventoryWarehouses(),
+        ]);
 
     return (
         <AppShell>
@@ -31,6 +61,12 @@ export default async function InventoryPage() {
                     </CardHeader>
 
                     <CardContent>
+                        <div className="mb-5">
+                            <InventoryFilters
+                                warehouses={warehouses}
+                            />
+                        </div>
+
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                                 <thead>
@@ -124,8 +160,30 @@ export default async function InventoryPage() {
                                             </tr>
                                         );
                                     })}
+
+                                    {inventoryItems.length === 0 && (
+                                        <tr>
+                                            <td
+                                                colSpan={6}
+                                                className="px-4 py-10 text-center text-sm text-slate-500"
+                                            >
+                                                No inventory items found.
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div className="mt-4 text-sm text-slate-500">
+                            Showing{" "}
+                            <span className="font-medium text-slate-700">
+                                {inventoryItems.length}
+                            </span>{" "}
+                            inventory item
+                            {inventoryItems.length !== 1
+                                ? "s"
+                                : ""}
                         </div>
                     </CardContent>
                 </Card>
