@@ -8,41 +8,78 @@ import { Button } from "@/components/ui/button";
 interface StatusUpdateProps {
     shipmentId: string;
     currentStatus:
-        | "PENDING"
-        | "PICKED_UP"
-        | "IN_TRANSIT"
-        | "OUT_FOR_DELIVERY"
-        | "DELIVERED"
-        | "CANCELLED";
+    | "PENDING"
+    | "PICKED_UP"
+    | "IN_TRANSIT"
+    | "OUT_FOR_DELIVERY"
+    | "DELIVERED"
+    | "CANCELLED";
+    role?: string;
 }
 
-const statusOptions = [
-    {
-        value: "PICKED_UP",
-        label: "Picked Up",
-    },
-    {
-        value: "IN_TRANSIT",
-        label: "In Transit",
-    },
-    {
-        value: "OUT_FOR_DELIVERY",
-        label: "Out for Delivery",
-    },
-    {
-        value: "DELIVERED",
-        label: "Delivered",
-    },
-    {
-        value: "CANCELLED",
-        label: "Cancelled",
-    },
-] as const;
+const statusOptions = {
+    PENDING: [
+        {
+            value: "PICKED_UP",
+            label: "Picked Up",
+        },
+        {
+            value: "CANCELLED",
+            label: "Cancelled",
+        },
+    ],
+
+    PICKED_UP: [
+        {
+            value: "IN_TRANSIT",
+            label: "In Transit",
+        },
+        {
+            value: "CANCELLED",
+            label: "Cancelled",
+        },
+    ],
+
+    IN_TRANSIT: [
+        {
+            value: "OUT_FOR_DELIVERY",
+            label: "Out for Delivery",
+        },
+        {
+            value: "CANCELLED",
+            label: "Cancelled",
+        },
+    ],
+
+    OUT_FOR_DELIVERY: [
+        {
+            value: "DELIVERED",
+            label: "Delivered",
+        },
+        {
+            value: "CANCELLED",
+            label: "Cancelled",
+        },
+    ],
+
+    DELIVERED: [],
+
+    CANCELLED: [],
+} as const;
 
 export function StatusUpdate({
     shipmentId,
     currentStatus,
+    role,
 }: StatusUpdateProps) {
+    if (
+        role !== "ADMIN" &&
+        role !== "MANAGER" &&
+        role !== "OPERATOR"
+    ) {
+        return null;
+    }
+
     const [status, setStatus] = useState(currentStatus);
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
@@ -97,7 +134,7 @@ export function StatusUpdate({
                         <option value="PENDING">Pending</option>
                     )}
 
-                    {statusOptions.map((option) => (
+                    {statusOptions[currentStatus].map((option) => (
                         <option
                             key={option.value}
                             value={option.value}
