@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth/auth-options";
 
 import { AppShell } from "@/components/layout/app-shell";
 import {
@@ -45,6 +48,9 @@ export default async function ShipmentDetailPage({
     const { id } = await params;
 
     const shipment = await getShipmentById(id);
+
+    const session = await getServerSession(authOptions);
+    const role = session?.user?.role;
 
     if (!shipment) {
         return (
@@ -263,6 +269,7 @@ export default async function ShipmentDetailPage({
                                     <StatusUpdate
                                         shipmentId={shipment.id}
                                         currentStatus={shipment.status}
+                                        role={role}
                                     />
                                 </CardContent>
                             </Card>
