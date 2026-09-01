@@ -37,6 +37,36 @@ export async function createShipment(
         throw new Error("Forbidden");
     }
 
+    if (!input.customerId.trim()) {
+        throw new Error("Customer is required");
+    }
+
+    if (!input.originAddress.trim()) {
+        throw new Error("Origin address is required");
+    }
+
+    if (!input.destinationAddress.trim()) {
+        throw new Error("Destination address is required");
+    }
+
+    if (!input.productName.trim()) {
+        throw new Error("Product name is required");
+    }
+
+    if (
+        !Number.isInteger(input.quantity) ||
+        input.quantity <= 0
+    ) {
+        throw new Error("Quantity must be a positive integer");
+    }
+
+    if (
+        input.weight !== undefined &&
+        (!Number.isFinite(input.weight) || input.weight < 0)
+    ) {
+        throw new Error("Weight must be a valid non-negative number");
+    }
+
     const shipment = await prisma.shipment.create({
         data: {
             trackingNumber: `LGT-${Date.now()}`,
