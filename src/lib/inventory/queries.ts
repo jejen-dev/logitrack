@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
 
 interface GetInventoryItemsParams {
@@ -9,6 +12,21 @@ interface GetInventoryItemsParams {
 export async function getInventoryItems(
     params: GetInventoryItemsParams = {},
 ) {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
     const { search, warehouseId, stockStatus = "ALL" } = params;
 
     const inventoryItems = await prisma.inventoryItem.findMany({
@@ -75,6 +93,22 @@ export async function getInventoryItems(
 }
 
 export async function getInventoryWarehouses() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
+
     return prisma.warehouse.findMany({
         orderBy: {
             name: "asc",
