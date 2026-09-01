@@ -1,6 +1,25 @@
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
 
 export async function getDashboardStats() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+        "DRIVER",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
     const [
         totalShipments,
         pendingShipments,
@@ -37,6 +56,23 @@ export async function getDashboardStats() {
 }
 
 export async function getRecentShipments() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+        "DRIVER",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
+
     return prisma.shipment.findMany({
         orderBy: {
             createdAt: "desc",
@@ -60,6 +96,23 @@ export async function getRecentShipments() {
 }
 
 export async function getShipmentStatusOverview() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+        "DRIVER",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
+
     const [
         pending,
         pickedUp,
