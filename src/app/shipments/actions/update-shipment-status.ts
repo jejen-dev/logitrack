@@ -55,6 +55,20 @@ export async function updateShipmentStatus(
         throw new Error("Invalid shipment status");
     }
 
+    if (
+        input.location !== undefined &&
+        input.location.length > 200
+    ) {
+        throw new Error("Location is too long");
+    }
+
+    if (
+        input.description !== undefined &&
+        input.description.length > 500
+    ) {
+        throw new Error("Description is too long");
+    }
+
     const currentShipment = await prisma.shipment.findUnique({
         where: {
             id: input.shipmentId,
@@ -66,6 +80,10 @@ export async function updateShipmentStatus(
 
     if (!currentShipment) {
         throw new Error("Shipment not found");
+    }
+
+    if (input.status === currentShipment.status) {
+        throw new Error("Shipment is already in this status");
     }
 
     const allowedTransitions: Record<
@@ -93,7 +111,6 @@ export async function updateShipmentStatus(
     };
 
     if (
-        input.status !== currentShipment.status &&
         !allowedTransitions[currentShipment.status].includes(
             input.status,
         )
