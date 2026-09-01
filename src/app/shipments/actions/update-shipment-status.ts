@@ -38,6 +38,71 @@ export async function updateShipmentStatus(
         throw new Error("Forbidden");
     }
 
+    if (!input.shipmentId.trim()) {
+        throw new Error("Shipment ID is required");
+    }
+
+    const validStatuses = [
+        "PENDING",
+        "PICKED_UP",
+        "IN_TRANSIT",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
+        "CANCELLED",
+    ] as const;
+
+    if (!validStatuses.includes(input.status)) {
+        throw new Error("Invalid shipment status");
+    }
+
+    const currentShipment = await prisma.shipment.findUnique({
+        where: {
+            id: input.shipmentId,
+        },
+        select: {
+            status: true,
+        },
+    });
+
+    if (!currentShipment) {
+        throw new Error("Shipment not found");
+    }
+
+    const allowedTransitions: Record<
+        typeof currentShipment.status,
+        string[]
+    > = {
+        PENDING: [
+            "PICKED_UP",
+            "CANCELLED",
+        ],
+        PICKED_UP: [
+            "IN_TRANSIT",
+            "CANCELLED",
+        ],
+        IN_TRANSIT: [
+            "OUT_FOR_DELIVERY",
+            "CANCELLED",
+        ],
+        OUT_FOR_DELIVERY: [
+            "DELIVERED",
+            "CANCELLED",
+        ],
+        DELIVERED: [],
+        CANCELLED: [],
+    };
+
+    if (
+        input.status !== currentShipment.status &&
+        !allowedTransitions[currentShipment.status].includes(
+            input.status,
+        )
+    ) {
+        throw new Error(
+            `Cannot change shipment status from ${currentShipment.status} to ${input.status}`,
+        );
+    }
+
     const shipment = await prisma.shipment.update({
         where: {
             id: input.shipmentId,
