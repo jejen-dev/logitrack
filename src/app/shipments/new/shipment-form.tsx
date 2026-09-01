@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { createShipment } from "@/app/shipments/actions/create-shipment";
-import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import {
     Card,
