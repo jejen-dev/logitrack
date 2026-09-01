@@ -4,6 +4,13 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
 
+const validRoles = [
+    "ADMIN",
+    "MANAGER",
+    "OPERATOR",
+    "DRIVER",
+] as const;
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -22,13 +29,24 @@ export const authOptions: NextAuthOptions = {
             },
 
             async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) {
+                if (
+                    typeof credentials?.email !== "string" ||
+                    typeof credentials?.password !== "string"
+                ) {
+                    return null;
+                }
+
+                const email = credentials.email
+                    .trim()
+                    .toLowerCase();
+
+                if (!email || !credentials.password) {
                     return null;
                 }
 
                 const user = await prisma.user.findUnique({
                     where: {
-                        email: credentials.email,
+                        email,
                     },
                 });
 
@@ -42,6 +60,10 @@ export const authOptions: NextAuthOptions = {
                 );
 
                 if (!passwordValid) {
+                    return null;
+                }
+
+                if (!validRoles.includes(user.role)) {
                     return null;
                 }
 
@@ -71,8 +93,8 @@ export const authOptions: NextAuthOptions = {
 
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id as string;
-                session.user.role = token.role as string;
+                session.user.id = token.id;
+                session.user.role = token.role;
             }
 
             return session;
