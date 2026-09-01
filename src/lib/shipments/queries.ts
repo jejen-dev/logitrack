@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
 import type {
     PaymentStatus,
@@ -13,6 +16,22 @@ interface GetShipmentsParams {
 export async function getShipments(
     params: GetShipmentsParams = {},
 ) {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.role) {
+        throw new Error("Unauthorized");
+    }
+
+    const allowedRoles = [
+        "ADMIN",
+        "MANAGER",
+        "OPERATOR",
+        "DRIVER",
+    ];
+
+    if (!allowedRoles.includes(session.user.role)) {
+        throw new Error("Forbidden");
+    }
     const { search, status, paymentStatus } = params;
 
     return prisma.shipment.findMany({
