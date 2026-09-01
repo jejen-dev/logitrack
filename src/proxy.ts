@@ -14,30 +14,35 @@ export async function proxy(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const isLoggedIn = !!token;
   const pathname = request.nextUrl.pathname;
-
   const isLoginPage = pathname === "/login";
 
-  if (!isLoggedIn && !isLoginPage) {
+  const hasValidId =
+    !!token &&
+    typeof token.id === "string" &&
+    token.id.length > 0;
+
+  const role = token?.role;
+
+  const hasValidRole = isUserRole(role);
+
+  const isAuthenticated =
+    hasValidId && hasValidRole;
+
+  if (!isAuthenticated && !isLoginPage) {
     return NextResponse.redirect(
       new URL("/login", request.url),
     );
   }
 
-  if (isLoggedIn && isLoginPage) {
+  if (isAuthenticated && isLoginPage) {
     return NextResponse.redirect(
       new URL("/dashboard", request.url),
     );
   }
 
-  if (isLoggedIn) {
-    const role = token.role;
-
-    if (
-      !isUserRole(role) ||
-      !canAccessRoute(pathname, role)
-    ) {
+  if (isAuthenticated) {
+    if (!canAccessRoute(pathname, role)) {
       return NextResponse.redirect(
         new URL("/dashboard", request.url),
       );
@@ -48,5 +53,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
