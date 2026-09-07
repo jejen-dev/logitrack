@@ -64,7 +64,72 @@ export async function createShipment(
         input.weight !== undefined &&
         (!Number.isFinite(input.weight) || input.weight < 0)
     ) {
-        throw new Error("Weight must be a valid non-negative number");
+        throw new Error(
+            "Weight must be a valid non-negative number",
+        );
+    }
+
+    const validPaymentStatuses = [
+        "UNPAID",
+        "PAID",
+        "REFUNDED",
+    ] as const;
+
+    if (!validPaymentStatuses.includes(input.paymentStatus)) {
+        throw new Error("Invalid payment status");
+    }
+
+    const customer = await prisma.customer.findUnique({
+        where: {
+            id: input.customerId,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (!customer) {
+        throw new Error("Customer not found");
+    }
+
+    if (input.driverId) {
+        const driver = await prisma.driver.findUnique({
+            where: {
+                id: input.driverId,
+            },
+            select: {
+                id: true,
+                status: true,
+            },
+        });
+
+        if (!driver) {
+            throw new Error("Driver not found");
+        }
+
+        if (driver.status !== "AVAILABLE") {
+            throw new Error("Driver is not available");
+        }
+    }
+
+    if (input.vehicleId) {
+        const vehicle = await prisma.vehicle.findUnique({
+            where: {
+                id: input.vehicleId,
+            },
+            select: {
+                id: true,
+                status: true,
+            },
+        });
+
+        if (!vehicle) {
+            throw new Error("Vehicle not found");
+        }
+
+        if (vehicle.status !== "AVAILABLE") {
+            throw new Error("Vehicle is not available");
+        }
     }
 
     const shipment = await prisma.shipment.create({
@@ -75,17 +140,21 @@ export async function createShipment(
             driverId: input.driverId || null,
             vehicleId: input.vehicleId || null,
 
-            originAddress: input.originAddress,
-            destinationAddress: input.destinationAddress,
+            originAddress: input.originAddress.trim(),
+            destinationAddress:
+                input.destinationAddress.trim(),
 
             paymentStatus: input.paymentStatus,
             status: "PENDING",
 
             items: {
                 create: {
-                    productName: input.productName,
+                    productName: input.productName.trim(),
                     quantity: input.quantity,
-                    weight: input.weight || null,
+                    weight:
+                        input.weight !== undefined
+                            ? input.weight
+                            : null,
                 },
             },
         },
