@@ -132,36 +132,69 @@ export async function createShipment(
         }
     }
 
-    const shipment = await prisma.shipment.create({
-        data: {
-            trackingNumber: `LGT-${Date.now()}`,
-            customerId: input.customerId,
+    const shipment = await prisma.$transaction(async (tx) => {
+        const createdShipment = await tx.shipment.create({
+            data: {
+                trackingNumber: `LGT-${Date.now()}`,
+                customerId: input.customerId,
 
-            driverId: input.driverId || null,
-            vehicleId: input.vehicleId || null,
+                driverId: input.driverId || null,
+                vehicleId: input.vehicleId || null,
 
-            originAddress: input.originAddress.trim(),
-            destinationAddress:
-                input.destinationAddress.trim(),
+                originAddress: input.originAddress.trim(),
+                destinationAddress:
+                    input.destinationAddress.trim(),
 
-            paymentStatus: input.paymentStatus,
-            status: "PENDING",
+                paymentStatus: input.paymentStatus,
+                status: "PENDING",
 
-            items: {
-                create: {
-                    productName: input.productName.trim(),
-                    quantity: input.quantity,
-                    weight:
-                        input.weight !== undefined
-                            ? input.weight
-                            : null,
+                items: {
+                    create: {
+                        productName: input.productName.trim(),
+                        quantity: input.quantity,
+                        weight:
+                            input.weight !== undefined
+                                ? input.weight
+                                : null,
+                    },
                 },
             },
-        },
+        });
+
+        const users = await tx.user.findMany({
+            where: {
+                role: {
+                    in: [
+                        "ADMIN",
+                        "MANAGER",
+                        "OPERATOR",
+                    ],
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        if (users.length > 0) {
+            await tx.notification.createMany({
+                data: users.map((user) => ({
+                    userId: user.id,
+                    shipmentId: createdShipment.id,
+                    type: "SHIPMENT" as const,
+                    title: "New shipment created",
+                    message: `Shipment ${createdShipment.trackingNumber} has been created and is pending.`,
+                    isRead: false,
+                })),
+            });
+        }
+
+        return createdShipment;
     });
 
     revalidatePath("/shipments");
     revalidatePath("/dashboard");
+    revalidatePath("/notifications");
 
     return shipment;
 }

@@ -14,6 +14,7 @@ async function main() {
   const passwordHash = await bcrypt.hash("demo-password", 12);
 
   // Clean existing data
+  await prisma.notification.deleteMany();
   await prisma.trackingEvent.deleteMany();
   await prisma.shipmentItem.deleteMany();
   await prisma.shipment.deleteMany();

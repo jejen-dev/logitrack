@@ -120,38 +120,74 @@ export async function updateShipmentStatus(
         );
     }
 
-    const shipment = await prisma.shipment.update({
-        where: {
-            id: input.shipmentId,
-        },
-        data: {
-            status: input.status,
+    const shipment = await prisma.$transaction(async (tx) => {
+        const updatedShipment = await tx.shipment.update({
+            where: {
+                id: input.shipmentId,
+            },
+            data: {
+                status: input.status,
 
-            shippedAt:
-                input.status === "PICKED_UP"
-                    ? new Date()
-                    : undefined,
+                shippedAt:
+                    input.status === "PICKED_UP"
+                        ? new Date()
+                        : undefined,
 
-            deliveredAt:
-                input.status === "DELIVERED"
-                    ? new Date()
-                    : undefined,
+                deliveredAt:
+                    input.status === "DELIVERED"
+                        ? new Date()
+                        : undefined,
 
-            trackingEvents: {
-                create: {
-                    status: input.status,
-                    location: input.location || null,
-                    description:
-                        input.description ||
-                        `Shipment status updated to ${input.status}`,
+                trackingEvents: {
+                    create: {
+                        status: input.status,
+                        location: input.location || null,
+                        description:
+                            input.description ||
+                            `Shipment status updated to ${input.status}`,
+                    },
                 },
             },
-        },
+        });
+
+        const users = await tx.user.findMany({
+            where: {
+                role: {
+                    in: [
+                        "ADMIN",
+                        "MANAGER",
+                        "OPERATOR",
+                    ],
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        if (users.length > 0) {
+            await tx.notification.createMany({
+                data: users.map((user) => ({
+                    userId: user.id,
+                    shipmentId: updatedShipment.id,
+                    type: "SHIPMENT" as const,
+                    title: "Shipment status updated",
+                    message: `Shipment ${updatedShipment.trackingNumber} is now ${input.status.replaceAll(
+                        "_",
+                        " ",
+                    )}.`,
+                    isRead: false,
+                })),
+            });
+        }
+
+        return updatedShipment;
     });
 
     revalidatePath("/shipments");
     revalidatePath(`/shipments/${input.shipmentId}`);
     revalidatePath("/dashboard");
+    revalidatePath("/notifications");
 
     return shipment;
 }
