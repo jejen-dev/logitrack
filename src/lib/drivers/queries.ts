@@ -30,6 +30,7 @@ export async function getDrivers() {
             phone: true,
             licenseNo: true,
             status: true,
+            isActive: true,
         },
     });
 }

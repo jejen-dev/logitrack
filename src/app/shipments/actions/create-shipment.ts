@@ -100,11 +100,16 @@ export async function createShipment(
             select: {
                 id: true,
                 status: true,
+                isActive: true,
             },
         });
 
         if (!driver) {
             throw new Error("Driver not found");
+        }
+
+        if (!driver.isActive) {
+            throw new Error("Driver is inactive");
         }
 
         if (driver.status !== "AVAILABLE") {

@@ -94,6 +94,7 @@ model Driver {
   phone     String
   licenseNo String       @unique
   status    DriverStatus @default(AVAILABLE)
+  isActive  Boolean      @default(true)
 
   shipments Shipment[]
 
