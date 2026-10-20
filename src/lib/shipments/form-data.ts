@@ -22,6 +22,9 @@ export async function getShipmentFormData() {
 
     const [customers, drivers, vehicles] = await Promise.all([
         prisma.customer.findMany({
+            where: {
+                isActive: true,
+            },
             orderBy: {
                 name: "asc",
             },

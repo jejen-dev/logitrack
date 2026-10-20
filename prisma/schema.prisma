@@ -67,6 +67,7 @@ model Customer {
   address    String?
   city       String?
   postalCode String?
+  isActive   Boolean @default(true)
 
   shipments Shipment[]
 

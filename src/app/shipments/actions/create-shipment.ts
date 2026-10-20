@@ -85,11 +85,16 @@ export async function createShipment(
         },
         select: {
             id: true,
+            isActive: true,
         },
     });
 
     if (!customer) {
         throw new Error("Customer not found");
+    }
+
+    if (!customer.isActive) {
+        throw new Error("Customer is inactive");
     }
 
     if (input.driverId) {

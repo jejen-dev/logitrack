@@ -32,6 +32,7 @@ export async function getCustomers() {
             address: true,
             city: true,
             postalCode: true,
+            isActive: true,
         },
     });
 }
