@@ -35,6 +35,17 @@ enum DriverStatus {
   OFF_DUTY
 }
 
+enum DriverLicenseType {
+  A
+  B1
+  B2
+  C
+  C1
+  C2
+  D
+  DI
+}
+
 enum VehicleStatus {
   AVAILABLE
   IN_USE
@@ -94,6 +105,7 @@ model Driver {
   name      String
   phone     String
   licenseNo String       @unique
+  licenseType DriverLicenseType @default(A)
   status    DriverStatus @default(AVAILABLE)
   isActive  Boolean      @default(true)
 

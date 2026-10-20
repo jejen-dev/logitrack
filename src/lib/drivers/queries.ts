@@ -29,6 +29,7 @@ export async function getDrivers() {
             name: true,
             phone: true,
             licenseNo: true,
+            licenseType: true,
             status: true,
             isActive: true,
         },

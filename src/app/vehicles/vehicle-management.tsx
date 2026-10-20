@@ -219,7 +219,7 @@ function VehicleForm({
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
                 Nomor polisi
-                <input name="plateNumber" required maxLength={20} defaultValue={vehicle?.plateNumber} autoComplete="off" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="plateNumber" required maxLength={20} defaultValue={vehicle?.plateNumber} placeholder="B 1234 ABC" autoComplete="off" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
                 Tipe kendaraan
@@ -231,7 +231,7 @@ function VehicleForm({
             </label>
             <label className="block text-sm font-medium text-slate-700">
                 Kapasitas
-                <input name="capacity" required type="number" min="0.01" step="any" defaultValue={vehicle?.capacity} aria-describedby="vehicle-capacity-note" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="capacity" required type="number" min="0.01" step="any" defaultValue={vehicle?.capacity} placeholder="1200" aria-describedby="vehicle-capacity-note" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 <span id="vehicle-capacity-note" className="mt-1 block text-xs font-normal text-slate-500">
                     Kapasitas muatan maksimal dalam kilogram (kg).
                 </span>

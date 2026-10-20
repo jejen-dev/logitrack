@@ -5,11 +5,13 @@ import { revalidatePath } from "next/cache";
 
 import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
+import { driverLicenseTypes } from "@/lib/drivers/license-types";
 
 interface DriverInput {
     name: string;
     phone: string;
     licenseNo: string;
+    licenseType: string;
 }
 
 async function requireDriverManager() {
@@ -30,7 +32,8 @@ function validateDriverInput(input: DriverInput) {
         !input ||
         typeof input.name !== "string" ||
         typeof input.phone !== "string" ||
-        typeof input.licenseNo !== "string"
+        typeof input.licenseNo !== "string" ||
+        typeof input.licenseType !== "string"
     ) {
         throw new Error("Data driver tidak valid.");
     }
@@ -38,16 +41,17 @@ function validateDriverInput(input: DriverInput) {
     const name = input.name.trim();
     const phone = input.phone.trim();
     const licenseNo = input.licenseNo.trim();
+    const licenseType = driverLicenseTypes.find((type) => type.value === input.licenseType)?.value;
 
-    if (!name || !phone || !licenseNo) {
-        throw new Error("Nama, nomor telepon, dan nomor SIM wajib diisi.");
+    if (!name || !phone || !licenseNo || !licenseType) {
+        throw new Error("Nama, nomor telepon, nomor SIM, dan tipe SIM wajib diisi.");
     }
 
     if (name.length > 120 || phone.length > 40 || licenseNo.length > 60) {
         throw new Error("Panjang data driver melebihi batas.");
     }
 
-    return { name, phone, licenseNo };
+    return { name, phone, licenseNo, licenseType };
 }
 
 function revalidateDriverPages() {

@@ -249,30 +249,30 @@ function CustomerForm({
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
                 Name
-                <input name="name" required maxLength={120} defaultValue={customer?.name} autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="name" required maxLength={120} defaultValue={customer?.name} placeholder="PT Logistik Nusantara" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
                     Email
-                    <input name="email" type="email" maxLength={254} defaultValue={customer?.email ?? ""} autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <input name="email" type="email" maxLength={254} defaultValue={customer?.email ?? ""} placeholder="operasional@perusahaan.co.id" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
                 <label className="block text-sm font-medium text-slate-700">
                     Phone
-                    <input name="phone" type="tel" maxLength={40} defaultValue={customer?.phone ?? ""} autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <input name="phone" type="tel" maxLength={40} defaultValue={customer?.phone ?? ""} placeholder="021 555 1234" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
             </div>
             <label className="block text-sm font-medium text-slate-700">
                 Address
-                <input name="address" maxLength={300} defaultValue={customer?.address ?? ""} autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="address" maxLength={300} defaultValue={customer?.address ?? ""} placeholder="Jl. Jenderal Sudirman No. 10" autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
                     City
-                    <input name="city" maxLength={100} defaultValue={customer?.city ?? ""} autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <input name="city" maxLength={100} defaultValue={customer?.city ?? ""} placeholder="Jakarta Selatan" autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
                 <label className="block text-sm font-medium text-slate-700">
                     Postal code
-                    <input name="postalCode" maxLength={20} defaultValue={customer?.postalCode ?? ""} autoComplete="postal-code" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <input name="postalCode" maxLength={20} defaultValue={customer?.postalCode ?? ""} placeholder="12190" autoComplete="postal-code" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
             </div>
             {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}

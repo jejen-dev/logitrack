@@ -11,12 +11,14 @@ import {
 } from "@/app/drivers/actions/manage-driver";
 import { Badge, Card, CardContent, CardHeader, CardTitle, Modal } from "@/components/ui";
 import { Button } from "@/components/ui/button";
+import { driverLicenseTypes } from "@/lib/drivers/license-types";
 
 interface Driver {
     id: string;
     name: string;
     phone: string;
     licenseNo: string;
+    licenseType: (typeof driverLicenseTypes)[number]["value"];
     status: "AVAILABLE" | "ON_DELIVERY" | "OFF_DUTY";
     isActive: boolean;
 }
@@ -44,6 +46,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
             name: String(formData.get("name") ?? ""),
             phone: String(formData.get("phone") ?? ""),
             licenseNo: String(formData.get("licenseNo") ?? ""),
+            licenseType: String(formData.get("licenseType") ?? ""),
         };
 
         try {
@@ -172,7 +175,9 @@ function DriverGrid({
                                 </div>
                                 <div>
                                     <CardTitle className="text-base">{driver.name}</CardTitle>
-                                    <p className="mt-1 text-xs text-slate-500">SIM {driver.licenseNo}</p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        {driverLicenseTypes.find((type) => type.value === driver.licenseType)?.label} · {driver.licenseNo}
+                                    </p>
                                 </div>
                             </div>
                             <Badge variant={driver.isActive ? (driver.status === "AVAILABLE" ? "success" : "info") : "default"}>
@@ -218,15 +223,22 @@ function DriverForm({
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
                 Nama
-                <input name="name" required maxLength={120} defaultValue={driver?.name} autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="name" required maxLength={120} defaultValue={driver?.name} placeholder="Budi Santoso" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
                 Nomor telepon
-                <input name="phone" required maxLength={40} defaultValue={driver?.phone} type="tel" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="phone" required maxLength={40} defaultValue={driver?.phone} placeholder="0812 3456 7890" type="tel" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+            </label>
+            <label className="block text-sm font-medium text-slate-700">
+                Tipe SIM
+                <select name="licenseType" required defaultValue={driver?.licenseType ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
+                    <option value="" disabled>Pilih tipe SIM</option>
+                    {driverLicenseTypes.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
+                </select>
             </label>
             <label className="block text-sm font-medium text-slate-700">
                 Nomor SIM
-                <input name="licenseNo" required maxLength={60} defaultValue={driver?.licenseNo} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <input name="licenseNo" required maxLength={60} defaultValue={driver?.licenseNo} placeholder="123456789012" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
             <div className="flex justify-end gap-2 pt-2">
