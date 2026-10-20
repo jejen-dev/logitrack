@@ -30,7 +30,7 @@ function validateVehicleInput(input: VehicleInput) {
         typeof input.type !== "string" ||
         (typeof input.capacity !== "number" && typeof input.capacity !== "string")
     ) {
-        throw new Error("Data vehicle tidak valid.");
+        throw new Error("Invalid vehicle data.");
     }
 
     const plateNumber = input.plateNumber.trim().toUpperCase();
@@ -38,13 +38,13 @@ function validateVehicleInput(input: VehicleInput) {
     const capacity = Number(input.capacity);
 
     if (!plateNumber || !vehicleTypes.includes(type as (typeof vehicleTypes)[number])) {
-        throw new Error("Pilih tipe kendaraan yang tersedia.");
+        throw new Error("Select a supported vehicle type.");
     }
     if (plateNumber.length > 20) {
-        throw new Error("Panjang data vehicle melebihi batas.");
+        throw new Error("Vehicle information exceeds the allowed length.");
     }
     if (!Number.isFinite(capacity) || capacity <= 0) {
-        throw new Error("Kapasitas harus berupa angka lebih besar dari nol.");
+        throw new Error("Capacity must be a number greater than zero.");
     }
 
     return { plateNumber, type, capacity };
@@ -65,7 +65,7 @@ export async function createVehicle(input: VehicleInput) {
         return vehicle;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("Nomor polisi sudah terdaftar.");
+            throw new Error("This license plate is already registered.");
         }
         throw error;
     }
@@ -73,7 +73,7 @@ export async function createVehicle(input: VehicleInput) {
 
 export async function updateVehicle(id: string, input: VehicleInput) {
     await requireVehicleManager();
-    if (typeof id !== "string" || !id.trim()) throw new Error("ID vehicle wajib diisi.");
+    if (typeof id !== "string" || !id.trim()) throw new Error("Vehicle ID is required.");
     const data = validateVehicleInput(input);
 
     try {
@@ -82,7 +82,7 @@ export async function updateVehicle(id: string, input: VehicleInput) {
         return vehicle;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("Nomor polisi sudah terdaftar.");
+            throw new Error("This license plate is already registered.");
         }
         throw error;
     }
@@ -90,8 +90,8 @@ export async function updateVehicle(id: string, input: VehicleInput) {
 
 export async function setVehicleActive(id: string, isActive: boolean) {
     await requireVehicleManager();
-    if (typeof id !== "string" || !id.trim()) throw new Error("ID vehicle wajib diisi.");
-    if (typeof isActive !== "boolean") throw new Error("Status vehicle tidak valid.");
+    if (typeof id !== "string" || !id.trim()) throw new Error("Vehicle ID is required.");
+    if (typeof isActive !== "boolean") throw new Error("Invalid vehicle status.");
 
     if (!isActive) {
         const [vehicle, activeShipments] = await Promise.all([
@@ -109,9 +109,9 @@ export async function setVehicleActive(id: string, isActive: boolean) {
             }),
         ]);
 
-        if (!vehicle) throw new Error("Vehicle tidak ditemukan.");
+        if (!vehicle) throw new Error("Vehicle not found.");
         if (vehicle.status === "IN_USE" || activeShipments > 0) {
-            throw new Error("Vehicle masih digunakan shipment aktif.");
+            throw new Error("The vehicle is assigned to an active shipment.");
         }
     }
 

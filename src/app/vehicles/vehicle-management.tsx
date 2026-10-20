@@ -53,7 +53,7 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
             setDialog(null);
             router.refresh();
         } catch (caught) {
-            setError(caught instanceof Error ? caught.message : "Gagal menyimpan vehicle.");
+            setError(caught instanceof Error ? caught.message : "Failed to save vehicle.");
         } finally {
             setBusy(false);
         }
@@ -69,7 +69,7 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
             setDialog(null);
             router.refresh();
         } catch (caught) {
-            setError(caught instanceof Error ? caught.message : "Gagal mengubah status vehicle.");
+            setError(caught instanceof Error ? caught.message : "Failed to update vehicle status.");
         } finally {
             setBusy(false);
         }
@@ -84,10 +84,10 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-slate-500">
-                    {activeVehicles.length} vehicle aktif · {inactiveVehicles.length} diarsipkan
+                    {activeVehicles.length} active · {inactiveVehicles.length} archived
                 </p>
                 <Button onClick={() => { setError(""); setDialog({ type: "create" }); }}>
-                    Tambah vehicle
+                    Add vehicle
                 </Button>
             </div>
 
@@ -101,7 +101,7 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
 
             {inactiveVehicles.length > 0 && (
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Vehicle diarsipkan</h2>
+                    <h2 className="text-lg font-semibold text-slate-800">Archived vehicles</h2>
                     <VehicleGrid
                         vehicles={inactiveVehicles}
                         onEdit={(vehicle) => { setError(""); setDialog({ type: "edit", vehicle }); }}
@@ -114,7 +114,7 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
                 <Card>
                     <CardContent className="py-12 text-center">
                         <Car className="mx-auto h-8 w-8 text-slate-300" />
-                        <p className="mt-3 text-sm text-slate-500">Belum ada vehicle. Tambahkan kendaraan pertama.</p>
+                        <p className="mt-3 text-sm text-slate-500">No vehicles found. Add your first vehicle.</p>
                     </CardContent>
                 </Card>
             )}
@@ -122,8 +122,8 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
             <Modal
                 open={dialog !== null}
                 onOpenChange={(open) => { if (!open && !busy) { setDialog(null); setError(""); } }}
-                title={dialog?.type === "create" ? "Tambah vehicle" : dialog?.type === "edit" ? "Edit vehicle" : dialog?.type === "archive" ? "Arsipkan vehicle" : "Aktifkan vehicle"}
-                description={dialog?.type === "create" ? "Isi data kendaraan baru." : dialog?.type === "edit" ? "Perbarui informasi kendaraan." : undefined}
+                title={dialog?.type === "create" ? "Add vehicle" : dialog?.type === "edit" ? "Edit vehicle" : dialog?.type === "archive" ? "Archive vehicle" : "Restore vehicle"}
+                description={dialog?.type === "create" ? "Enter the new vehicle's information." : dialog?.type === "edit" ? "Update the vehicle's information." : undefined}
             >
                 {(dialog?.type === "create" || dialog?.type === "edit") && (
                     <VehicleForm vehicle={editingVehicle} busy={busy} error={error} onCancel={() => setDialog(null)} onSubmit={saveVehicle} />
@@ -133,14 +133,14 @@ export function VehicleManagement({ vehicles }: { vehicles: Vehicle[] }) {
                     <div className="space-y-5">
                         <p className="text-sm leading-6 text-slate-600">
                             {dialog?.type === "archive"
-                                ? `Arsipkan ${stateChangeVehicle.plateNumber}? Data dan riwayat shipment tetap disimpan, tetapi kendaraan tidak tersedia untuk shipment baru.`
-                                : `Aktifkan kembali ${stateChangeVehicle.plateNumber}? Kendaraan dapat dipilih lagi untuk shipment baru jika statusnya tersedia.`}
+                                ? `Archive ${stateChangeVehicle.plateNumber}? The vehicle record and shipment history will be kept, but it cannot be assigned to new shipments.`
+                                : `Restore ${stateChangeVehicle.plateNumber}? It can be assigned to new shipments again when available.`}
                         </p>
                         {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Batal</Button>
+                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Cancel</Button>
                             <Button variant={dialog?.type === "archive" ? "danger" : "primary"} disabled={busy} onClick={confirmVehicleStateChange}>
-                                {busy ? "Menyimpan…" : dialog?.type === "archive" ? "Arsipkan" : "Aktifkan"}
+                                {busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"}
                             </Button>
                         </div>
                     </div>
@@ -177,14 +177,14 @@ function VehicleGrid({
                                 </div>
                             </div>
                             <Badge variant={vehicle.isActive ? (vehicle.status === "AVAILABLE" ? "success" : "info") : "default"}>
-                                {vehicle.isActive ? vehicle.status.replaceAll("_", " ") : "DIARSIPKAN"}
+                                {vehicle.isActive ? vehicle.status.replaceAll("_", " ") : "ARCHIVED"}
                             </Badge>
                         </div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                             <Gauge className="h-4 w-4 text-slate-400" />
-                            <span>Kapasitas: {vehicle.capacity}</span>
+                            <span>Capacity: {vehicle.capacity} kg</span>
                         </div>
                         <div className="mt-4 flex flex-wrap gap-2">
                             <Button variant="outline" size="sm" onClick={() => onEdit(vehicle)}>
@@ -192,7 +192,7 @@ function VehicleGrid({
                             </Button>
                             <Button variant={vehicle.isActive ? "danger" : "secondary"} size="sm" onClick={() => onToggle(vehicle)}>
                                 {vehicle.isActive ? <Archive aria-hidden="true" className="h-3.5 w-3.5" /> : <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />}
-                                {vehicle.isActive ? "Nonaktifkan" : "Aktifkan"}
+                                {vehicle.isActive ? "Archive" : "Restore"}
                             </Button>
                         </div>
                     </CardContent>
@@ -218,28 +218,28 @@ function VehicleForm({
     return (
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
-                Nomor polisi
+                License plate
                 <input name="plateNumber" required maxLength={20} defaultValue={vehicle?.plateNumber} placeholder="B 1234 ABC" autoComplete="off" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Tipe kendaraan
+                Vehicle type
                 <select name="type" required defaultValue={vehicle ? normalizeVehicleType(vehicle.type) : ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
-                    <option value="" disabled>Pilih tipe kendaraan</option>
-                    {vehicle && !normalizeVehicleType(vehicle.type) && <option value="" disabled>Tipe lama tidak dikenal, pilih tipe baru</option>}
+                    <option value="" disabled>Select a vehicle type</option>
+                    {vehicle && !normalizeVehicleType(vehicle.type) && <option value="" disabled>Unknown legacy type; select a new type</option>}
                     {vehicleTypes.map((type) => <option key={type} value={type}>{type}</option>)}
                 </select>
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Kapasitas
+                Capacity
                 <input name="capacity" required type="number" min="0.01" step="any" defaultValue={vehicle?.capacity} placeholder="1200" aria-describedby="vehicle-capacity-note" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 <span id="vehicle-capacity-note" className="mt-1 block text-xs font-normal text-slate-500">
-                    Kapasitas muatan maksimal dalam kilogram (kg).
+                    Maximum cargo capacity in kilograms (kg).
                 </span>
             </label>
             {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
             <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Batal</Button>
-                <Button type="submit" disabled={busy}>{busy ? "Menyimpan…" : "Simpan"}</Button>
+                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Cancel</Button>
+                <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
             </div>
         </form>
     );

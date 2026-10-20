@@ -55,7 +55,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
             setDialog(null);
             router.refresh();
         } catch (caught) {
-            setError(caught instanceof Error ? caught.message : "Gagal menyimpan driver.");
+            setError(caught instanceof Error ? caught.message : "Failed to save driver.");
         } finally {
             setBusy(false);
         }
@@ -71,7 +71,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
             setDialog(null);
             router.refresh();
         } catch (caught) {
-            setError(caught instanceof Error ? caught.message : "Gagal mengubah status driver.");
+            setError(caught instanceof Error ? caught.message : "Failed to update driver status.");
         } finally {
             setBusy(false);
         }
@@ -86,10 +86,10 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-slate-500">
-                    {activeDrivers.length} driver aktif · {inactiveDrivers.length} diarsipkan
+                    {activeDrivers.length} active · {inactiveDrivers.length} archived
                 </p>
                 <Button onClick={() => { setError(""); setDialog({ type: "create" }); }}>
-                    Tambah driver
+                    Add driver
                 </Button>
             </div>
 
@@ -103,7 +103,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
 
             {inactiveDrivers.length > 0 && (
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Driver diarsipkan</h2>
+                    <h2 className="text-lg font-semibold text-slate-800">Archived drivers</h2>
                     <DriverGrid
                         drivers={inactiveDrivers}
                         onEdit={(driver) => { setError(""); setDialog({ type: "edit", driver }); }}
@@ -116,7 +116,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
                 <Card>
                     <CardContent className="py-12 text-center">
                         <UserRound className="mx-auto h-8 w-8 text-slate-300" />
-                        <p className="mt-3 text-sm text-slate-500">Belum ada driver. Tambahkan driver pertama.</p>
+                        <p className="mt-3 text-sm text-slate-500">No drivers found. Add your first driver.</p>
                     </CardContent>
                 </Card>
             )}
@@ -124,8 +124,8 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
             <Modal
                 open={dialog !== null}
                 onOpenChange={(open) => { if (!open && !busy) { setDialog(null); setError(""); } }}
-                title={dialog?.type === "create" ? "Tambah driver" : dialog?.type === "edit" ? "Edit driver" : dialog?.type === "archive" ? "Arsipkan driver" : "Aktifkan driver"}
-                description={dialog?.type === "create" ? "Isi data driver baru." : dialog?.type === "edit" ? "Perbarui informasi driver." : undefined}
+                title={dialog?.type === "create" ? "Add driver" : dialog?.type === "edit" ? "Edit driver" : dialog?.type === "archive" ? "Archive driver" : "Restore driver"}
+                description={dialog?.type === "create" ? "Enter the new driver's information." : dialog?.type === "edit" ? "Update the driver's information." : undefined}
             >
                 {(dialog?.type === "create" || dialog?.type === "edit") && (
                     <DriverForm driver={editingDriver} busy={busy} error={error} onCancel={() => setDialog(null)} onSubmit={saveDriver} />
@@ -135,14 +135,14 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
                     <div className="space-y-5">
                         <p className="text-sm leading-6 text-slate-600">
                             {dialog?.type === "archive"
-                                ? `Arsipkan ${stateChangeDriver.name}? Data dan riwayat shipment tetap disimpan, tetapi driver tidak tersedia untuk shipment baru.`
-                                : `Aktifkan kembali ${stateChangeDriver.name}? Driver dapat dipilih lagi untuk shipment baru jika statusnya tersedia.`}
+                                ? `Archive ${stateChangeDriver.name}? The driver record and shipment history will be kept, but the driver cannot be assigned to new shipments.`
+                                : `Restore ${stateChangeDriver.name}? The driver can be assigned to new shipments again when available.`}
                         </p>
                         {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Batal</Button>
+                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Cancel</Button>
                             <Button variant={dialog?.type === "archive" ? "danger" : "primary"} disabled={busy} onClick={confirmDriverStateChange}>
-                                {busy ? "Menyimpan…" : dialog?.type === "archive" ? "Arsipkan" : "Aktifkan"}
+                                {busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"}
                             </Button>
                         </div>
                     </div>
@@ -181,7 +181,7 @@ function DriverGrid({
                                 </div>
                             </div>
                             <Badge variant={driver.isActive ? (driver.status === "AVAILABLE" ? "success" : "info") : "default"}>
-                                {driver.isActive ? driver.status.replaceAll("_", " ") : "DIARSIPKAN"}
+                                {driver.isActive ? driver.status.replaceAll("_", " ") : "ARCHIVED"}
                             </Badge>
                         </div>
                     </CardHeader>
@@ -196,7 +196,7 @@ function DriverGrid({
                             </Button>
                             <Button variant={driver.isActive ? "danger" : "secondary"} size="sm" onClick={() => onToggle(driver)}>
                                 {driver.isActive ? <Archive aria-hidden="true" className="h-3.5 w-3.5" /> : <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />}
-                                {driver.isActive ? "Nonaktifkan" : "Aktifkan"}
+                                {driver.isActive ? "Archive" : "Restore"}
                             </Button>
                         </div>
                     </CardContent>
@@ -222,28 +222,28 @@ function DriverForm({
     return (
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
-                Nama
+                Name
                 <input name="name" required maxLength={120} defaultValue={driver?.name} placeholder="Budi Santoso" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Nomor telepon
+                Phone number
                 <input name="phone" required maxLength={40} defaultValue={driver?.phone} placeholder="0812 3456 7890" type="tel" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Tipe SIM
+                License class
                 <select name="licenseType" required defaultValue={driver?.licenseType ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
-                    <option value="" disabled>Pilih tipe SIM</option>
+                    <option value="" disabled>Select a license class</option>
                     {driverLicenseTypes.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
                 </select>
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Nomor SIM
+                License number
                 <input name="licenseNo" required maxLength={60} defaultValue={driver?.licenseNo} placeholder="123456789012" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
             <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Batal</Button>
-                <Button type="submit" disabled={busy}>{busy ? "Menyimpan…" : "Simpan"}</Button>
+                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Cancel</Button>
+                <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
             </div>
         </form>
     );

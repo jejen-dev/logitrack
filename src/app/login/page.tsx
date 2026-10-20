@@ -16,7 +16,7 @@ export default function LoginPage() {
                 callbackUrl: "/dashboard",
             });
         } catch {
-            setError("Google sign in gagal. Coba lagi.");
+            setError("Google sign-in failed. Please try again.");
             setLoading(false);
         }
     }
@@ -45,7 +45,7 @@ export default function LoginPage() {
                         <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z" />
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.87l-7.65-5.93c-2.13 1.43-4.86 2.28-8.25 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
                     </svg>
-                    {loading ? "Menghubungkan ke Google…" : "Lanjutkan dengan Google"}
+                    {loading ? "Connecting to Google…" : "Continue with Google"}
                 </button>
 
                 {error && (
@@ -55,7 +55,7 @@ export default function LoginPage() {
                 )}
 
                 <p className="mt-6 text-center text-xs text-slate-400">
-                    Akun baru dibuat otomatis saat pertama kali masuk.
+                    New accounts are created automatically on first sign-in.
                 </p>
             </div>
         </main>

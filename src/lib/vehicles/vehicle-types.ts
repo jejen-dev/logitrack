@@ -1,29 +1,29 @@
 export const vehicleTypes = [
-    "Sepeda Motor",
-    "Mobil Van",
-    "Truk Pikap",
-    "Truk Ringan (CDE)",
-    "Truk Sedang (CDD)",
-    "Truk Box",
-    "Truk Berpendingin",
-    "Truk Wingbox",
-    "Truk Bak Datar",
-    "Kepala Traktor + Trailer",
+    "Motorcycle",
+    "Van",
+    "Pickup Truck",
+    "Light Truck (CDE)",
+    "Medium Truck (CDD)",
+    "Box Truck",
+    "Refrigerated Truck",
+    "Wingbox Truck",
+    "Flatbed Truck",
+    "Tractor Head & Trailer",
 ] as const;
 
 export type VehicleType = (typeof vehicleTypes)[number];
 
 const legacyVehicleTypes: Record<string, VehicleType> = {
-    Motorcycle: "Sepeda Motor",
-    Van: "Mobil Van",
-    "Pickup Truck": "Truk Pikap",
-    "Light Truck (CDE)": "Truk Ringan (CDE)",
-    "Medium Truck (CDD)": "Truk Sedang (CDD)",
-    "Box Truck": "Truk Box",
-    "Refrigerated Truck": "Truk Berpendingin",
-    "Wingbox Truck": "Truk Wingbox",
-    "Flatbed Truck": "Truk Bak Datar",
-    "Tractor Head & Trailer": "Kepala Traktor + Trailer",
+    "Sepeda Motor": "Motorcycle",
+    "Mobil Van": "Van",
+    "Truk Pikap": "Pickup Truck",
+    "Truk Ringan (CDE)": "Light Truck (CDE)",
+    "Truk Sedang (CDD)": "Medium Truck (CDD)",
+    "Truk Box": "Box Truck",
+    "Truk Berpendingin": "Refrigerated Truck",
+    "Truk Wingbox": "Wingbox Truck",
+    "Truk Bak Datar": "Flatbed Truck",
+    "Kepala Traktor + Trailer": "Tractor Head & Trailer",
 };
 
 export function normalizeVehicleType(value: string): VehicleType | "" {
@@ -32,5 +32,5 @@ export function normalizeVehicleType(value: string): VehicleType | "" {
 }
 
 export function getVehicleTypeLabel(value: string): string {
-    return normalizeVehicleType(value) || "Tipe lainnya";
+    return normalizeVehicleType(value) || "Other type";
 }

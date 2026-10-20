@@ -35,7 +35,7 @@ function validateDriverInput(input: DriverInput) {
         typeof input.licenseNo !== "string" ||
         typeof input.licenseType !== "string"
     ) {
-        throw new Error("Data driver tidak valid.");
+        throw new Error("Invalid driver data.");
     }
 
     const name = input.name.trim();
@@ -44,11 +44,11 @@ function validateDriverInput(input: DriverInput) {
     const licenseType = driverLicenseTypes.find((type) => type.value === input.licenseType)?.value;
 
     if (!name || !phone || !licenseNo || !licenseType) {
-        throw new Error("Nama, nomor telepon, nomor SIM, dan tipe SIM wajib diisi.");
+        throw new Error("Name, phone number, license number, and license class are required.");
     }
 
     if (name.length > 120 || phone.length > 40 || licenseNo.length > 60) {
-        throw new Error("Panjang data driver melebihi batas.");
+        throw new Error("Driver information exceeds the allowed length.");
     }
 
     return { name, phone, licenseNo, licenseType };
@@ -69,7 +69,7 @@ export async function createDriver(input: DriverInput) {
         return driver;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("Nomor SIM sudah digunakan driver lain.");
+            throw new Error("This license number is already assigned to another driver.");
         }
         throw error;
     }
@@ -77,7 +77,7 @@ export async function createDriver(input: DriverInput) {
 
 export async function updateDriver(id: string, input: DriverInput) {
     await requireDriverManager();
-    if (typeof id !== "string" || !id.trim()) throw new Error("ID driver wajib diisi.");
+    if (typeof id !== "string" || !id.trim()) throw new Error("Driver ID is required.");
     const data = validateDriverInput(input);
 
     try {
@@ -89,7 +89,7 @@ export async function updateDriver(id: string, input: DriverInput) {
         return driver;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("Nomor SIM sudah digunakan driver lain.");
+            throw new Error("This license number is already assigned to another driver.");
         }
         throw error;
     }
@@ -97,8 +97,8 @@ export async function updateDriver(id: string, input: DriverInput) {
 
 export async function setDriverActive(id: string, isActive: boolean) {
     await requireDriverManager();
-    if (typeof id !== "string" || !id.trim()) throw new Error("ID driver wajib diisi.");
-    if (typeof isActive !== "boolean") throw new Error("Status driver tidak valid.");
+    if (typeof id !== "string" || !id.trim()) throw new Error("Driver ID is required.");
+    if (typeof isActive !== "boolean") throw new Error("Invalid driver status.");
 
     if (!isActive) {
         const [driver, activeShipments] = await Promise.all([
@@ -116,9 +116,9 @@ export async function setDriverActive(id: string, isActive: boolean) {
             }),
         ]);
 
-        if (!driver) throw new Error("Driver tidak ditemukan.");
+        if (!driver) throw new Error("Driver not found.");
         if (driver.status === "ON_DELIVERY" || activeShipments > 0) {
-            throw new Error("Driver masih menangani shipment aktif.");
+            throw new Error("The driver is assigned to an active shipment.");
         }
     }
 

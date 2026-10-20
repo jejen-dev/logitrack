@@ -12,7 +12,7 @@ export default async function DriversPage() {
             <PageContainer>
                 <PageHeader
                     title="Drivers"
-                    description="Kelola data driver, status aktif, dan ketersediaan mereka."
+                    description="Manage driver records, active status, and availability."
                 />
                 <DriverManagement drivers={drivers} />
             </PageContainer>
