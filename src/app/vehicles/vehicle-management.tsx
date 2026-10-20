@@ -18,7 +18,7 @@ interface Vehicle {
     plateNumber: string;
     type: string;
     capacity: number;
-    status: "AVAILABLE" | "IN_USE" | "MAINTENANCE";
+    status: "AVAILABLE" | "RESERVED" | "IN_USE" | "MAINTENANCE";
     isActive: boolean;
 }
 

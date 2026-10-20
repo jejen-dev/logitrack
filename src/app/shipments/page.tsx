@@ -1,9 +1,13 @@
 import { AppShell } from "@/components/layout/app-shell";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/auth-options";
 import { Badge, Card, CardContent } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipments } from "@/lib/shipments/queries";
+import { getShipmentFormData } from "@/lib/shipments/form-data";
+import { ShipmentCreateDialog } from "./shipment-create-dialog";
 import Link from "next/link";
 
 import type {
@@ -68,11 +72,12 @@ export default async function ShipmentsPage({
             ? (params.payment as PaymentStatus)
             : undefined;
 
-    const shipments = await getShipments({
-        search,
-        status,
-        paymentStatus,
-    });
+    const session = await getServerSession(authOptions);
+    const canCreateShipment = ["ADMIN", "MANAGER", "OPERATOR"].includes(session?.user?.role ?? "");
+    const [shipments, formData] = await Promise.all([
+        getShipments({ search, status, paymentStatus }),
+        canCreateShipment ? getShipmentFormData() : Promise.resolve(null),
+    ]);
 
     return (
         <AppShell>
@@ -80,13 +85,7 @@ export default async function ShipmentsPage({
                 <PageHeader
                     title="Shipments"
                     description="Manage and monitor all shipments."
-                    actions={
-                        <Link href="/shipments/new">
-                            <Button>
-                                Create Shipment
-                            </Button>
-                        </Link>
-                    }
+                    actions={formData ? <ShipmentCreateDialog {...formData} /> : undefined}
                 />
 
                 <div className="mb-4">
@@ -158,11 +157,19 @@ export default async function ShipmentsPage({
                                         </th>
 
                                         <th className="px-6 py-3 font-medium">
+                                            Vehicle
+                                        </th>
+
+                                        <th className="px-6 py-3 font-medium">
                                             Status
                                         </th>
 
                                         <th className="px-6 py-3 font-medium">
                                             Payment
+                                        </th>
+
+                                        <th className="px-6 py-3 font-medium">
+                                            Created
                                         </th>
                                     </tr>
                                 </thead>
@@ -204,6 +211,10 @@ export default async function ShipmentsPage({
                                                     "Unassigned"}
                                             </td>
 
+                                            <td className="whitespace-nowrap px-6 py-4 text-slate-600">
+                                                {shipment.vehicle?.plateNumber ?? "Unassigned"}
+                                            </td>
+
                                             <td className="whitespace-nowrap px-6 py-4">
                                                 <Badge
                                                     variant={getStatusVariant(
@@ -223,6 +234,10 @@ export default async function ShipmentsPage({
                                                         shipment.paymentStatus
                                                     }
                                                 </span>
+                                            </td>
+
+                                            <td className="whitespace-nowrap px-6 py-4 text-xs text-slate-500">
+                                                {shipment.createdAt.toLocaleDateString("en-ID")}
                                             </td>
                                         </tr>
                                     ))}

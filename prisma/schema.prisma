@@ -31,6 +31,7 @@ enum PaymentStatus {
 
 enum DriverStatus {
   AVAILABLE
+  ASSIGNED
   ON_DELIVERY
   OFF_DUTY
 }
@@ -48,6 +49,7 @@ enum DriverLicenseType {
 
 enum VehicleStatus {
   AVAILABLE
+  RESERVED
   IN_USE
   MAINTENANCE
 }
@@ -102,13 +104,13 @@ model Warehouse {
 }
 
 model Driver {
-  id        String       @id @default(cuid())
-  name      String
-  phone     String
-  licenseNo String       @unique
+  id          String            @id @default(cuid())
+  name        String
+  phone       String
+  licenseNo   String            @unique
   licenseType DriverLicenseType @default(A)
-  status    DriverStatus @default(AVAILABLE)
-  isActive  Boolean      @default(true)
+  status      DriverStatus      @default(AVAILABLE)
+  isActive    Boolean           @default(true)
 
   shipments Shipment[]
 
@@ -160,24 +162,28 @@ model Shipment {
 }
 
 model ShipmentItem {
-  id          String @id @default(cuid())
-  shipmentId  String
-  productName String
-  quantity    Int
-  weight      Float?
+  id              String  @id @default(cuid())
+  shipmentId      String
+  productName     String
+  quantity        Int
+  weight          Float?
+  inventoryItemId String?
 
-  shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  shipment      Shipment       @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
 }
 
 model InventoryItem {
-  id           String @id @default(cuid())
-  sku          String @unique
-  name         String
-  quantity     Int    @default(0)
-  reorderPoint Int    @default(0)
+  id               String @id @default(cuid())
+  sku              String @unique
+  name             String
+  quantity         Int    @default(0)
+  reservedQuantity Int    @default(0)
+  reorderPoint     Int    @default(0)
 
-  warehouseId String
-  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+  warehouseId   String
+  warehouse     Warehouse      @relation(fields: [warehouseId], references: [id])
+  shipmentItems ShipmentItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -194,6 +200,9 @@ model TrackingEvent {
   shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+
+  @@index([shipmentId, occurredAt])
+  @@index([occurredAt])
 }
 
 model Notification {

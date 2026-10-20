@@ -5,189 +5,169 @@ import { revalidatePath } from "next/cache";
 
 import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
+import type { ShipmentStatus } from "@/generated/prisma/enums";
 
 interface UpdateShipmentStatusInput {
     shipmentId: string;
-    status:
-    | "PENDING"
-    | "PICKED_UP"
-    | "IN_TRANSIT"
-    | "OUT_FOR_DELIVERY"
-    | "DELIVERED"
-    | "CANCELLED";
+    status: ShipmentStatus;
     location?: string;
     description?: string;
 }
 
-export async function updateShipmentStatus(
-    input: UpdateShipmentStatusInput,
-) {
+const allowedTransitions: Record<ShipmentStatus, ShipmentStatus[]> = {
+    PENDING: ["PICKED_UP", "CANCELLED"],
+    PICKED_UP: ["IN_TRANSIT", "CANCELLED"],
+    IN_TRANSIT: ["OUT_FOR_DELIVERY", "CANCELLED"],
+    OUT_FOR_DELIVERY: ["DELIVERED", "CANCELLED"],
+    DELIVERED: [],
+    CANCELLED: [],
+};
+
+export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
     const session = await getServerSession(authOptions);
+    const role = session?.user?.role;
+    if (!role) throw new Error("Unauthorized");
+    if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) throw new Error("Forbidden");
+    if (!input || typeof input.shipmentId !== "string" || !input.shipmentId.trim()) throw new Error("Shipment ID is required.");
+    if (!Object.keys(allowedTransitions).includes(input.status)) throw new Error("Invalid shipment status.");
+    if (input.location !== undefined && (typeof input.location !== "string" || input.location.trim().length > 200)) throw new Error("Location must be 200 characters or fewer.");
+    if (input.description !== undefined && (typeof input.description !== "string" || input.description.trim().length > 500)) throw new Error("Description must be 500 characters or fewer.");
 
-    if (!session?.user?.role) {
-        throw new Error("Unauthorized");
-    }
+    const location = input.location?.trim() || null;
+    const description = input.description?.trim() || null;
 
-    const allowedRoles = [
-        "ADMIN",
-        "MANAGER",
-        "OPERATOR",
-    ];
-
-    if (!allowedRoles.includes(session.user.role)) {
-        throw new Error("Forbidden");
-    }
-
-    if (!input.shipmentId.trim()) {
-        throw new Error("Shipment ID is required");
-    }
-
-    const validStatuses = [
-        "PENDING",
-        "PICKED_UP",
-        "IN_TRANSIT",
-        "OUT_FOR_DELIVERY",
-        "DELIVERED",
-        "CANCELLED",
-    ] as const;
-
-    if (!validStatuses.includes(input.status)) {
-        throw new Error("Invalid shipment status");
-    }
-
-    if (
-        input.location !== undefined &&
-        input.location.length > 200
-    ) {
-        throw new Error("Location is too long");
-    }
-
-    if (
-        input.description !== undefined &&
-        input.description.length > 500
-    ) {
-        throw new Error("Description is too long");
-    }
-
-    const currentShipment = await prisma.shipment.findUnique({
-        where: {
-            id: input.shipmentId,
-        },
-        select: {
-            status: true,
-        },
-    });
-
-    if (!currentShipment) {
-        throw new Error("Shipment not found");
-    }
-
-    if (input.status === currentShipment.status) {
-        throw new Error("Shipment is already in this status");
-    }
-
-    const allowedTransitions: Record<
-        typeof currentShipment.status,
-        string[]
-    > = {
-        PENDING: [
-            "PICKED_UP",
-            "CANCELLED",
-        ],
-        PICKED_UP: [
-            "IN_TRANSIT",
-            "CANCELLED",
-        ],
-        IN_TRANSIT: [
-            "OUT_FOR_DELIVERY",
-            "CANCELLED",
-        ],
-        OUT_FOR_DELIVERY: [
-            "DELIVERED",
-            "CANCELLED",
-        ],
-        DELIVERED: [],
-        CANCELLED: [],
-    };
-
-    if (
-        !allowedTransitions[currentShipment.status].includes(
-            input.status,
-        )
-    ) {
-        throw new Error(
-            `Cannot change shipment status from ${currentShipment.status} to ${input.status}`,
-        );
-    }
-
-    const shipment = await prisma.$transaction(async (tx) => {
-        const updatedShipment = await tx.shipment.update({
-            where: {
-                id: input.shipmentId,
+    const updatedShipment = await prisma.$transaction(async (tx) => {
+        const shipment = await tx.shipment.findUnique({
+            where: { id: input.shipmentId },
+            select: {
+                id: true,
+                trackingNumber: true,
+                status: true,
+                driverId: true,
+                vehicleId: true,
+                items: { select: { inventoryItemId: true, quantity: true } },
             },
+        });
+        if (!shipment) throw new Error("Shipment not found.");
+        if (!allowedTransitions[shipment.status].includes(input.status)) {
+            throw new Error(`Cannot change shipment from ${shipment.status.replaceAll("_", " ")} to ${input.status.replaceAll("_", " ")}.`);
+        }
+
+        const changed = await tx.shipment.updateMany({
+            where: { id: shipment.id, status: shipment.status },
             data: {
                 status: input.status,
+                shippedAt: input.status === "PICKED_UP" ? new Date() : undefined,
+                deliveredAt: input.status === "DELIVERED" ? new Date() : undefined,
+            },
+        });
+        if (changed.count !== 1) throw new Error("Shipment status changed in another request. Refresh and try again.");
 
-                shippedAt:
-                    input.status === "PICKED_UP"
-                        ? new Date()
-                        : undefined,
-
-                deliveredAt:
-                    input.status === "DELIVERED"
-                        ? new Date()
-                        : undefined,
-
-                trackingEvents: {
-                    create: {
-                        status: input.status,
-                        location: input.location || null,
-                        description:
-                            input.description ||
-                            `Shipment status updated to ${input.status}`,
+        if (input.status === "PICKED_UP") {
+            if (shipment.driverId) {
+                const claimed = await tx.driver.updateMany({
+                    where: { id: shipment.driverId, isActive: true, status: "ASSIGNED" },
+                    data: { status: "ON_DELIVERY" },
+                });
+                if (claimed.count !== 1) throw new Error("The assigned driver is no longer available.");
+            }
+            if (shipment.vehicleId) {
+                const claimed = await tx.vehicle.updateMany({
+                    where: { id: shipment.vehicleId, isActive: true, status: "RESERVED" },
+                    data: { status: "IN_USE" },
+                });
+                if (claimed.count !== 1) throw new Error("The assigned vehicle is no longer available.");
+            }
+            for (const item of shipment.items) {
+                if (!item.inventoryItemId) continue;
+                const consumed = await tx.inventoryItem.updateMany({
+                    where: {
+                        id: item.inventoryItemId,
+                        quantity: { gte: item.quantity },
+                        reservedQuantity: { gte: item.quantity },
                     },
-                },
+                    data: {
+                        quantity: { decrement: item.quantity },
+                        reservedQuantity: { decrement: item.quantity },
+                    },
+                });
+                if (consumed.count !== 1) throw new Error("Reserved inventory is unavailable. Contact an administrator.");
+            }
+        }
+
+        if (input.status === "CANCELLED" && shipment.status === "PENDING") {
+            if (shipment.driverId) {
+                const released = await tx.driver.updateMany({ where: { id: shipment.driverId, status: "ASSIGNED" }, data: { status: "AVAILABLE" } });
+                if (released.count !== 1) throw new Error("The assigned driver reservation could not be released.");
+            }
+            if (shipment.vehicleId) {
+                const released = await tx.vehicle.updateMany({ where: { id: shipment.vehicleId, status: "RESERVED" }, data: { status: "AVAILABLE" } });
+                if (released.count !== 1) throw new Error("The assigned vehicle reservation could not be released.");
+            }
+            for (const item of shipment.items) {
+                if (!item.inventoryItemId) continue;
+                const released = await tx.inventoryItem.updateMany({
+                    where: { id: item.inventoryItemId, reservedQuantity: { gte: item.quantity } },
+                    data: { reservedQuantity: { decrement: item.quantity } },
+                });
+                if (released.count !== 1) throw new Error("Shipment reservation could not be released. Contact an administrator.");
+            }
+        }
+
+        if (input.status === "DELIVERED" || (input.status === "CANCELLED" && shipment.status !== "PENDING")) {
+            if (shipment.driverId) {
+                await tx.driver.updateMany({ where: { id: shipment.driverId, status: "ON_DELIVERY" }, data: { status: "AVAILABLE" } });
+            }
+            if (shipment.vehicleId) {
+                await tx.vehicle.updateMany({ where: { id: shipment.vehicleId, status: "IN_USE" }, data: { status: "AVAILABLE" } });
+            }
+        }
+
+        const stockAuditNote = input.status === "PICKED_UP" && shipment.items.some((item) => item.inventoryItemId)
+            ? "Reserved inventory was deducted from on-hand stock."
+            : input.status === "CANCELLED" && shipment.status === "PENDING" && shipment.items.some((item) => item.inventoryItemId)
+                ? "Inventory reservations were released."
+                : input.status === "CANCELLED" && shipment.status !== "PENDING" && shipment.items.some((item) => item.inventoryItemId)
+                    ? "Shipment was cancelled after pickup; deducted stock was not restored."
+                    : null;
+
+        await tx.trackingEvent.create({
+            data: {
+                shipmentId: shipment.id,
+                status: input.status,
+                location,
+                description: [description, stockAuditNote]
+                    .filter(Boolean)
+                    .join(" ") || `Shipment status updated to ${input.status.replaceAll("_", " ")}.`,
             },
         });
 
         const users = await tx.user.findMany({
-            where: {
-                role: {
-                    in: [
-                        "ADMIN",
-                        "MANAGER",
-                        "OPERATOR",
-                    ],
-                },
-            },
-            select: {
-                id: true,
-            },
+            where: { role: { in: ["ADMIN", "MANAGER", "OPERATOR"] } },
+            select: { id: true },
         });
-
         if (users.length > 0) {
             await tx.notification.createMany({
                 data: users.map((user) => ({
                     userId: user.id,
-                    shipmentId: updatedShipment.id,
+                    shipmentId: shipment.id,
                     type: "SHIPMENT" as const,
                     title: "Shipment status updated",
-                    message: `Shipment ${updatedShipment.trackingNumber} is now ${input.status.replaceAll(
-                        "_",
-                        " ",
-                    )}.`,
-                    isRead: false,
+                    message: `Shipment ${shipment.trackingNumber} is now ${input.status.replaceAll("_", " ")}.`,
                 })),
             });
         }
-
-        return updatedShipment;
+        return { id: shipment.id, trackingNumber: shipment.trackingNumber };
     });
 
     revalidatePath("/shipments");
+    revalidatePath("/shipments/new");
     revalidatePath(`/shipments/${input.shipmentId}`);
+    revalidatePath("/tracking");
+    revalidatePath("/inventory");
+    revalidatePath("/drivers");
+    revalidatePath("/vehicles");
     revalidatePath("/dashboard");
     revalidatePath("/notifications");
-
-    return shipment;
+    return updatedShipment;
 }

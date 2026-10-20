@@ -206,6 +206,10 @@ export default async function ShipmentDetailPage({
                                                 </th>
 
                                                 <th className="px-6 py-3 font-medium">
+                                                    Stock source
+                                                </th>
+
+                                                <th className="px-6 py-3 font-medium">
                                                     Weight
                                                 </th>
                                             </tr>
@@ -229,7 +233,13 @@ export default async function ShipmentDetailPage({
                                                         </td>
 
                                                         <td className="px-6 py-4 text-slate-600">
-                                                            {item.weight
+                                                            {item.inventoryItem
+                                                                ? `${item.inventoryItem.warehouse.name} · ${item.inventoryItem.sku}`
+                                                                : "Manual item"}
+                                                        </td>
+
+                                                        <td className="px-6 py-4 text-slate-600">
+                                                            {item.weight != null
                                                                 ? `${item.weight} kg`
                                                                 : "-"}
                                                         </td>
@@ -258,22 +268,6 @@ export default async function ShipmentDetailPage({
                                 </CardTitle>
                             </CardHeader>
 
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>
-                                        Update Status
-                                    </CardTitle>
-                                </CardHeader>
-
-                                <CardContent>
-                                    <StatusUpdate
-                                        shipmentId={shipment.id}
-                                        currentStatus={shipment.status}
-                                        role={role}
-                                    />
-                                </CardContent>
-                            </Card>
-
                             <CardContent className="space-y-4">
                                 <div>
                                     <p className="text-xs text-slate-500">
@@ -296,6 +290,15 @@ export default async function ShipmentDetailPage({
                                             "Unassigned"}
                                     </p>
                                 </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Update Status</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <StatusUpdate shipmentId={shipment.id} currentStatus={shipment.status} role={role} />
                             </CardContent>
                         </Card>
 

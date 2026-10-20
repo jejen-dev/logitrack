@@ -33,7 +33,16 @@ export async function getShipmentById(id: string) {
             customer: true,
             driver: true,
             vehicle: true,
-            items: true,
+            items: {
+                include: {
+                    inventoryItem: {
+                        select: {
+                            sku: true,
+                            warehouse: { select: { name: true, code: true } },
+                        },
+                    },
+                },
+            },
             trackingEvents: {
                 orderBy: {
                     occurredAt: "desc",

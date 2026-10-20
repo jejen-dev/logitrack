@@ -20,7 +20,7 @@ export async function getShipmentFormData() {
         throw new Error("Forbidden");
     }
 
-    const [customers, drivers, vehicles] = await Promise.all([
+    const [customers, drivers, vehicles, inventoryItems] = await Promise.all([
         prisma.customer.findMany({
             where: {
                 isActive: true,
@@ -62,11 +62,27 @@ export async function getShipmentFormData() {
                 type: true,
             },
         }),
+
+        prisma.inventoryItem.findMany({
+            where: { warehouse: { isActive: true } },
+            orderBy: { name: "asc" },
+            select: {
+                id: true,
+                sku: true,
+                name: true,
+                quantity: true,
+                reservedQuantity: true,
+                warehouse: { select: { name: true, code: true } },
+            },
+        }),
     ]);
 
     return {
         customers,
         drivers,
         vehicles,
+        inventoryItems: inventoryItems
+            .filter((item) => item.quantity > item.reservedQuantity)
+            .map((item) => ({ ...item, availableQuantity: item.quantity - item.reservedQuantity })),
     };
 }

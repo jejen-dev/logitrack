@@ -28,16 +28,28 @@ interface Vehicle {
     type: string;
 }
 
+interface InventoryItem {
+    id: string;
+    sku: string;
+    name: string;
+    availableQuantity: number;
+    warehouse: { name: string; code: string };
+}
+
 interface ShipmentFormProps {
     customers: Customer[];
     drivers: Driver[];
     vehicles: Vehicle[];
+    inventoryItems: InventoryItem[];
+    onCancel?: () => void;
 }
 
 export function ShipmentForm({
     customers,
     drivers,
     vehicles,
+    inventoryItems,
+    onCancel,
 }: ShipmentFormProps) {
     const router = useRouter();
 
@@ -48,6 +60,7 @@ export function ShipmentForm({
         customerId: "",
         driverId: "",
         vehicleId: "",
+        inventoryItemId: "",
         originAddress: "",
         destinationAddress: "",
         paymentStatus: "UNPAID" as
@@ -58,6 +71,8 @@ export function ShipmentForm({
         quantity: "1",
         weight: "",
     });
+
+    const selectedInventoryItem = inventoryItems.find((item) => item.id === form.inventoryItemId);
 
     function updateField(
         field: keyof typeof form,
@@ -82,6 +97,7 @@ export function ShipmentForm({
                 customerId: form.customerId,
                 driverId: form.driverId || undefined,
                 vehicleId: form.vehicleId || undefined,
+                inventoryItemId: form.inventoryItemId || undefined,
                 originAddress: form.originAddress,
                 destinationAddress: form.destinationAddress,
                 paymentStatus: form.paymentStatus,
@@ -94,10 +110,8 @@ export function ShipmentForm({
 
             router.push(`/shipments/${shipment.id}`);
             router.refresh();
-        } catch {
-            setError(
-                "Failed to create shipment. Please try again.",
-            );
+        } catch (caught) {
+            setError(caught instanceof Error ? caught.message : "Failed to create shipment. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -311,6 +325,37 @@ export function ShipmentForm({
 
                 <CardContent>
                     <div className="grid gap-5 md:grid-cols-3">
+                        <div className="md:col-span-3">
+                            <label className="mb-2 block text-sm font-medium text-slate-700">
+                                Inventory stock <span className="font-normal text-slate-500">(optional)</span>
+                            </label>
+                            <select
+                                value={form.inventoryItemId}
+                                onChange={(event) => {
+                                    const inventoryItemId = event.target.value;
+                                    const item = inventoryItems.find((candidate) => candidate.id === inventoryItemId);
+                                    setForm((current) => ({
+                                        ...current,
+                                        inventoryItemId,
+                                        productName: item?.name ?? "",
+                                    }));
+                                }}
+                                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            >
+                                <option value="">Manual item (not linked to inventory)</option>
+                                {inventoryItems.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.name} · {item.sku} · {item.availableQuantity} available · {item.warehouse.name} ({item.warehouse.code})
+                                    </option>
+                                ))}
+                            </select>
+                            {selectedInventoryItem && (
+                                <p className="mt-1 text-xs text-slate-500">
+                                    This shipment will reserve stock from this warehouse. {selectedInventoryItem.availableQuantity} available now.
+                                </p>
+                            )}
+                        </div>
+
                         {/* Product */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -318,7 +363,7 @@ export function ShipmentForm({
                             </label>
 
                             <input
-                                required
+                                required={!selectedInventoryItem}
                                 value={form.productName}
                                 onChange={(event) =>
                                     updateField(
@@ -327,6 +372,7 @@ export function ShipmentForm({
                                     )
                                 }
                                 placeholder="Product name"
+                                disabled={Boolean(selectedInventoryItem)}
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             />
                         </div>
@@ -340,6 +386,8 @@ export function ShipmentForm({
                             <input
                                 required
                                 min="1"
+                                max={selectedInventoryItem?.availableQuantity}
+                                step="1"
                                 type="number"
                                 value={form.quantity}
                                 onChange={(event) =>
@@ -350,6 +398,9 @@ export function ShipmentForm({
                                 }
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             />
+                            {selectedInventoryItem && Number(form.quantity) > selectedInventoryItem.availableQuantity && (
+                                <p className="mt-1 text-xs text-red-600">Quantity exceeds available stock.</p>
+                            )}
                         </div>
 
                         {/* Weight */}
@@ -389,9 +440,7 @@ export function ShipmentForm({
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() =>
-                        router.push("/shipments")
-                    }
+                    onClick={() => onCancel ? onCancel() : router.push("/shipments")}
                 >
                     Cancel
                 </Button>

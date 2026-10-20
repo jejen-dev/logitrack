@@ -10,6 +10,7 @@ export default async function NewShipmentPage() {
         customers,
         drivers,
         vehicles,
+        inventoryItems,
     } = await getShipmentFormData();
 
     return (
@@ -24,6 +25,7 @@ export default async function NewShipmentPage() {
                     customers={customers}
                     drivers={drivers}
                     vehicles={vehicles}
+                    inventoryItems={inventoryItems}
                 />
             </PageContainer>
         </AppShell>

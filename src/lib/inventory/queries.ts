@@ -66,6 +66,7 @@ export async function getInventoryItems(
             sku: true,
             name: true,
             quantity: true,
+            reservedQuantity: true,
             reorderPoint: true,
 
             warehouse: {
@@ -83,8 +84,8 @@ export async function getInventoryItems(
     }
 
     return inventoryItems.filter((item) => {
-        const isLowStock =
-            item.quantity <= item.reorderPoint;
+        const availableQuantity = item.quantity - item.reservedQuantity;
+        const isLowStock = availableQuantity <= item.reorderPoint;
 
         return stockStatus === "LOW_STOCK"
             ? isLowStock

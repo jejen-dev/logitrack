@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { updateShipmentStatus } from "@/app/shipments/actions/update-shipment-status";
 import { Button } from "@/components/ui/button";
@@ -72,14 +73,7 @@ export function StatusUpdate({
     currentStatus,
     role,
 }: StatusUpdateProps) {
-    if (
-        role !== "ADMIN" &&
-        role !== "MANAGER" &&
-        role !== "OPERATOR"
-    ) {
-        return null;
-    }
-
+    const router = useRouter();
     const [status, setStatus] = useState(currentStatus);
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
@@ -102,13 +96,14 @@ export function StatusUpdate({
                 setMessage("Shipment status updated successfully.");
                 setLocation("");
                 setDescription("");
-
-                window.location.reload();
-            } catch {
-                setMessage("Failed to update shipment status.");
+                router.refresh();
+            } catch (caught) {
+                setMessage(caught instanceof Error ? caught.message : "Failed to update shipment status.");
             }
         });
     }
+
+    if (role !== "ADMIN" && role !== "MANAGER" && role !== "OPERATOR") return null;
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,9 +125,7 @@ export function StatusUpdate({
                     }
                     className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
-                    {currentStatus === "PENDING" && (
-                        <option value="PENDING">Pending</option>
-                    )}
+                    <option value={currentStatus}>{currentStatus.replaceAll("_", " ")}</option>
 
                     {statusOptions[currentStatus].map((option) => (
                         <option
@@ -195,7 +188,7 @@ export function StatusUpdate({
             </Button>
 
             {message && (
-                <p className="text-xs text-slate-500">
+                <p role="status" className="text-xs text-slate-500">
                     {message}
                 </p>
             )}

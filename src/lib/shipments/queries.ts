@@ -60,6 +60,26 @@ export async function getShipments(
                             },
                         },
                     },
+                    {
+                        originAddress: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        destinationAddress: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        driver: {
+                            name: {
+                                contains: search,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
                 ],
             }),
         },
@@ -86,6 +106,11 @@ export async function getShipments(
             driver: {
                 select: {
                     name: true,
+                },
+            },
+            vehicle: {
+                select: {
+                    plateNumber: true,
                 },
             },
         },

@@ -19,7 +19,7 @@ interface Driver {
     phone: string;
     licenseNo: string;
     licenseType: (typeof driverLicenseTypes)[number]["value"];
-    status: "AVAILABLE" | "ON_DELIVERY" | "OFF_DUTY";
+    status: "AVAILABLE" | "ASSIGNED" | "ON_DELIVERY" | "OFF_DUTY";
     isActive: boolean;
 }
 
