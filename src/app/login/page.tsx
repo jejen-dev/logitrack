@@ -1,112 +1,63 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+    async function handleGoogleSignIn() {
+        setError("");
+        setLoading(true);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setError("");
-    setLoading(true);
-
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      setError("Email atau password salah.");
-      setLoading(false);
-      return;
+        try {
+            await signIn("google", {
+                callbackUrl: "/dashboard",
+            });
+        } catch {
+            setError("Google sign in gagal. Coba lagi.");
+            setLoading(false);
+        }
     }
 
-    router.push("/");
-    router.refresh();
-  }
+    return (
+        <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+                <div className="mb-8 text-center">
+                    <h1 className="text-3xl font-bold text-slate-900">
+                        LogiTrack
+                    </h1>
+                    <p className="mt-2 text-sm text-slate-500">
+                        Sign in or create your account with Google
+                    </p>
+                </div>
 
-  return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-900">
-            LogiTrack
-          </h1>
+                <button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    disabled={loading}
+                    className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-wait disabled:opacity-60"
+                >
+                    <svg aria-hidden="true" viewBox="0 0 48 48" className="h-5 w-5">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z" />
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.25 5.48-4.73 7.18l7.65 5.93c4.46-4.12 7.12-10.18 7.12-17.58Z" />
+                        <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z" />
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.87l-7.65-5.93c-2.13 1.43-4.86 2.28-8.25 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
+                    </svg>
+                    {loading ? "Menghubungkan ke Google…" : "Lanjutkan dengan Google"}
+                </button>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Sign in to your account
-          </p>
-        </div>
+                {error && (
+                    <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                        {error}
+                    </p>
+                )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Email
-            </label>
-
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="admin@logitrack.dev"
-              required
-              autoComplete="email"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter your password"
-              required
-              autoComplete="current-password"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
+                <p className="mt-6 text-center text-xs text-slate-400">
+                    Akun baru dibuat otomatis saat pertama kali masuk.
+                </p>
             </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-xs text-slate-400">
-          LogiTrack Logistics Management System
-        </p>
-      </div>
-    </main>
-  );
+        </main>
+    );
 }

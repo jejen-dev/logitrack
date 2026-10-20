@@ -27,7 +27,7 @@ export async function proxy(request: NextRequest) {
   const hasValidRole = isUserRole(role);
 
   const isAuthenticated =
-    hasValidId && hasValidRole;
+    hasValidId && hasValidRole && token?.authProvider === "google";
 
   if (!isAuthenticated && !isLoginPage) {
     return NextResponse.redirect(
