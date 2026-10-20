@@ -108,6 +108,7 @@ model Vehicle {
   type        String
   capacity    Float
   status      VehicleStatus @default(AVAILABLE)
+  isActive    Boolean       @default(true)
 
   shipments Shipment[]
 

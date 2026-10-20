@@ -129,7 +129,7 @@ async function main() {
   const vehicleA = await prisma.vehicle.create({
     data: {
       plateNumber: "B 1234 LGT",
-      type: "Box Truck",
+      type: "Truk Box",
       capacity: 1200,
       status: "IN_USE",
     },
@@ -138,7 +138,7 @@ async function main() {
   const vehicleB = await prisma.vehicle.create({
     data: {
       plateNumber: "B 5678 LGT",
-      type: "Van",
+      type: "Mobil Van",
       capacity: 600,
       status: "AVAILABLE",
     },

@@ -1,0 +1,129 @@
+"use server";
+
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
+
+import { authOptions } from "@/lib/auth/auth-options";
+import { prisma } from "@/lib/prisma";
+import { vehicleTypes } from "@/lib/vehicles/vehicle-types";
+
+interface VehicleInput {
+    plateNumber: string;
+    type: string;
+    capacity: number;
+}
+
+async function requireVehicleManager() {
+    const session = await getServerSession(authOptions);
+    const role = session?.user?.role;
+
+    if (!role) throw new Error("Unauthorized");
+    if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) {
+        throw new Error("Forbidden");
+    }
+}
+
+function validateVehicleInput(input: VehicleInput) {
+    if (
+        !input ||
+        typeof input.plateNumber !== "string" ||
+        typeof input.type !== "string" ||
+        (typeof input.capacity !== "number" && typeof input.capacity !== "string")
+    ) {
+        throw new Error("Data vehicle tidak valid.");
+    }
+
+    const plateNumber = input.plateNumber.trim().toUpperCase();
+    const type = input.type.trim();
+    const capacity = Number(input.capacity);
+
+    if (!plateNumber || !vehicleTypes.includes(type as (typeof vehicleTypes)[number])) {
+        throw new Error("Pilih tipe kendaraan yang tersedia.");
+    }
+    if (plateNumber.length > 20) {
+        throw new Error("Panjang data vehicle melebihi batas.");
+    }
+    if (!Number.isFinite(capacity) || capacity <= 0) {
+        throw new Error("Kapasitas harus berupa angka lebih besar dari nol.");
+    }
+
+    return { plateNumber, type, capacity };
+}
+
+function revalidateVehiclePages() {
+    revalidatePath("/vehicles");
+    revalidatePath("/shipments/new");
+}
+
+export async function createVehicle(input: VehicleInput) {
+    await requireVehicleManager();
+    const data = validateVehicleInput(input);
+
+    try {
+        const vehicle = await prisma.vehicle.create({ data });
+        revalidateVehiclePages();
+        return vehicle;
+    } catch (error) {
+        if (isUniqueConstraintError(error)) {
+            throw new Error("Nomor polisi sudah terdaftar.");
+        }
+        throw error;
+    }
+}
+
+export async function updateVehicle(id: string, input: VehicleInput) {
+    await requireVehicleManager();
+    if (typeof id !== "string" || !id.trim()) throw new Error("ID vehicle wajib diisi.");
+    const data = validateVehicleInput(input);
+
+    try {
+        const vehicle = await prisma.vehicle.update({ where: { id }, data });
+        revalidateVehiclePages();
+        return vehicle;
+    } catch (error) {
+        if (isUniqueConstraintError(error)) {
+            throw new Error("Nomor polisi sudah terdaftar.");
+        }
+        throw error;
+    }
+}
+
+export async function setVehicleActive(id: string, isActive: boolean) {
+    await requireVehicleManager();
+    if (typeof id !== "string" || !id.trim()) throw new Error("ID vehicle wajib diisi.");
+    if (typeof isActive !== "boolean") throw new Error("Status vehicle tidak valid.");
+
+    if (!isActive) {
+        const [vehicle, activeShipments] = await Promise.all([
+            prisma.vehicle.findUnique({
+                where: { id },
+                select: { status: true },
+            }),
+            prisma.shipment.count({
+                where: {
+                    vehicleId: id,
+                    status: {
+                        in: ["PENDING", "PICKED_UP", "IN_TRANSIT", "OUT_FOR_DELIVERY"],
+                    },
+                },
+            }),
+        ]);
+
+        if (!vehicle) throw new Error("Vehicle tidak ditemukan.");
+        if (vehicle.status === "IN_USE" || activeShipments > 0) {
+            throw new Error("Vehicle masih digunakan shipment aktif.");
+        }
+    }
+
+    await prisma.vehicle.update({ where: { id }, data: { isActive } });
+    revalidateVehiclePages();
+}
+
+function isUniqueConstraintError(error: unknown): boolean {
+    return (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        error.code === "P2002"
+    );
+}

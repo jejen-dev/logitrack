@@ -125,11 +125,16 @@ export async function createShipment(
             select: {
                 id: true,
                 status: true,
+                isActive: true,
             },
         });
 
         if (!vehicle) {
             throw new Error("Vehicle not found");
+        }
+
+        if (!vehicle.isActive) {
+            throw new Error("Vehicle is inactive");
         }
 
         if (vehicle.status !== "AVAILABLE") {

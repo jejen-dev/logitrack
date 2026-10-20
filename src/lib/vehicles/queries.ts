@@ -30,6 +30,7 @@ export async function getVehicles() {
             type: true,
             capacity: true,
             status: true,
+            isActive: true,
         },
     });
 }

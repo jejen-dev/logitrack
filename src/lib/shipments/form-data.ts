@@ -47,6 +47,7 @@ export async function getShipmentFormData() {
 
         prisma.vehicle.findMany({
             where: {
+                isActive: true,
                 status: "AVAILABLE",
             },
             orderBy: {
