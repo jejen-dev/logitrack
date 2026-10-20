@@ -10,6 +10,7 @@ interface InventoryFiltersProps {
         id: string;
         name: string;
         code: string;
+        isActive: boolean;
     }[];
 }
 
@@ -99,7 +100,7 @@ export function InventoryFilters({
                         key={warehouse.id}
                         value={warehouse.id}
                     >
-                        {warehouse.name}
+                        {warehouse.name}{warehouse.isActive ? "" : " (Archived)"}
                     </option>
                 ))}
             </select>

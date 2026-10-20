@@ -56,7 +56,7 @@ export function Modal({
                 </div>
                 <button
                     type="button"
-                    aria-label="Tutup dialog"
+                    aria-label="Close dialog"
                     onClick={() => onOpenChange(false)}
                     className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                 >

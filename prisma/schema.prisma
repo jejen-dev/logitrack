@@ -93,6 +93,7 @@ model Warehouse {
   address    String?
   city       String?
   postalCode String?
+  isActive   Boolean @default(true)
 
   inventoryItems InventoryItem[]
 

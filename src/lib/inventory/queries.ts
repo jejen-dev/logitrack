@@ -117,6 +117,7 @@ export async function getInventoryWarehouses() {
             id: true,
             name: true,
             code: true,
+            isActive: true,
         },
     });
 }

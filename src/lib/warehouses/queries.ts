@@ -31,6 +31,7 @@ export async function getWarehouses() {
             address: true,
             city: true,
             postalCode: true,
+            isActive: true,
 
             _count: {
                 select: {
