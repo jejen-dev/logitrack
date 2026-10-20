@@ -43,6 +43,15 @@ export const authOptions: NextAuthOptions = {
                 token.id = appUser.id;
                 token.role = appUser.role;
                 token.authProvider = account?.provider;
+            } else if (token.id) {
+                const appUser = await prisma.user.findUnique({
+                    where: { id: token.id },
+                    select: { role: true },
+                });
+
+                // JWTs outlive database role changes, so refresh the role on
+                // each session read instead of trusting the original claim.
+                token.role = appUser?.role ?? "";
             }
 
             return token;
