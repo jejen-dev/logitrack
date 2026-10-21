@@ -194,7 +194,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
                     {accountOpen && (
                         <div
-                            className="glass-surface absolute right-0 top-11 z-50 w-64 rounded-xl border border-white/80 bg-white/85 p-2 shadow-lg"
+                            className="account-menu-surface absolute right-0 top-11 z-50 w-64 rounded-xl p-2"
                             role="menu"
                         >
                             <div className="border-b border-slate-100 px-3 py-3">

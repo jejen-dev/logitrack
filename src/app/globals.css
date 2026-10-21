@@ -45,6 +45,15 @@ body {
   backdrop-filter: blur(18px);
 }
 
+.account-menu-surface {
+  isolation: isolate;
+  background-color: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
 /* Apply the shared glass treatment to feature panels built directly in pages. */
 div[class~="bg-white"][class~="border"][class~="rounded-lg"],
 div[class~="bg-white"][class~="border"][class~="rounded-xl"],
