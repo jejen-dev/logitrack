@@ -18,7 +18,8 @@ interface UpdateShipmentStatusInput {
 export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
-    if (!role) throw new Error("Unauthorized");
+    const merchantId = session?.user?.merchantId;
+    if (!role || !merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR", "DRIVER"].includes(role)) throw new Error("Forbidden");
     if (!input || typeof input.shipmentId !== "string" || !input.shipmentId.trim()) throw new Error("Shipment ID is required.");
     if (!Object.keys(allowedShipmentTransitions).includes(input.status)) throw new Error("Invalid shipment status.");
@@ -131,6 +132,7 @@ export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
         await tx.trackingEvent.create({
             data: {
                 shipmentId: shipment.id,
+                merchantId,
                 status: input.status,
                 location,
                 description: [description, stockAuditNote]
@@ -148,6 +150,7 @@ export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
                 data: users.map((user) => ({
                     userId: user.id,
                     shipmentId: shipment.id,
+                    merchantId,
                     type: "SHIPMENT" as const,
                     title: "Shipment status updated",
                     message: `Shipment ${shipment.trackingNumber} is now ${input.status.replaceAll("_", " ")}.`,

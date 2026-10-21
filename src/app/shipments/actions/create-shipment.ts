@@ -23,7 +23,8 @@ interface CreateShipmentInput {
 export async function createShipment(input: CreateShipmentInput) {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
-    if (!role) throw new Error("Unauthorized");
+    const merchantId = session?.user?.merchantId;
+    if (!role || !merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) throw new Error("Forbidden");
 
     if (!input || typeof input !== "object" ||
@@ -112,6 +113,7 @@ export async function createShipment(input: CreateShipmentInput) {
 
         const createdShipment = await tx.shipment.create({
             data: {
+                merchantId,
                 trackingNumber,
                 customerId,
                 driverId: driverId ?? null,
@@ -122,6 +124,7 @@ export async function createShipment(input: CreateShipmentInput) {
                 status: "PENDING",
                 items: {
                     create: {
+                        merchantId,
                         productName: itemName,
                         quantity: input.quantity,
                         weight: input.weight ?? null,
@@ -130,6 +133,7 @@ export async function createShipment(input: CreateShipmentInput) {
                 },
                 trackingEvents: {
                     create: {
+                        merchantId,
                         status: "PENDING",
                         location: originAddress,
                         description: inventoryItemId
@@ -149,6 +153,7 @@ export async function createShipment(input: CreateShipmentInput) {
                 data: users.map((user) => ({
                     userId: user.id,
                     shipmentId: createdShipment.id,
+                    merchantId,
                     type: "SHIPMENT" as const,
                     title: "New shipment created",
                     message: `Shipment ${createdShipment.trackingNumber} has been created and is pending.`,

@@ -60,11 +60,14 @@ enum NotificationType {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  passwordHash String?
-  role         UserRole @default(OPERATOR)
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String?
+  role          UserRole  @default(OPERATOR)
+  merchantId    String?
+  merchant      Merchant? @relation("MerchantMembers", fields: [merchantId], references: [id], onDelete: Restrict)
+  ownedMerchant Merchant? @relation("MerchantOwner")
 
   notifications Notification[]
 
@@ -72,15 +75,51 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Merchant {
+  id             String               @id @default(cuid())
+  name           String
+  ownerId        String               @unique
+  owner          User                 @relation("MerchantOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  members        User[]               @relation("MerchantMembers")
+  invitations    MerchantInvitation[]
+  customers      Customer[]
+  warehouses     Warehouse[]
+  drivers        Driver[]
+  vehicles       Vehicle[]
+  shipments      Shipment[]
+  shipmentItems  ShipmentItem[]
+  inventoryItems InventoryItem[]
+  trackingEvents TrackingEvent[]
+  notifications  Notification[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
+
+model MerchantInvitation {
+  id         String    @id @default(cuid())
+  merchantId String
+  merchant   Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  email      String
+  role       UserRole  @default(OPERATOR)
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([merchantId, email])
+}
+
 model Customer {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   name       String
   email      String?
   phone      String?
   address    String?
   city       String?
   postalCode String?
-  isActive   Boolean @default(true)
+  isActive   Boolean  @default(true)
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   shipments Shipment[]
 
@@ -89,55 +128,70 @@ model Customer {
 }
 
 model Warehouse {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   name       String
-  code       String  @unique
+  code       String
   address    String?
   city       String?
   postalCode String?
-  isActive   Boolean @default(true)
+  isActive   Boolean  @default(true)
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   inventoryItems InventoryItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([merchantId, code])
 }
 
 model Driver {
   id          String            @id @default(cuid())
   name        String
-  email       String?           @unique
+  email       String?
   phone       String
-  licenseNo   String            @unique
+  licenseNo   String
   licenseType DriverLicenseType @default(A)
   status      DriverStatus      @default(AVAILABLE)
   isActive    Boolean           @default(true)
+  merchantId  String
+  merchant    Merchant          @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   shipments Shipment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([merchantId, email])
+  @@unique([merchantId, licenseNo])
 }
 
 model Vehicle {
   id          String        @id @default(cuid())
-  plateNumber String        @unique
+  plateNumber String
   type        String
   capacity    Float
   status      VehicleStatus @default(AVAILABLE)
   isActive    Boolean       @default(true)
+  merchantId  String
+  merchant    Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   shipments Shipment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([merchantId, plateNumber])
 }
 
 model Shipment {
   id             String         @id @default(cuid())
-  trackingNumber String         @unique
+  trackingNumber String
   status         ShipmentStatus @default(PENDING)
   paymentStatus  PaymentStatus  @default(UNPAID)
+  merchantId     String
+  merchant       Merchant       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   customerId String
   customer   Customer @relation(fields: [customerId], references: [id])
@@ -160,28 +214,34 @@ model Shipment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([merchantId, trackingNumber])
 }
 
 model ShipmentItem {
-  id              String  @id @default(cuid())
+  id              String   @id @default(cuid())
   shipmentId      String
   productName     String
   quantity        Int
   weight          Float?
   inventoryItemId String?
+  merchantId      String
+  merchant        Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   shipment      Shipment       @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
   inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
 }
 
 model InventoryItem {
-  id               String @id @default(cuid())
-  sku              String @unique
+  id               String   @id @default(cuid())
+  sku              String
   name             String
-  quantity         Int    @default(0)
-  reservedQuantity Int    @default(0)
-  reorderPoint     Int    @default(0)
-  isActive         Boolean @default(true)
+  quantity         Int      @default(0)
+  reservedQuantity Int      @default(0)
+  reorderPoint     Int      @default(0)
+  isActive         Boolean  @default(true)
+  merchantId       String
+  merchant         Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   warehouseId   String
   warehouse     Warehouse      @relation(fields: [warehouseId], references: [id])
@@ -189,6 +249,8 @@ model InventoryItem {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([merchantId, sku])
 }
 
 model TrackingEvent {
@@ -198,6 +260,8 @@ model TrackingEvent {
   location    String?
   description String?
   occurredAt  DateTime       @default(now())
+  merchantId  String
+  merchant    Merchant       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
 
@@ -216,10 +280,12 @@ model Notification {
   shipmentId String?
   shipment   Shipment? @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
 
-  type    NotificationType @default(SYSTEM)
-  title   String
-  message String
-  isRead  Boolean          @default(false)
+  type       NotificationType @default(SYSTEM)
+  title      String
+  message    String
+  isRead     Boolean          @default(false)
+  merchantId String
+  merchant   Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

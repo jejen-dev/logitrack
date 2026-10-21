@@ -14,11 +14,12 @@ interface WarehouseInput {
     postalCode: string;
 }
 
-async function requireWarehouseManager() {
+async function requireWarehouseManager(): Promise<string> {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
-    if (!role) throw new Error("Unauthorized");
+    if (!role || !session?.user?.merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) throw new Error("Forbidden");
+    return session.user.merchantId;
 }
 
 function validateWarehouseInput(input: WarehouseInput) {
@@ -86,10 +87,10 @@ async function saveWarehouse(operation: () => Promise<unknown>) {
 }
 
 export async function createWarehouse(input: WarehouseInput) {
-    await requireWarehouseManager();
+    const merchantId = await requireWarehouseManager();
     const data = validateWarehouseInput(input);
     if (data.code) {
-        await saveWarehouse(() => prisma.warehouse.create({ data }));
+        await saveWarehouse(() => prisma.warehouse.create({ data: { ...data, merchantId } }));
         return;
     }
 
@@ -97,7 +98,7 @@ export async function createWarehouse(input: WarehouseInput) {
     for (let attempt = 0; attempt < 5; attempt += 1) {
         const code = await generateWarehouseCode(data.name);
         try {
-            await prisma.warehouse.create({ data: { ...data, code } });
+            await prisma.warehouse.create({ data: { ...data, code, merchantId } });
             revalidatePath("/warehouses");
             revalidatePath("/inventory");
             return;

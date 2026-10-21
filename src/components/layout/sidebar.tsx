@@ -121,7 +121,7 @@ export function Sidebar() {
             ...section,
             items: section.items.filter(
                 (item) =>
-                    role && canAccessRoute(item.href, role),
+                    role && (canAccessRoute(item.href, role) || (item.href === "/users" && session?.user?.isMerchantOwner === true)),
             ),
         }))
         .filter((section) => section.items.length > 0);

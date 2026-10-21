@@ -15,14 +15,15 @@ interface CustomerInput {
     postalCode: string;
 }
 
-async function requireCustomerManager() {
+async function requireCustomerManager(): Promise<string> {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
 
-    if (!role) throw new Error("Unauthorized");
+    if (!role || !session?.user?.merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) {
         throw new Error("Forbidden");
     }
+    return session.user.merchantId;
 }
 
 function optionalText(value: unknown, label: string, maxLength: number) {
@@ -62,9 +63,9 @@ function revalidateCustomerPages() {
 }
 
 export async function createCustomer(input: CustomerInput) {
-    await requireCustomerManager();
+    const merchantId = await requireCustomerManager();
     const data = validateCustomerInput(input);
-    await prisma.customer.create({ data });
+    await prisma.customer.create({ data: { ...data, merchantId } });
     revalidateCustomerPages();
 }
 

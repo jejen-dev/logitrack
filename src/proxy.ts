@@ -16,6 +16,8 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isLoginPage = pathname === "/login";
+  const isJoinPage = pathname === "/join" || pathname.startsWith("/join/");
+  const isTeamPage = pathname === "/team" || pathname.startsWith("/team/");
 
   const hasValidId =
     !!token &&
@@ -30,19 +32,42 @@ export async function proxy(request: NextRequest) {
     hasValidId && hasValidRole && token?.authProvider === "google";
 
   if (!isAuthenticated && !isLoginPage) {
+    if (isJoinPage) {
+      const callbackUrl = `${pathname}${request.nextUrl.search}`;
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", callbackUrl);
+      return NextResponse.redirect(loginUrl);
+    }
     return NextResponse.redirect(
       new URL("/login", request.url),
     );
   }
 
-  if (isAuthenticated && isLoginPage) {
+  if (isAuthenticated && isTeamPage) {
+    return NextResponse.redirect(new URL("/users", request.url));
+  }
+
+  if (isAuthenticated && !token?.merchantId && !isJoinPage && !isLoginPage) {
+    return NextResponse.redirect(new URL("/join", request.url));
+  }
+
+  if (isAuthenticated && !token?.merchantId && isLoginPage) {
+    return NextResponse.redirect(new URL("/join", request.url));
+  }
+
+  if (isAuthenticated && token?.merchantId && isJoinPage) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (isAuthenticated && isLoginPage && token?.merchantId) {
     return NextResponse.redirect(
       new URL("/dashboard", request.url),
     );
   }
 
   if (isAuthenticated) {
-    if (!canAccessRoute(pathname, role)) {
+    const isOwnerUsersPage = pathname.startsWith("/users") && token?.isMerchantOwner === true;
+    if (!canAccessRoute(pathname, role) && !isOwnerUsersPage) {
       return NextResponse.redirect(
         new URL("/dashboard", request.url),
       );

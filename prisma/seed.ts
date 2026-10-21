@@ -23,6 +23,8 @@ async function main() {
   await prisma.vehicle.deleteMany();
   await prisma.customer.deleteMany();
   await prisma.warehouse.deleteMany();
+  await prisma.user.updateMany({ data: { merchantId: null } });
+  await prisma.merchant.deleteMany();
   await prisma.user.deleteMany();
 
   // Users
@@ -34,6 +36,10 @@ async function main() {
       role: "ADMIN",
     },
   });
+  const merchant = await prisma.merchant.create({
+    data: { name: "LogiTrack Demo Merchant", ownerId: admin.id },
+  });
+  await prisma.user.update({ where: { id: admin.id }, data: { merchantId: merchant.id } });
 
   await prisma.user.create({
     data: {
@@ -41,6 +47,7 @@ async function main() {
       email: "manager@logitrack.dev",
       passwordHash,
       role: "MANAGER",
+      merchantId: merchant.id,
     },
   });
 
@@ -50,6 +57,7 @@ async function main() {
       email: "operator@logitrack.dev",
       passwordHash,
       role: "OPERATOR",
+      merchantId: merchant.id,
     },
   });
 
@@ -59,6 +67,7 @@ async function main() {
       email: "driver@logitrack.dev",
       passwordHash,
       role: "DRIVER",
+      merchantId: merchant.id,
     },
   });
 
@@ -66,6 +75,7 @@ async function main() {
   const customerA = await prisma.customer.create({
     data: {
       name: "PT Nusantara Retail",
+      merchantId: merchant.id,
       email: "contact@nusantararetail.co.id",
       phone: "021-555-0101",
       address: "Jl. Sudirman No. 10",
@@ -77,6 +87,7 @@ async function main() {
   const customerB = await prisma.customer.create({
     data: {
       name: "CV Mitra Distribusi",
+      merchantId: merchant.id,
       email: "hello@mitradistribusi.co.id",
       phone: "021-555-0202",
       address: "Jl. Ahmad Yani No. 25",
@@ -89,6 +100,7 @@ async function main() {
   const warehouseA = await prisma.warehouse.create({
     data: {
       name: "Jakarta Central Warehouse",
+      merchantId: merchant.id,
       code: "WH-JKT-01",
       address: "Jl. Raya Cakung No. 12",
       city: "Jakarta",
@@ -99,6 +111,7 @@ async function main() {
   const warehouseB = await prisma.warehouse.create({
     data: {
       name: "Bekasi Distribution Center",
+      merchantId: merchant.id,
       code: "WH-BKS-01",
       address: "Jl. Industri Raya No. 8",
       city: "Bekasi",
@@ -110,6 +123,7 @@ async function main() {
   const driverA = await prisma.driver.create({
     data: {
       name: "Andi Pratama",
+      merchantId: merchant.id,
       email: "driver@logitrack.dev",
       phone: "0812-1000-2001",
       licenseNo: "SIM-A-10001",
@@ -120,6 +134,7 @@ async function main() {
   const driverB = await prisma.driver.create({
     data: {
       name: "Budi Santoso",
+      merchantId: merchant.id,
       phone: "0812-1000-2002",
       licenseNo: "SIM-A-10002",
       status: "AVAILABLE",
@@ -130,6 +145,7 @@ async function main() {
   const vehicleA = await prisma.vehicle.create({
     data: {
       plateNumber: "B 1234 LGT",
+      merchantId: merchant.id,
       type: "Box Truck",
       capacity: 1200,
       status: "IN_USE",
@@ -139,6 +155,7 @@ async function main() {
   const vehicleB = await prisma.vehicle.create({
     data: {
       plateNumber: "B 5678 LGT",
+      merchantId: merchant.id,
       type: "Van",
       capacity: 600,
       status: "AVAILABLE",
@@ -150,6 +167,7 @@ async function main() {
     data: [
       {
         sku: "SKU-001",
+        merchantId: merchant.id,
         name: "Electronic Components",
         quantity: 240,
         reorderPoint: 50,
@@ -157,6 +175,7 @@ async function main() {
       },
       {
         sku: "SKU-002",
+        merchantId: merchant.id,
         name: "Packaging Box Large",
         quantity: 850,
         reorderPoint: 200,
@@ -164,6 +183,7 @@ async function main() {
       },
       {
         sku: "SKU-003",
+        merchantId: merchant.id,
         name: "Packaging Box Medium",
         quantity: 120,
         reorderPoint: 150,
@@ -171,6 +191,7 @@ async function main() {
       },
       {
         sku: "SKU-004",
+        merchantId: merchant.id,
         name: "Industrial Parts",
         quantity: 320,
         reorderPoint: 75,
@@ -183,6 +204,7 @@ async function main() {
   const shipmentA = await prisma.shipment.create({
     data: {
       trackingNumber: "LGT-2026-0001",
+      merchantId: merchant.id,
       status: "IN_TRANSIT",
       paymentStatus: "PAID",
       customerId: customerA.id,
@@ -194,11 +216,13 @@ async function main() {
       items: {
         create: [
           {
+            merchantId: merchant.id,
             productName: "Electronic Components",
             quantity: 40,
             weight: 180,
           },
           {
+            merchantId: merchant.id,
             productName: "Packaging Box Large",
             quantity: 100,
             weight: 75,
@@ -212,6 +236,7 @@ async function main() {
   const shipmentB = await prisma.shipment.create({
     data: {
       trackingNumber: "LGT-2026-0002",
+      merchantId: merchant.id,
       status: "OUT_FOR_DELIVERY",
       paymentStatus: "PAID",
       customerId: customerB.id,
@@ -223,6 +248,7 @@ async function main() {
       items: {
         create: [
           {
+            merchantId: merchant.id,
             productName: "Industrial Parts",
             quantity: 20,
             weight: 95,
@@ -236,6 +262,7 @@ async function main() {
   const shipmentC = await prisma.shipment.create({
     data: {
       trackingNumber: "LGT-2026-0003",
+      merchantId: merchant.id,
       status: "DELIVERED",
       paymentStatus: "PAID",
       customerId: customerA.id,
@@ -246,6 +273,7 @@ async function main() {
       items: {
         create: [
           {
+            merchantId: merchant.id,
             productName: "Packaging Box Medium",
             quantity: 50,
             weight: 30,
@@ -260,6 +288,7 @@ async function main() {
     data: [
       {
         shipmentId: shipmentA.id,
+        merchantId: merchant.id,
         status: "PICKED_UP",
         location: "Jakarta Central Warehouse",
         description: "Shipment picked up from warehouse",
@@ -267,6 +296,7 @@ async function main() {
       },
       {
         shipmentId: shipmentA.id,
+        merchantId: merchant.id,
         status: "IN_TRANSIT",
         location: "Jakarta - Bekasi Highway",
         description: "Shipment is currently in transit",
@@ -274,6 +304,7 @@ async function main() {
       },
       {
         shipmentId: shipmentB.id,
+        merchantId: merchant.id,
         status: "PICKED_UP",
         location: "Bekasi Distribution Center",
         description: "Shipment picked up by driver",
@@ -281,6 +312,7 @@ async function main() {
       },
       {
         shipmentId: shipmentB.id,
+        merchantId: merchant.id,
         status: "OUT_FOR_DELIVERY",
         location: "Bekasi",
         description: "Shipment is out for delivery",
@@ -288,6 +320,7 @@ async function main() {
       },
       {
         shipmentId: shipmentC.id,
+        merchantId: merchant.id,
         status: "DELIVERED",
         location: "Jakarta",
         description: "Shipment successfully delivered",

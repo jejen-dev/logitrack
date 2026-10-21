@@ -13,14 +13,15 @@ interface VehicleInput {
     capacity: number;
 }
 
-async function requireVehicleManager() {
+async function requireVehicleManager(): Promise<string> {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
 
-    if (!role) throw new Error("Unauthorized");
+    if (!role || !session?.user?.merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) {
         throw new Error("Forbidden");
     }
+    return session.user.merchantId;
 }
 
 function validateVehicleInput(input: VehicleInput) {
@@ -56,11 +57,11 @@ function revalidateVehiclePages() {
 }
 
 export async function createVehicle(input: VehicleInput) {
-    await requireVehicleManager();
+    const merchantId = await requireVehicleManager();
     const data = validateVehicleInput(input);
 
     try {
-        const vehicle = await prisma.vehicle.create({ data });
+        const vehicle = await prisma.vehicle.create({ data: { ...data, merchantId } });
         revalidateVehiclePages();
         return vehicle;
     } catch (error) {

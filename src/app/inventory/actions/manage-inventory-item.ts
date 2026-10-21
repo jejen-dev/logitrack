@@ -14,11 +14,12 @@ interface InventoryItemInput {
     warehouseId: string;
 }
 
-async function requireInventoryManager() {
+async function requireInventoryManager(): Promise<string> {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
-    if (!role) throw new Error("Unauthorized");
+    if (!role || !session?.user?.merchantId) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) throw new Error("Forbidden");
+    return session.user.merchantId;
 }
 
 function validateInput(input: InventoryItemInput) {
@@ -79,14 +80,14 @@ async function generateSku(name: string) {
 }
 
 export async function createInventoryItem(input: InventoryItemInput) {
-    await requireInventoryManager();
+    const merchantId = await requireInventoryManager();
     const data = validateInput(input);
     await requireActiveWarehouse(data.warehouseId);
     if (!data.sku) {
         for (let attempt = 0; attempt < 5; attempt += 1) {
             const sku = await generateSku(data.name);
             try {
-                await prisma.inventoryItem.create({ data: { ...data, sku } });
+                await prisma.inventoryItem.create({ data: { ...data, sku, merchantId } });
                 revalidatePath("/inventory");
                 revalidatePath("/dashboard");
                 return;
@@ -97,7 +98,7 @@ export async function createInventoryItem(input: InventoryItemInput) {
         throw new Error("Could not generate a unique SKU. Please try again.");
     }
     try {
-        await prisma.inventoryItem.create({ data });
+        await prisma.inventoryItem.create({ data: { ...data, merchantId } });
     } catch (error) {
         if (isUniqueConstraintError(error)) throw new Error("This SKU is already in use.");
         throw error;

@@ -13,7 +13,7 @@ export default function LoginPage() {
 
         try {
             await signIn("google", {
-                callbackUrl: "/dashboard",
+                callbackUrl: new URLSearchParams(window.location.search).get("callbackUrl") ?? "/dashboard",
             });
         } catch {
             setError("Google sign-in failed. Please try again.");

@@ -15,17 +15,18 @@ interface DriverInput {
     licenseType: string;
 }
 
-async function requireDriverManager() {
+async function requireDriverManager(): Promise<string> {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
 
-    if (!role) {
+    if (!role || !session?.user?.merchantId) {
         throw new Error("Unauthorized");
     }
 
     if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) {
         throw new Error("Forbidden");
     }
+    return session.user.merchantId;
 }
 
 function validateDriverInput(input: DriverInput) {
@@ -63,11 +64,11 @@ function revalidateDriverPages() {
 }
 
 export async function createDriver(input: DriverInput) {
-    await requireDriverManager();
+    const merchantId = await requireDriverManager();
     const data = validateDriverInput(input);
 
     try {
-        const driver = await prisma.driver.create({ data });
+        const driver = await prisma.driver.create({ data: { ...data, merchantId } });
         revalidateDriverPages();
         return driver;
     } catch (error) {
