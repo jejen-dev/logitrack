@@ -5,68 +5,14 @@ import { useRouter } from "next/navigation";
 
 import { updateShipmentStatus } from "@/app/shipments/actions/update-shipment-status";
 import { Button } from "@/components/ui/button";
+import { allowedShipmentTransitions, shipmentStatuses } from "@/lib/shipments/status-transitions";
+import type { ShipmentStatus } from "@/generated/prisma/enums";
 
 interface StatusUpdateProps {
     shipmentId: string;
-    currentStatus:
-    | "PENDING"
-    | "PICKED_UP"
-    | "IN_TRANSIT"
-    | "OUT_FOR_DELIVERY"
-    | "DELIVERED"
-    | "CANCELLED";
+    currentStatus: ShipmentStatus;
     role?: string;
 }
-
-const statusOptions = {
-    PENDING: [
-        {
-            value: "PICKED_UP",
-            label: "Picked Up",
-        },
-        {
-            value: "CANCELLED",
-            label: "Cancelled",
-        },
-    ],
-
-    PICKED_UP: [
-        {
-            value: "IN_TRANSIT",
-            label: "In Transit",
-        },
-        {
-            value: "CANCELLED",
-            label: "Cancelled",
-        },
-    ],
-
-    IN_TRANSIT: [
-        {
-            value: "OUT_FOR_DELIVERY",
-            label: "Out for Delivery",
-        },
-        {
-            value: "CANCELLED",
-            label: "Cancelled",
-        },
-    ],
-
-    OUT_FOR_DELIVERY: [
-        {
-            value: "DELIVERED",
-            label: "Delivered",
-        },
-        {
-            value: "CANCELLED",
-            label: "Cancelled",
-        },
-    ],
-
-    DELIVERED: [],
-
-    CANCELLED: [],
-} as const;
 
 export function StatusUpdate({
     shipmentId,
@@ -127,14 +73,18 @@ export function StatusUpdate({
                 >
                     <option value={currentStatus}>{currentStatus.replaceAll("_", " ")}</option>
 
-                    {statusOptions[currentStatus]
-                        .filter((option) => role !== "DRIVER" || option.value !== "CANCELLED")
+                    {shipmentStatuses
+                        .filter((option) => option !== currentStatus)
                         .map((option) => (
                         <option
-                            key={option.value}
-                            value={option.value}
+                            key={option}
+                            value={option}
+                            disabled={
+                                !allowedShipmentTransitions[currentStatus].includes(option) ||
+                                (role === "DRIVER" && option === "CANCELLED")
+                            }
                         >
-                            {option.label}
+                            {option.replaceAll("_", " ")}
                         </option>
                     ))}
                 </select>

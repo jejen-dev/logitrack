@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
+import { allowedShipmentTransitions } from "@/lib/shipments/status-transitions";
 import type { ShipmentStatus } from "@/generated/prisma/enums";
 
 interface UpdateShipmentStatusInput {
@@ -14,22 +15,13 @@ interface UpdateShipmentStatusInput {
     description?: string;
 }
 
-const allowedTransitions: Record<ShipmentStatus, ShipmentStatus[]> = {
-    PENDING: ["PICKED_UP", "CANCELLED"],
-    PICKED_UP: ["IN_TRANSIT", "CANCELLED"],
-    IN_TRANSIT: ["OUT_FOR_DELIVERY", "CANCELLED"],
-    OUT_FOR_DELIVERY: ["DELIVERED", "CANCELLED"],
-    DELIVERED: [],
-    CANCELLED: [],
-};
-
 export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
     if (!role) throw new Error("Unauthorized");
     if (!["ADMIN", "MANAGER", "OPERATOR", "DRIVER"].includes(role)) throw new Error("Forbidden");
     if (!input || typeof input.shipmentId !== "string" || !input.shipmentId.trim()) throw new Error("Shipment ID is required.");
-    if (!Object.keys(allowedTransitions).includes(input.status)) throw new Error("Invalid shipment status.");
+    if (!Object.keys(allowedShipmentTransitions).includes(input.status)) throw new Error("Invalid shipment status.");
     if (role === "DRIVER" && input.status === "CANCELLED") throw new Error("Drivers cannot cancel shipments.");
     if (input.location !== undefined && (typeof input.location !== "string" || input.location.trim().length > 200)) throw new Error("Location must be 200 characters or fewer.");
     if (input.description !== undefined && (typeof input.description !== "string" || input.description.trim().length > 500)) throw new Error("Description must be 500 characters or fewer.");
@@ -54,7 +46,7 @@ export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
         if (role === "DRIVER" && shipment.driver?.email !== session.user.email?.trim().toLowerCase()) {
             throw new Error("You can only update shipments assigned to you.");
         }
-        if (!allowedTransitions[shipment.status].includes(input.status)) {
+        if (!allowedShipmentTransitions[shipment.status].includes(input.status)) {
             throw new Error(`Cannot change shipment from ${shipment.status.replaceAll("_", " ")} to ${input.status.replaceAll("_", " ")}.`);
         }
 
