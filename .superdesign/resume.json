@@ -23,8 +23,8 @@
         "src/components/ui/index.ts"
       ],
       "fingerprints": {
-        ".superdesign/design-system.md": "8079a90168251d6b5845b9dd3090407d55ae8e6d4faf5c02b5d7b13215029b4f",
-        "src/app/globals.css": "59b1f6718dace69582cd046059d7338875033019be8eb6d1361cb4895d081790",
+        ".superdesign/design-system.md": "4b536e8f114bce5a82d9e26924618706571763103cdee78b6ad37bf65bc48ecf",
+        "src/app/globals.css": "8404a1c5e3f4db94e3b5b7284afc2e7f63f684ae4b7c6eab285904a56cf4c216",
         "src/app/dashboard/page.tsx": "6eeacfd4f356438526f083d640dea7946dcc9b72a29dd4677934051a84959b75",
         "src/components/layout/app-shell.tsx": "a1660f0d20b3ed999f9eb6ab4378029bf6e1b09f9629f57e58bc74b9389ee06b",
         "src/components/layout/sidebar.tsx": "7adb13c176a82c00997cbf7f95803c5b68faf9afbdacf0afc19d04b0252f50e9",
@@ -56,7 +56,7 @@
           "currentVersion": 2
         }
       },
-      "updatedAt": "2026-10-21T14:07:39.226093+00:00"
+      "updatedAt": "2026-10-21T14:13:39.789479+00:00"
     }
   }
 }

@@ -68,7 +68,7 @@ export function InventoryFilters({
                     type="search"
                     defaultValue={search}
                     placeholder="Search SKU or product..."
-                    className="h-9 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="h-10 min-h-10 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     onKeyDown={(event) => {
                         if (event.key === "Enter") {
                             updateFilter(
@@ -89,7 +89,7 @@ export function InventoryFilters({
                         event.target.value,
                     )
                 }
-                className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
                 <option value="">
                     All Warehouses
@@ -114,7 +114,7 @@ export function InventoryFilters({
                         event.target.value,
                     )
                 }
-                className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
                 <option value="ALL">
                     All Stock

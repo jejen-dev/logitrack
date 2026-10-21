@@ -10,7 +10,7 @@ LogiTrack is an operational logistics dashboard. Preserve the truck icon plus Lo
 - Semantic colors: preserve status colors; badges use lightly tinted surfaces and readable text.
 - Typography: Inter and the existing compact dashboard hierarchy.
 - Radius: 12–18px for panels/cards, 10–12px for controls; avoid excessive pills.
-- Tables and forms: maintain legibility with subtle row separators, readable surface opacity, visible labels, and clear input focus states.
+- Tables and forms: maintain legibility with subtle row separators, readable surface opacity, visible labels, and clear input focus states. Standard inputs and single-select controls share a 40px height. Keep selects native for keyboard, screen-reader, and form behavior while styling them with the glass surface, custom chevron, and clear focus state.
 
 ## Components
 - Sidebar: translucent fixed panel with current role-filtered navigation, active item blue glass highlight, exact existing labels/icons.

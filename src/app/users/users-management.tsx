@@ -93,7 +93,7 @@ function UserRow({
             <td className="px-4 py-3 text-slate-600">{user.email}</td>
             <td className="px-4 py-3">
                 <form id={`role-${user.id}`} action={onSave}>
-                    <select name="role" defaultValue={user.role} disabled={disabled} aria-label={`Role for ${user.email}`} className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm disabled:bg-slate-50">
+                    <select name="role" defaultValue={user.role} disabled={disabled} aria-label={`Role for ${user.email}`} className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm disabled:bg-slate-50">
                         {roles.map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
                 </form>

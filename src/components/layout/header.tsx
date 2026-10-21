@@ -134,7 +134,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                         }
                         placeholder="Search shipments, tracking numbers..."
                         aria-label="Search shipments"
-                        className="h-9 w-full rounded-lg border border-white/80 bg-white/60 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white/90 focus:ring-2 focus:ring-blue-100"
+                        className="h-10 min-h-10 w-full rounded-lg border border-white/80 bg-white/60 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white/90 focus:ring-2 focus:ring-blue-100"
                     />
                 </form>
             </div>

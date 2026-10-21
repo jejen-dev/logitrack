@@ -98,13 +98,13 @@ export default async function ShipmentsPage({
                             name="search"
                             defaultValue={search}
                             placeholder="Search tracking number or customer..."
-                            className="h-9 flex-1 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                            className="h-10 min-h-10 flex-1 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
                         />
 
                         <select
                             name="status"
                             defaultValue={status ?? ""}
-                            className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All Status</option>
                             <option value="PENDING">Pending</option>
@@ -120,7 +120,7 @@ export default async function ShipmentsPage({
                         <select
                             name="payment"
                             defaultValue={paymentStatus ?? ""}
-                            className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All Payments</option>
                             <option value="UNPAID">Unpaid</option>

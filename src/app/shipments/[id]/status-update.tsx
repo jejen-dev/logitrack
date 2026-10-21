@@ -69,7 +69,7 @@ export function StatusUpdate({
                             event.target.value as typeof status,
                         )
                     }
-                    className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="mt-1 h-10 min-h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
                     <option value={currentStatus}>{currentStatus.replaceAll("_", " ")}</option>
 
@@ -105,7 +105,7 @@ export function StatusUpdate({
                         setLocation(event.target.value)
                     }
                     placeholder="e.g. Bekasi Warehouse"
-                    className="mt-1 h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="mt-1 h-10 min-h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
             </div>
 
