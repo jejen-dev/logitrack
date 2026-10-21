@@ -5,12 +5,6 @@ import { useRouter } from "next/navigation";
 
 import { createShipment } from "@/app/shipments/actions/create-shipment";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui";
 
 interface Customer {
     id: string;
@@ -120,18 +114,12 @@ export function ShipmentForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-6"
+            className="space-y-5"
         >
             {/* Shipment Information */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        Shipment Information
-                    </CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                    <div className="grid gap-5 md:grid-cols-2">
+            <section className="space-y-4">
+                <h3 className="text-sm font-semibold text-slate-800">Shipment Information</h3>
+                <div className="grid gap-5 md:grid-cols-2">
                         {/* Customer */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -235,20 +223,13 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             />
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
             {/* Delivery Assignment */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        Delivery Assignment
-                    </CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                    <div className="grid gap-5 md:grid-cols-2">
+            <section className="space-y-4">
+                <h3 className="text-sm font-semibold text-slate-800">Delivery Assignment</h3>
+                <div className="grid gap-5 md:grid-cols-2">
                         {/* Driver */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -311,20 +292,13 @@ export function ShipmentForm({
                                 ))}
                             </select>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
             {/* Shipment Item */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        Shipment Item
-                    </CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                    <div className="grid gap-5 md:grid-cols-3">
+            <section className="space-y-4">
+                <h3 className="text-sm font-semibold text-slate-800">Shipment Item</h3>
+                <div className="grid gap-5 md:grid-cols-3">
                         <div className="md:col-span-3">
                             <label className="mb-2 block text-sm font-medium text-slate-700">
                                 Inventory stock <span className="font-normal text-slate-500">(optional)</span>
@@ -424,9 +398,8 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             />
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
             {/* Error */}
             {error && (
