@@ -61,6 +61,10 @@ export const routePermissions: Record<string, UserRole[]> = {
         "ADMIN",
         "MANAGER",
     ],
+
+    "/users": [
+        "ADMIN",
+    ],
 };
 
 const validRoles: UserRole[] = [

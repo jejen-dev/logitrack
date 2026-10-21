@@ -13,6 +13,7 @@ import {
     Settings,
     Truck,
     Users,
+    UserCog,
     Warehouse,
 } from "lucide-react";
 
@@ -94,6 +95,16 @@ const navigation: NavigationSection[] = [
                 label: "Reports",
                 href: "/reports",
                 icon: BarChart3,
+            },
+        ],
+    },
+    {
+        label: "Administration",
+        items: [
+            {
+                label: "Users & Access",
+                href: "/users",
+                icon: UserCog,
             },
         ],
     },

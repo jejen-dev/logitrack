@@ -68,6 +68,7 @@ export async function getInventoryItems(
             quantity: true,
             reservedQuantity: true,
             reorderPoint: true,
+            isActive: true,
 
             warehouse: {
                 select: {

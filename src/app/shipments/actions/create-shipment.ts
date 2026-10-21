@@ -88,9 +88,10 @@ export async function createShipment(input: CreateShipmentInput) {
         if (inventoryItemId) {
             const inventoryItem = await tx.inventoryItem.findUnique({
                 where: { id: inventoryItemId },
-                select: { name: true, warehouse: { select: { isActive: true } } },
+                select: { name: true, isActive: true, warehouse: { select: { isActive: true } } },
             });
             if (!inventoryItem) throw new Error("Inventory item not found.");
+            if (!inventoryItem.isActive) throw new Error("The inventory item is archived.");
             if (!inventoryItem.warehouse.isActive) throw new Error("The item's warehouse is inactive.");
 
             const reserved = await tx.$executeRaw`
@@ -98,6 +99,7 @@ export async function createShipment(input: CreateShipmentInput) {
                 SET "reservedQuantity" = "reservedQuantity" + ${input.quantity}, "updatedAt" = CURRENT_TIMESTAMP
                 WHERE "id" = ${inventoryItemId}
                     AND "quantity" - "reservedQuantity" >= ${input.quantity}
+                    AND "isActive" = true
                     AND EXISTS (
                         SELECT 1 FROM "Warehouse"
                         WHERE "Warehouse"."id" = "InventoryItem"."warehouseId"

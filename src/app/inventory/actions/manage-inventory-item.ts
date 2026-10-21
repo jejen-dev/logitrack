@@ -129,3 +129,32 @@ export async function updateInventoryItem(id: string, input: InventoryItemInput)
     revalidatePath("/inventory");
     revalidatePath("/dashboard");
 }
+
+export async function setInventoryItemActive(id: string, isActive: boolean) {
+    await requireInventoryManager();
+    if (typeof id !== "string" || !id.trim()) throw new Error("Inventory item ID is required.");
+    if (typeof isActive !== "boolean") throw new Error("Invalid inventory item status.");
+
+    const updated = await prisma.inventoryItem.updateMany({
+        where: isActive
+            ? { id, isActive: false }
+            : { id, isActive: true, reservedQuantity: 0 },
+        data: { isActive },
+    });
+
+    if (updated.count !== 1) {
+        const item = await prisma.inventoryItem.findUnique({
+            where: { id },
+            select: { isActive: true, reservedQuantity: true },
+        });
+        if (!item) throw new Error("Inventory item was not found.");
+        if (item.isActive === isActive) return;
+        if (!isActive && item.reservedQuantity > 0) {
+            throw new Error("Release this item's shipment reservations before archiving it.");
+        }
+        throw new Error("Inventory item status changed in another request. Refresh and try again.");
+    }
+
+    revalidatePath("/inventory");
+    revalidatePath("/shipments/new");
+}

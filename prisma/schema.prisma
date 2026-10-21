@@ -181,6 +181,7 @@ model InventoryItem {
   quantity         Int    @default(0)
   reservedQuantity Int    @default(0)
   reorderPoint     Int    @default(0)
+  isActive         Boolean @default(true)
 
   warehouseId   String
   warehouse     Warehouse      @relation(fields: [warehouseId], references: [id])

@@ -110,6 +110,7 @@ async function main() {
   const driverA = await prisma.driver.create({
     data: {
       name: "Andi Pratama",
+      email: "driver@logitrack.dev",
       phone: "0812-1000-2001",
       licenseNo: "SIM-A-10001",
       status: "ON_DELIVERY",

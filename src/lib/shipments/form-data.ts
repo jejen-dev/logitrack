@@ -64,7 +64,7 @@ export async function getShipmentFormData() {
         }),
 
         prisma.inventoryItem.findMany({
-            where: { warehouse: { isActive: true } },
+            where: { isActive: true, warehouse: { isActive: true } },
             orderBy: { name: "asc" },
             select: {
                 id: true,
