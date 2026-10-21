@@ -15,6 +15,7 @@ export async function proxy(request: NextRequest) {
   });
 
   const pathname = request.nextUrl.pathname;
+  const isPublicLandingPage = pathname === "/";
   const isLoginPage = pathname === "/login";
   const isJoinPage = pathname === "/join" || pathname.startsWith("/join/");
   const isTeamPage = pathname === "/team" || pathname.startsWith("/team/");
@@ -31,7 +32,7 @@ export async function proxy(request: NextRequest) {
   const isAuthenticated =
     hasValidId && hasValidRole && token?.authProvider === "google";
 
-  if (!isAuthenticated && !isLoginPage) {
+  if (!isAuthenticated && !isLoginPage && !isPublicLandingPage) {
     if (isJoinPage) {
       const callbackUrl = `${pathname}${request.nextUrl.search}`;
       const loginUrl = new URL("/login", request.url);
@@ -47,7 +48,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/users", request.url));
   }
 
-  if (isAuthenticated && !token?.merchantId && !isJoinPage && !isLoginPage) {
+  if (isAuthenticated && !token?.merchantId && !isJoinPage && !isLoginPage && !isPublicLandingPage) {
     return NextResponse.redirect(new URL("/join", request.url));
   }
 

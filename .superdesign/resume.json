@@ -57,6 +57,38 @@
         }
       },
       "updatedAt": "2026-10-21T14:13:39.789479+00:00"
+    },
+    "/": {
+      "targetKind": "new-ui",
+      "projectId": "533081cb-00e9-4efc-ad7c-ffbbf750b661",
+      "activeDraftId": "17d6d5e5-09b6-4eaf-b43a-9d88cb2df05b",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "src/app/globals.css",
+        "src/app/page.tsx",
+        "src/app/login/page.tsx",
+        "src/app/dashboard/page.tsx",
+        "src/components/layout/sidebar.tsx"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "4b536e8f114bce5a82d9e26924618706571763103cdee78b6ad37bf65bc48ecf",
+        "src/app/globals.css": "d9ca43defcdf90a822470e7805d3c31189e211e4b21356c5a9ecada52694eb91",
+        "src/app/page.tsx": "f63e6e3b95c768765b22f2a4e7812137ceabed94f20d8b6ae02f31c23e4e1036",
+        "src/app/login/page.tsx": "34f71167218d4d9199c5b094de4f021cd79d4f52ecaf14de0b6e005b7fe80df4",
+        "src/app/dashboard/page.tsx": "20008d5c8fb6d89181e1fa6ae2010b23027e4fd0e821323ad24dca081126f1e9",
+        "src/components/layout/sidebar.tsx": "0b2f1dd90f9be92563fe4bbcbc3a28485020f052019b91a1b0ef36992a89aa78"
+      },
+      "referenceIds": [],
+      "components": [],
+      "drafts": {
+        "17d6d5e5-09b6-4eaf-b43a-9d88cb2df05b": {
+          "title": "LogiTrack Landing Page",
+          "visualDirection": "Indonesian public landing page using restrained blue glassmorphism and real app capabilities",
+          "currentVersion": 3
+        }
+      },
+      "updatedAt": "2026-10-21T15:41:54.698086+00:00"
     }
   }
 }
