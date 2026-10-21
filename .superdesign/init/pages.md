@@ -1,0 +1,282 @@
+# Key page dependency trees
+
+## /dashboard
+Entry: `src/app/dashboard/page.tsx`
+Dependencies:
+- `src/app/dashboard/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/ui/index.ts`
+    - `src/components/ui/badge.tsx`
+    - `src/components/ui/card.tsx`
+    - `src/components/ui/modal.tsx`
+    - `src/components/ui/separator.tsx`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/dashboard/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+
+## /shipments
+Entry: `src/app/shipments/page.tsx`
+Dependencies:
+- `src/app/shipments/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/lib/auth/auth-options.ts`
+    - `src/lib/prisma.ts`
+      - `src/generated/prisma/client.ts`
+  - `src/components/ui/index.ts`
+    - `src/components/ui/badge.tsx`
+    - `src/components/ui/card.tsx`
+    - `src/components/ui/modal.tsx`
+    - `src/components/ui/separator.tsx`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/shipments/queries.ts`
+    - `src/generated/prisma/enums.ts`
+  - `src/lib/shipments/form-data.ts`
+  - `src/app/shipments/shipment-create-dialog.tsx`
+    - `src/app/shipments/new/shipment-form.tsx`
+      - `src/app/shipments/actions/create-shipment.ts`
+  - `src/generated/prisma/enums.ts`
+
+## /shipments/[id]
+Entry: `src/app/shipments/[id]/page.tsx`
+Dependencies:
+- `src/app/shipments/[id]/page.tsx`
+  - `src/lib/auth/auth-options.ts`
+    - `src/lib/prisma.ts`
+      - `src/generated/prisma/client.ts`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/ui/index.ts`
+    - `src/components/ui/badge.tsx`
+    - `src/components/ui/card.tsx`
+    - `src/components/ui/modal.tsx`
+    - `src/components/ui/separator.tsx`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/shipments/detail.ts`
+  - `src/app/shipments/[id]/status-update.tsx`
+    - `src/app/shipments/actions/update-shipment-status.ts`
+      - `src/lib/shipments/status-transitions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+    - `src/generated/prisma/enums.ts`
+
+## /tracking
+Entry: `src/app/tracking/page.tsx`
+Dependencies:
+- `src/app/tracking/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/ui/index.ts`
+    - `src/components/ui/badge.tsx`
+    - `src/components/ui/card.tsx`
+    - `src/components/ui/modal.tsx`
+    - `src/components/ui/separator.tsx`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/tracking/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+    - `src/generated/prisma/enums.ts`
+  - `src/generated/prisma/enums.ts`
+
+## /inventory
+Entry: `src/app/inventory/page.tsx`
+Dependencies:
+- `src/app/inventory/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/inventory/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/inventory/inventory-management.tsx`
+    - `src/app/inventory/actions/manage-inventory-item.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+    - `src/app/inventory/inventory-filters.tsx`
+
+## /customers
+Entry: `src/app/customers/page.tsx`
+Dependencies:
+- `src/app/customers/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/customers/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/customers/customer-management.tsx`
+    - `src/app/customers/actions/manage-customer.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+
+## /drivers
+Entry: `src/app/drivers/page.tsx`
+Dependencies:
+- `src/app/drivers/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/drivers/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/drivers/driver-management.tsx`
+    - `src/app/drivers/actions/manage-driver.ts`
+      - `src/lib/drivers/license-types.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+
+## /vehicles
+Entry: `src/app/vehicles/page.tsx`
+Dependencies:
+- `src/app/vehicles/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/vehicles/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/vehicles/vehicle-management.tsx`
+    - `src/app/vehicles/actions/manage-vehicle.ts`
+      - `src/lib/vehicles/vehicle-types.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+
+## /warehouses
+Entry: `src/app/warehouses/page.tsx`
+Dependencies:
+- `src/app/warehouses/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/warehouses/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/warehouses/warehouse-management.tsx`
+    - `src/app/warehouses/actions/manage-warehouse.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+
+## /users
+Entry: `src/app/users/page.tsx`
+Dependencies:
+- `src/app/users/page.tsx`
+  - `src/components/layout/app-shell.tsx`
+    - `src/components/layout/header.tsx`
+      - `src/components/ui/button.tsx`
+        - `src/lib/utils.ts`
+    - `src/components/layout/sidebar.tsx`
+      - `src/lib/auth/permissions.ts`
+        - `src/generated/prisma/enums.ts`
+      - `src/generated/prisma/enums.ts`
+  - `src/components/shared/page-container.tsx`
+  - `src/components/shared/page-header.tsx`
+    - `src/components/layout/breadcrumbs.tsx`
+  - `src/lib/users/queries.ts`
+    - `src/lib/auth/auth-options.ts`
+      - `src/lib/prisma.ts`
+        - `src/generated/prisma/client.ts`
+  - `src/app/users/users-management.tsx`
+    - `src/app/users/actions/manage-user.ts`
+      - `src/generated/prisma/enums.ts`
+    - `src/components/ui/index.ts`
+      - `src/components/ui/badge.tsx`
+      - `src/components/ui/card.tsx`
+      - `src/components/ui/modal.tsx`
+      - `src/components/ui/separator.tsx`
+    - `src/generated/prisma/enums.ts`

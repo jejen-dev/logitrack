@@ -106,7 +106,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             .toUpperCase() || "U";
 
     return (
-        <header className="flex h-16 items-center border-b border-slate-200 bg-white px-4 md:px-6">
+        <header className="glass-surface sticky top-0 z-30 flex h-16 items-center border-x-0 border-t-0 border-b-white/70 bg-white/65 px-4 backdrop-blur-xl md:px-6">
             {/* Mobile menu */}
             <Button
                 variant="ghost"
@@ -134,7 +134,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                         }
                         placeholder="Search shipments, tracking numbers..."
                         aria-label="Search shipments"
-                        className="h-9 w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                        className="h-9 w-full rounded-lg border border-white/80 bg-white/60 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white/90 focus:ring-2 focus:ring-blue-100"
                     />
                 </form>
             </div>
@@ -194,7 +194,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
                     {accountOpen && (
                         <div
-                            className="absolute right-0 top-11 z-50 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-lg"
+                            className="glass-surface absolute right-0 top-11 z-50 w-64 rounded-xl border border-white/80 bg-white/85 p-2 shadow-lg"
                             role="menu"
                         >
                             <div className="border-b border-slate-100 px-3 py-3">

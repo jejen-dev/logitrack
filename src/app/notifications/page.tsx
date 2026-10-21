@@ -53,7 +53,7 @@ export default async function NotificationsPage() {
             </div>
 
             {notifications.length === 0 ? (
-                <div className="flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed">
+                <div className="glass-surface flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed">
                     <Bell className="mb-3 h-8 w-8 text-muted-foreground" />
 
                     <h2 className="font-medium">No notifications</h2>
@@ -67,7 +67,7 @@ export default async function NotificationsPage() {
                     {notifications.map((notification) => {
                         const content = (
                             <div
-                                className={`flex gap-4 rounded-xl border p-4 transition-colors ${notification.isRead
+                                className={`glass-surface flex gap-4 rounded-xl border p-4 transition-colors ${notification.isRead
                                         ? "bg-background"
                                         : "border-primary/20 bg-primary/5"
                                     }`}

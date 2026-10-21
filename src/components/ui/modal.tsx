@@ -44,7 +44,7 @@ export function Modal({
                 if (event.target === event.currentTarget) onOpenChange(false);
             }}
             className={cn(
-                "m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border-0 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-950/50",
+                "glass-surface m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border p-0 text-slate-900 backdrop:bg-slate-950/40",
                 "max-h-[calc(100dvh-2rem)] overflow-y-auto",
                 className,
             )}

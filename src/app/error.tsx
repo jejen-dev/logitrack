@@ -12,7 +12,7 @@ export default function Error({
     return (
         <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
             <div
-                className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+                className="glass-surface w-full max-w-md rounded-xl p-6 text-center shadow-sm"
                 role="alert"
             >
                 <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-red-50">

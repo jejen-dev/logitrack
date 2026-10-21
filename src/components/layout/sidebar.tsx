@@ -130,9 +130,9 @@ export function Sidebar() {
         role && canAccessRoute("/settings", role);
 
     return (
-        <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
+        <aside className="glass-surface flex h-screen w-64 shrink-0 flex-col border-r border-white/70 bg-white/70 shadow-[8px_0_32px_rgba(30,64,110,0.06)] backdrop-blur-xl">
             {/* Brand */}
-            <div className="flex h-16 items-center border-b border-slate-200 px-5">
+            <div className="flex h-16 items-center border-b border-white/70 px-5">
                 <Link
                     href="/dashboard"
                     className="flex items-center gap-3"
@@ -179,11 +179,11 @@ export function Sidebar() {
                                             key={item.href}
                                             href={item.href}
                                             className={cn(
-                                                "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium",
+                                                "flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium",
                                                 "transition-colors duration-150",
                                                 isActive
-                                                    ? "bg-blue-50 text-blue-700"
-                                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                                                    ? "bg-blue-600/10 text-blue-700 ring-1 ring-inset ring-blue-500/15"
+                                                    : "text-slate-600 hover:bg-white/60 hover:text-slate-900",
                                             )}
                                         >
                                             <Icon className="h-4 w-4 shrink-0" />
@@ -200,13 +200,13 @@ export function Sidebar() {
 
             {/* Settings */}
             {canAccessSettings && (
-                <div className="border-t border-slate-200 p-3">
+                <div className="border-t border-white/70 p-3">
                     <Link
                         href="/settings"
                         className={cn(
-                            "flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium",
+                            "flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium",
                             "text-slate-600 transition-colors duration-150",
-                            "hover:bg-slate-50 hover:text-slate-900",
+                            "hover:bg-white/60 hover:text-slate-900",
                         )}
                     >
                         <Settings className="h-4 w-4" />

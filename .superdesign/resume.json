@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "/dashboard": {
+      "targetKind": "existing-ui",
+      "projectId": "533081cb-00e9-4efc-ad7c-ffbbf750b661",
+      "baselineDraftId": "e585a6bb-1e61-4779-a5e4-c22485784cb3",
+      "activeDraftId": "e585a6bb-1e61-4779-a5e4-c22485784cb3",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "src/app/globals.css",
+        "src/app/dashboard/page.tsx",
+        "src/components/layout/app-shell.tsx",
+        "src/components/layout/sidebar.tsx",
+        "src/components/layout/header.tsx",
+        "src/components/layout/breadcrumbs.tsx",
+        "src/components/shared/page-container.tsx",
+        "src/components/shared/page-header.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/button.tsx",
+        "src/lib/utils.ts",
+        "src/components/ui/index.ts"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "8079a90168251d6b5845b9dd3090407d55ae8e6d4faf5c02b5d7b13215029b4f",
+        "src/app/globals.css": "59b1f6718dace69582cd046059d7338875033019be8eb6d1361cb4895d081790",
+        "src/app/dashboard/page.tsx": "6eeacfd4f356438526f083d640dea7946dcc9b72a29dd4677934051a84959b75",
+        "src/components/layout/app-shell.tsx": "a1660f0d20b3ed999f9eb6ab4378029bf6e1b09f9629f57e58bc74b9389ee06b",
+        "src/components/layout/sidebar.tsx": "7adb13c176a82c00997cbf7f95803c5b68faf9afbdacf0afc19d04b0252f50e9",
+        "src/components/layout/header.tsx": "5fb85aedd960d50c878cd175067a4de7a8a55ee79aa5f03ee0befd15401d553f",
+        "src/components/layout/breadcrumbs.tsx": "b22f050cba50f4ac0d33e10350b19b3b093ee5fd837804ccbee161ff904f1182",
+        "src/components/shared/page-container.tsx": "01eb1e7de89d359560e59175b814165b830b8ad4440996fa8d3a21133ccd5e5d",
+        "src/components/shared/page-header.tsx": "8d2d5e8aeddc985a7b0018d9b372c6be7decb74f7f21218ddc65b6a521ad7620",
+        "src/components/ui/card.tsx": "3ba11108e04e0d6a6be89694a9138ed3b89ce65524495ecdb7fd70f38770f98e",
+        "src/components/ui/button.tsx": "c9d8699f4ca58ab4f87b50bda24050a7e426886bef949fb58989463d97d745d9",
+        "src/lib/utils.ts": "180b64c15667ad7eead4f3a9ad2bc2f2202ec6829e9493e93d0a6e7df04742d5",
+        "src/components/ui/index.ts": "1750456d465ae55b901d71259ea2ee3d244f608c0deaa35f8abc12fbf0bf40a0"
+      },
+      "components": [
+        {
+          "name": "Sidebar",
+          "id": "0df37a3d-3727-4a44-9da7-bd3b3cf84489",
+          "sourcePath": "src/components/layout/sidebar.tsx"
+        },
+        {
+          "name": "Header",
+          "id": "54cf0cbf-8525-4619-b4ae-037374650ea8",
+          "sourcePath": "src/components/layout/header.tsx"
+        }
+      ],
+      "drafts": {
+        "e585a6bb-1e61-4779-a5e4-c22485784cb3": {
+          "title": "LogiTrack Glassmorphism Dashboard",
+          "visualDirection": "Restrained light glassmorphism for the shared logistics dashboard shell and panels",
+          "currentVersion": 2
+        }
+      },
+      "updatedAt": "2026-10-21T14:07:39.226093+00:00"
+    }
+  }
+}
