@@ -29,6 +29,9 @@ export async function getTrackingEvents({ search, status }: GetTrackingEventsPar
 
     return prisma.trackingEvent.findMany({
         where: {
+            ...(session.user.role === "DRIVER"
+                ? { shipment: { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } } }
+                : {}),
             ...(status ? { status } : {}),
             ...(search ? {
                 OR: [

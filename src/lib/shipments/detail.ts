@@ -28,6 +28,9 @@ export async function getShipmentById(id: string) {
     return prisma.shipment.findUnique({
         where: {
             id,
+            ...(session.user.role === "DRIVER"
+                ? { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } }
+                : {}),
         },
         include: {
             customer: true,

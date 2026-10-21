@@ -16,6 +16,7 @@ import { driverLicenseTypes } from "@/lib/drivers/license-types";
 interface Driver {
     id: string;
     name: string;
+    email: string | null;
     phone: string;
     licenseNo: string;
     licenseType: (typeof driverLicenseTypes)[number]["value"];
@@ -44,6 +45,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
         const formData = new FormData(event.currentTarget);
         const input = {
             name: String(formData.get("name") ?? ""),
+            email: String(formData.get("email") ?? ""),
             phone: String(formData.get("phone") ?? ""),
             licenseNo: String(formData.get("licenseNo") ?? ""),
             licenseType: String(formData.get("licenseType") ?? ""),
@@ -224,6 +226,10 @@ function DriverForm({
             <label className="block text-sm font-medium text-slate-700">
                 Name
                 <input name="name" required maxLength={120} defaultValue={driver?.name} placeholder="Budi Santoso" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+            </label>
+            <label className="block text-sm font-medium text-slate-700">
+                Email for driver sign-in
+                <input name="email" type="email" required maxLength={254} defaultValue={driver?.email ?? ""} placeholder="driver@company.com" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
                 Phone number

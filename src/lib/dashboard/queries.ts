@@ -20,28 +20,34 @@ export async function getDashboardStats() {
     if (!allowedRoles.includes(session.user.role)) {
         throw new Error("Forbidden");
     }
+    const driverScope = session.user.role === "DRIVER"
+        ? { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } }
+        : {};
     const [
         totalShipments,
         pendingShipments,
         inTransitShipments,
         deliveredShipments,
     ] = await Promise.all([
-        prisma.shipment.count(),
+        prisma.shipment.count({ where: driverScope }),
 
         prisma.shipment.count({
             where: {
+                ...driverScope,
                 status: "PENDING",
             },
         }),
 
         prisma.shipment.count({
             where: {
+                ...driverScope,
                 status: "IN_TRANSIT",
             },
         }),
 
         prisma.shipment.count({
             where: {
+                ...driverScope,
                 status: "DELIVERED",
             },
         }),
@@ -73,7 +79,12 @@ export async function getRecentShipments() {
         throw new Error("Forbidden");
     }
 
+    const driverScope = session.user.role === "DRIVER"
+        ? { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } }
+        : {};
+
     return prisma.shipment.findMany({
+        where: driverScope,
         orderBy: {
             createdAt: "desc",
         },
@@ -113,6 +124,9 @@ export async function getShipmentStatusOverview() {
         throw new Error("Forbidden");
     }
 
+    const driverScope = session.user.role === "DRIVER"
+        ? { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } }
+        : {};
     const [
         pending,
         pickedUp,
@@ -122,27 +136,27 @@ export async function getShipmentStatusOverview() {
         cancelled,
     ] = await Promise.all([
         prisma.shipment.count({
-            where: { status: "PENDING" },
+            where: { ...driverScope, status: "PENDING" },
         }),
 
         prisma.shipment.count({
-            where: { status: "PICKED_UP" },
+            where: { ...driverScope, status: "PICKED_UP" },
         }),
 
         prisma.shipment.count({
-            where: { status: "IN_TRANSIT" },
+            where: { ...driverScope, status: "IN_TRANSIT" },
         }),
 
         prisma.shipment.count({
-            where: { status: "OUT_FOR_DELIVERY" },
+            where: { ...driverScope, status: "OUT_FOR_DELIVERY" },
         }),
 
         prisma.shipment.count({
-            where: { status: "DELIVERED" },
+            where: { ...driverScope, status: "DELIVERED" },
         }),
 
         prisma.shipment.count({
-            where: { status: "CANCELLED" },
+            where: { ...driverScope, status: "CANCELLED" },
         }),
     ]);
 

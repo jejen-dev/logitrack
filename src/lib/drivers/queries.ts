@@ -27,6 +27,7 @@ export async function getDrivers() {
         select: {
             id: true,
             name: true,
+            email: true,
             phone: true,
             licenseNo: true,
             licenseType: true,

@@ -33,9 +33,13 @@ export async function getShipments(
         throw new Error("Forbidden");
     }
     const { search, status, paymentStatus } = params;
+    const driverScope = session.user.role === "DRIVER"
+        ? { driver: { email: session.user.email?.trim().toLowerCase() ?? "" } }
+        : {};
 
     return prisma.shipment.findMany({
         where: {
+            ...driverScope,
             ...(status && {
                 status,
             }),

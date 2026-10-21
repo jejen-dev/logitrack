@@ -27,9 +27,10 @@ export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
     const session = await getServerSession(authOptions);
     const role = session?.user?.role;
     if (!role) throw new Error("Unauthorized");
-    if (!["ADMIN", "MANAGER", "OPERATOR"].includes(role)) throw new Error("Forbidden");
+    if (!["ADMIN", "MANAGER", "OPERATOR", "DRIVER"].includes(role)) throw new Error("Forbidden");
     if (!input || typeof input.shipmentId !== "string" || !input.shipmentId.trim()) throw new Error("Shipment ID is required.");
     if (!Object.keys(allowedTransitions).includes(input.status)) throw new Error("Invalid shipment status.");
+    if (role === "DRIVER" && input.status === "CANCELLED") throw new Error("Drivers cannot cancel shipments.");
     if (input.location !== undefined && (typeof input.location !== "string" || input.location.trim().length > 200)) throw new Error("Location must be 200 characters or fewer.");
     if (input.description !== undefined && (typeof input.description !== "string" || input.description.trim().length > 500)) throw new Error("Description must be 500 characters or fewer.");
 
@@ -44,11 +45,15 @@ export async function updateShipmentStatus(input: UpdateShipmentStatusInput) {
                 trackingNumber: true,
                 status: true,
                 driverId: true,
+                driver: { select: { email: true } },
                 vehicleId: true,
                 items: { select: { inventoryItemId: true, quantity: true } },
             },
         });
         if (!shipment) throw new Error("Shipment not found.");
+        if (role === "DRIVER" && shipment.driver?.email !== session.user.email?.trim().toLowerCase()) {
+            throw new Error("You can only update shipments assigned to you.");
+        }
         if (!allowedTransitions[shipment.status].includes(input.status)) {
             throw new Error(`Cannot change shipment from ${shipment.status.replaceAll("_", " ")} to ${input.status.replaceAll("_", " ")}.`);
         }

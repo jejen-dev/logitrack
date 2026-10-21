@@ -103,7 +103,7 @@ export function StatusUpdate({
         });
     }
 
-    if (role !== "ADMIN" && role !== "MANAGER" && role !== "OPERATOR") return null;
+    if (role !== "ADMIN" && role !== "MANAGER" && role !== "OPERATOR" && role !== "DRIVER") return null;
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -127,7 +127,9 @@ export function StatusUpdate({
                 >
                     <option value={currentStatus}>{currentStatus.replaceAll("_", " ")}</option>
 
-                    {statusOptions[currentStatus].map((option) => (
+                    {statusOptions[currentStatus]
+                        .filter((option) => role !== "DRIVER" || option.value !== "CANCELLED")
+                        .map((option) => (
                         <option
                             key={option.value}
                             value={option.value}

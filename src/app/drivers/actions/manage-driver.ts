@@ -9,6 +9,7 @@ import { driverLicenseTypes } from "@/lib/drivers/license-types";
 
 interface DriverInput {
     name: string;
+    email: string;
     phone: string;
     licenseNo: string;
     licenseType: string;
@@ -31,6 +32,7 @@ function validateDriverInput(input: DriverInput) {
     if (
         !input ||
         typeof input.name !== "string" ||
+        typeof input.email !== "string" ||
         typeof input.phone !== "string" ||
         typeof input.licenseNo !== "string" ||
         typeof input.licenseType !== "string"
@@ -39,19 +41,20 @@ function validateDriverInput(input: DriverInput) {
     }
 
     const name = input.name.trim();
+    const email = input.email.trim().toLowerCase();
     const phone = input.phone.trim();
     const licenseNo = input.licenseNo.trim();
     const licenseType = driverLicenseTypes.find((type) => type.value === input.licenseType)?.value;
 
-    if (!name || !phone || !licenseNo || !licenseType) {
-        throw new Error("Name, phone number, license number, and license class are required.");
+    if (!name || !email || !phone || !licenseNo || !licenseType) {
+        throw new Error("Name, email, phone number, license number, and license class are required.");
     }
 
-    if (name.length > 120 || phone.length > 40 || licenseNo.length > 60) {
-        throw new Error("Driver information exceeds the allowed length.");
+    if (name.length > 120 || email.length > 254 || !/^\S+@\S+\.\S+$/.test(email) || phone.length > 40 || licenseNo.length > 60) {
+        throw new Error("Enter a valid email and keep driver information within the allowed length.");
     }
 
-    return { name, phone, licenseNo, licenseType };
+    return { name, email, phone, licenseNo, licenseType };
 }
 
 function revalidateDriverPages() {
@@ -69,7 +72,7 @@ export async function createDriver(input: DriverInput) {
         return driver;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("This license number is already assigned to another driver.");
+            throw new Error("A driver with this email or license number already exists.");
         }
         throw error;
     }
@@ -89,7 +92,7 @@ export async function updateDriver(id: string, input: DriverInput) {
         return driver;
     } catch (error) {
         if (isUniqueConstraintError(error)) {
-            throw new Error("This license number is already assigned to another driver.");
+            throw new Error("A driver with this email or license number already exists.");
         }
         throw error;
     }
