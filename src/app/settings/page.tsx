@@ -1,3 +1,5 @@
+"use client";
+
 import { Settings, ShieldCheck } from "lucide-react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -10,8 +12,11 @@ import {
 } from "@/components/ui";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
+import { useLocale , LocalizedText} from "@/components/locale-provider";
+import { LanguageSetting } from "./language-setting";
 
 export default function SettingsPage() {
+    const { t } = useLocale();
     return (
         <AppShell>
             <PageContainer>
@@ -21,6 +26,7 @@ export default function SettingsPage() {
                 />
 
                 <div className="grid gap-6 lg:grid-cols-2">
+                    <LanguageSetting />
                     <Card>
                         <CardHeader>
                             <div className="flex items-center gap-3">
@@ -30,11 +36,11 @@ export default function SettingsPage() {
 
                                 <div>
                                     <CardTitle className="text-base">
-                                        Application
+                                        {t("Application")}
                                     </CardTitle>
 
                                     <p className="mt-1 text-xs text-slate-500">
-                                        Current application configuration.
+                                        {t("Current application configuration.")}
                                     </p>
                                 </div>
                             </div>
@@ -44,32 +50,30 @@ export default function SettingsPage() {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                     <span className="text-sm text-slate-500">
-                                        Application
+                                        {t("Application")}
                                     </span>
 
                                     <span className="text-sm font-medium text-slate-900">
-                                        LogiTrack
-                                    </span>
+                                        <LocalizedText text={"\n                                        LogiTrack\n                                    "} /></span>
                                 </div>
 
                                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                     <span className="text-sm text-slate-500">
-                                        Environment
+                                        {t("Environment")}
                                     </span>
 
                                     <Badge variant="success">
-                                        Development
+                                        {t("Development")}
                                     </Badge>
                                 </div>
 
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-slate-500">
-                                        Version
+                                        {t("Version")}
                                     </span>
 
                                     <span className="text-sm font-medium text-slate-900">
-                                        0.1.0
-                                    </span>
+                                        <LocalizedText text={"\n                                        0.1.0\n                                    "} /></span>
                                 </div>
                             </div>
                         </CardContent>
@@ -84,11 +88,11 @@ export default function SettingsPage() {
 
                                 <div>
                                     <CardTitle className="text-base">
-                                        Access Control
+                                        {t("Access Control")}
                                     </CardTitle>
 
                                     <p className="mt-1 text-xs text-slate-500">
-                                        Role-based access control is enabled.
+                                        {t("Role-based access control is enabled.")}
                                     </p>
                                 </div>
                             </div>
@@ -98,41 +102,37 @@ export default function SettingsPage() {
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
                                     <span className="text-sm text-slate-600">
-                                        ADMIN
-                                    </span>
+                                        <LocalizedText text={"\n                                        ADMIN\n                                    "} /></span>
 
                                     <Badge variant="success">
-                                        Full Access
+                                        {t("Full Access")}
                                     </Badge>
                                 </div>
 
                                 <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
                                     <span className="text-sm text-slate-600">
-                                        MANAGER
-                                    </span>
+                                        <LocalizedText text={"\n                                        MANAGER\n                                    "} /></span>
 
                                     <Badge variant="info">
-                                        Management
+                                        {t("Management")}
                                     </Badge>
                                 </div>
 
                                 <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
                                     <span className="text-sm text-slate-600">
-                                        OPERATOR
-                                    </span>
+                                        <LocalizedText text={"\n                                        OPERATOR\n                                    "} /></span>
 
                                     <Badge variant="info">
-                                        Operations
+                                        {t("Operations")}
                                     </Badge>
                                 </div>
 
                                 <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
                                     <span className="text-sm text-slate-600">
-                                        DRIVER
-                                    </span>
+                                        <LocalizedText text={"\n                                        DRIVER\n                                    "} /></span>
 
                                     <Badge variant="info">
-                                        Delivery
+                                        {t("Delivery")}
                                     </Badge>
                                 </div>
                             </div>

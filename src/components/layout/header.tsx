@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { useLocale , LocalizedInput} from "@/components/locale-provider";
 
 interface HeaderProps {
     onMenuClick?: () => void;
@@ -20,6 +21,7 @@ interface HeaderProps {
 export function Header({ onMenuClick }: HeaderProps) {
     const router = useRouter();
     const { data: session } = useSession();
+    const { t } = useLocale();
 
     const [search, setSearch] = useState("");
     const [accountOpen, setAccountOpen] = useState(false);
@@ -112,7 +114,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                 variant="ghost"
                 size="sm"
                 className="mr-2 md:hidden"
-                aria-label="Open navigation menu"
+                aria-label={t("Open navigation menu")}
                 onClick={onMenuClick}
             >
                 <Menu className="h-5 w-5" />
@@ -126,14 +128,14 @@ export function Header({ onMenuClick }: HeaderProps) {
                 >
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
-                    <input
+                    <LocalizedInput
                         type="search"
                         value={search}
                         onChange={(event) =>
                             setSearch(event.target.value)
                         }
-                        placeholder="Search shipments, tracking numbers..."
-                        aria-label="Search shipments"
+                        placeholder={t("Search shipments, tracking numbers...")}
+                        aria-label={t("Search shipments")}
                         className="h-10 min-h-10 w-full rounded-lg border border-white/80 bg-white/60 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white/90 focus:ring-2 focus:ring-blue-100"
                     />
                 </form>
@@ -147,8 +149,8 @@ export function Header({ onMenuClick }: HeaderProps) {
                     className="relative h-9 w-9 px-0"
                     aria-label={
                         unreadCount > 0
-                            ? `${unreadCount} unread notifications`
-                            : "Notifications"
+                            ? `${unreadCount} ${t("unread notifications")}`
+                            : t("Notifications")
                     }
                     onClick={() => {
                         router.push("/notifications");
@@ -216,7 +218,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
                                 <div className="mt-3 rounded-md bg-slate-50 px-3 py-2">
                                     <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
-                                        Role
+                                        {t("Role")}
                                     </p>
 
                                     <p className="mt-0.5 text-xs font-semibold text-slate-700">
@@ -235,7 +237,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                                 className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             >
                                 <User className="h-4 w-4" />
-                                Account Settings
+                                {t("Account Settings")}
                             </button>
 
                             <button
@@ -244,7 +246,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                                 onClick={handleLogout}
                                 className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
                             >
-                                Logout
+                                {t("Logout")}
                             </button>
                         </div>
                     )}

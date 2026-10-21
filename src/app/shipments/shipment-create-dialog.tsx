@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { ShipmentForm } from "./new/shipment-form";
+import { LocalizedText } from "@/components/locale-provider";
 
 interface ShipmentCreateDialogProps {
     customers: { id: string; name: string }[];
@@ -24,7 +25,7 @@ export function ShipmentCreateDialog(props: ShipmentCreateDialogProps) {
 
     return (
         <>
-            <Button onClick={() => setOpen(true)}>Create Shipment</Button>
+            <Button onClick={() => setOpen(true)}><LocalizedText text={"Create Shipment"} /></Button>
             <Modal
                 open={open}
                 onOpenChange={setOpen}

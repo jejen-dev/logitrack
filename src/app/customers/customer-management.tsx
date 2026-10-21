@@ -11,6 +11,7 @@ import {
 } from "@/app/customers/actions/manage-customer";
 import { Badge, Card, CardContent, CardHeader, CardTitle, Modal } from "@/components/ui";
 import { Button } from "@/components/ui/button";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 interface Customer {
     id: string;
@@ -97,14 +98,12 @@ export function CustomerManagement({ customers }: { customers: Customer[] }) {
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-slate-500">
-                    {activeCustomers.length} active · {inactiveCustomers.length} archived
-                </p>
+                    {activeCustomers.length} <LocalizedText text={" active · "} />{inactiveCustomers.length} <LocalizedText text={" archived\n                "} /></p>
                 <Button onClick={() => { setError(""); setDialog({ type: "create" }); }}>
-                    Add customer
-                </Button>
+                    <LocalizedText text={"\n                    Add customer\n                "} /></Button>
             </div>
 
-            {error && !dialog && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            {error && !dialog && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"><LocalizedText text={error} /></p>}
 
             <CustomerGrid
                 customers={activeCustomers}
@@ -114,7 +113,7 @@ export function CustomerManagement({ customers }: { customers: Customer[] }) {
 
             {inactiveCustomers.length > 0 && (
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Archived customers</h2>
+                    <h2 className="text-lg font-semibold text-slate-800"><LocalizedText text={"Archived customers"} /></h2>
                     <CustomerGrid
                         customers={inactiveCustomers}
                         onEdit={(customer) => { setError(""); setDialog({ type: "edit", customer }); }}
@@ -127,7 +126,7 @@ export function CustomerManagement({ customers }: { customers: Customer[] }) {
                 <Card>
                     <CardContent className="py-12 text-center">
                         <UserRound className="mx-auto h-8 w-8 text-slate-300" />
-                        <p className="mt-3 text-sm text-slate-500">No customers found. Add your first customer.</p>
+                        <p className="mt-3 text-sm text-slate-500"><LocalizedText text={"No customers found. Add your first customer."} /></p>
                     </CardContent>
                 </Card>
             )}
@@ -149,11 +148,11 @@ export function CustomerManagement({ customers }: { customers: Customer[] }) {
                                 ? `Archive ${stateChangeCustomer.name}? The customer record and shipment history will be kept, but the customer cannot be selected for new shipments.`
                                 : `Restore ${stateChangeCustomer.name}? The customer can be selected for new shipments again.`}
                         </p>
-                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Cancel</Button>
+                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}><LocalizedText text={"Cancel"} /></Button>
                             <Button variant={dialog?.type === "archive" ? "danger" : "primary"} disabled={busy} onClick={confirmCustomerStateChange}>
-                                {busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"}
+                                <LocalizedText text={busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"} />
                             </Button>
                         </div>
                     </div>
@@ -189,7 +188,7 @@ function CustomerGrid({
                                     {customer.city && <p className="mt-1 text-xs text-slate-500">{customer.city}</p>}
                                 </div>
                             </div>
-                            {!customer.isActive && <Badge>ARCHIVED</Badge>}
+                            {!customer.isActive && <Badge><LocalizedText text={"ARCHIVED"} /></Badge>}
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -219,10 +218,10 @@ function CustomerGrid({
                             )}
                         </div>
                         <div className="mt-4 flex flex-wrap gap-2">
-                            <Button variant="outline" size="sm" onClick={() => onEdit(customer)}>Edit</Button>
+                            <Button variant="outline" size="sm" onClick={() => onEdit(customer)}><LocalizedText text={"Edit"} /></Button>
                             <Button variant={customer.isActive ? "danger" : "secondary"} size="sm" onClick={() => onToggle(customer)}>
                                 {customer.isActive ? <Archive aria-hidden="true" className="h-3.5 w-3.5" /> : <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />}
-                                {customer.isActive ? "Archive" : "Restore"}
+                                <LocalizedText text={customer.isActive ? "Archive" : "Restore"} />
                             </Button>
                         </div>
                     </CardContent>
@@ -248,37 +247,31 @@ function CustomerForm({
     return (
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
-                Name
-                <input name="name" required maxLength={120} defaultValue={customer?.name} placeholder="PT Logistik Nusantara" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                Name\n                "} /><LocalizedInput name="name" required maxLength={120} defaultValue={customer?.name} placeholder="PT Logistik Nusantara" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
-                    Email
-                    <input name="email" type="email" maxLength={254} defaultValue={customer?.email ?? ""} placeholder="operasional@perusahaan.co.id" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <LocalizedText text={"\n                    Email\n                    "} /><LocalizedInput name="email" type="email" maxLength={254} defaultValue={customer?.email ?? ""} placeholder="operasional@perusahaan.co.id" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
                 <label className="block text-sm font-medium text-slate-700">
-                    Phone
-                    <input name="phone" type="tel" maxLength={40} defaultValue={customer?.phone ?? ""} placeholder="021 555 1234" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <LocalizedText text={"\n                    Phone\n                    "} /><LocalizedInput name="phone" type="tel" maxLength={40} defaultValue={customer?.phone ?? ""} placeholder="021 555 1234" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
             </div>
             <label className="block text-sm font-medium text-slate-700">
-                Address
-                <input name="address" maxLength={300} defaultValue={customer?.address ?? ""} placeholder="Jl. Jenderal Sudirman No. 10" autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                Address\n                "} /><LocalizedInput name="address" maxLength={300} defaultValue={customer?.address ?? ""} placeholder="Jl. Jenderal Sudirman No. 10" autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
-                    City
-                    <input name="city" maxLength={100} defaultValue={customer?.city ?? ""} placeholder="Jakarta Selatan" autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <LocalizedText text={"\n                    City\n                    "} /><LocalizedInput name="city" maxLength={100} defaultValue={customer?.city ?? ""} placeholder="Jakarta Selatan" autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
                 <label className="block text-sm font-medium text-slate-700">
-                    Postal code
-                    <input name="postalCode" maxLength={20} defaultValue={customer?.postalCode ?? ""} placeholder="12190" autoComplete="postal-code" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <LocalizedText text={"\n                    Postal code\n                    "} /><LocalizedInput name="postalCode" maxLength={20} defaultValue={customer?.postalCode ?? ""} placeholder="12190" autoComplete="postal-code" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
             </div>
-            {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+            {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
             <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Cancel</Button>
-                <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
+                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}><LocalizedText text={"Cancel"} /></Button>
+                <Button type="submit" disabled={busy}><LocalizedText text={busy ? "Saving…" : "Save"} /></Button>
             </div>
         </form>
     );

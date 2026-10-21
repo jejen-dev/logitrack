@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 interface InventoryFiltersProps {
     warehouses: {
@@ -64,7 +65,7 @@ export function InventoryFilters({
             <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
-                <input
+                <LocalizedInput
                     type="search"
                     defaultValue={search}
                     placeholder="Search SKU or product..."
@@ -92,15 +93,14 @@ export function InventoryFilters({
                 className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
                 <option value="">
-                    All Warehouses
-                </option>
+                    <LocalizedText text={"\n                    All Warehouses\n                "} /></option>
 
                 {warehouses.map((warehouse) => (
                     <option
                         key={warehouse.id}
                         value={warehouse.id}
                     >
-                        {warehouse.name}{warehouse.isActive ? "" : " (Archived)"}
+                        {warehouse.name}<LocalizedText text={warehouse.isActive ? "" : " (Archived)"} />
                     </option>
                 ))}
             </select>
@@ -117,16 +117,13 @@ export function InventoryFilters({
                 className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
                 <option value="ALL">
-                    All Stock
-                </option>
+                    <LocalizedText text={"\n                    All Stock\n                "} /></option>
 
                 <option value="IN_STOCK">
-                    In Stock
-                </option>
+                    <LocalizedText text={"\n                    In Stock\n                "} /></option>
 
                 <option value="LOW_STOCK">
-                    Low Stock
-                </option>
+                    <LocalizedText text={"\n                    Low Stock\n                "} /></option>
             </select>
 
             {hasFilters && (
@@ -138,8 +135,7 @@ export function InventoryFilters({
                     className="gap-1 text-slate-500"
                 >
                     <X className="h-4 w-4" />
-                    Clear
-                </Button>
+                    <LocalizedText text={"\n                    Clear\n                "} /></Button>
             )}
         </div>
     );

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/locale-provider";
 
 interface AppShellProps {
     children: React.ReactNode;
@@ -12,6 +13,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { t } = useLocale();
 
     return (
         <div className="min-h-screen bg-transparent">
@@ -24,7 +26,7 @@ export function AppShell({ children }: AppShellProps) {
             {sidebarOpen && (
                 <button
                     type="button"
-                    aria-label="Close navigation menu"
+                    aria-label={t("Close navigation menu")}
                     className="fixed inset-0 z-40 bg-slate-900/20 md:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />

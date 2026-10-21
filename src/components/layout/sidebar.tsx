@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useLocale , LocalizedText} from "@/components/locale-provider";
 import { canAccessRoute } from "@/lib/auth/permissions";
 import type { UserRole } from "@/generated/prisma/enums";
 
@@ -113,6 +114,7 @@ const navigation: NavigationSection[] = [
 export function Sidebar() {
     const pathname = usePathname();
     const { data: session } = useSession();
+    const { t } = useLocale();
 
     const role = session?.user?.role as UserRole | undefined;
 
@@ -143,11 +145,10 @@ export function Sidebar() {
 
                     <div>
                         <p className="text-sm font-semibold tracking-tight text-slate-900">
-                            LogiTrack
-                        </p>
+                            <LocalizedText text={"\n                            LogiTrack\n                        "} /></p>
 
                         <p className="text-[11px] text-slate-500">
-                            Logistics Platform
+                            {t("Logistics Platform")}
                         </p>
                     </div>
                 </Link>
@@ -160,7 +161,7 @@ export function Sidebar() {
                         <div key={section.label}>
                             <div className="mb-2 px-2">
                                 <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                                    {section.label}
+                                    {t(section.label)}
                                 </p>
                             </div>
 
@@ -188,7 +189,7 @@ export function Sidebar() {
                                         >
                                             <Icon className="h-4 w-4 shrink-0" />
 
-                                            <span>{item.label}</span>
+                                            <span>{t(item.label)}</span>
                                         </Link>
                                     );
                                 })}
@@ -211,7 +212,7 @@ export function Sidebar() {
                     >
                         <Settings className="h-4 w-4" />
 
-                        <span>Settings</span>
+                        <span><LocalizedText text={"Settings"} /></span>
                     </Link>
                 </div>
             )}

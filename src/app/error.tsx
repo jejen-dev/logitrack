@@ -3,6 +3,7 @@
 import { AlertTriangle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { LocalizedText } from "@/components/locale-provider";
 
 export default function Error({
     reset,
@@ -20,19 +21,16 @@ export default function Error({
                 </div>
 
                 <h1 className="mt-4 text-lg font-semibold text-slate-900">
-                    Something went wrong
-                </h1>
+                    <LocalizedText text={"\n                    Something went wrong\n                "} /></h1>
 
                 <p className="mt-2 text-sm text-slate-500">
-                    We could not load this page. Please try again.
-                </p>
+                    <LocalizedText text={"\n                    We could not load this page. Please try again.\n                "} /></p>
 
                 <Button
                     className="mt-5"
                     onClick={reset}
                 >
-                    Try again
-                </Button>
+                    <LocalizedText text={"\n                    Try again\n                "} /></Button>
             </div>
         </main>
     );

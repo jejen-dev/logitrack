@@ -7,6 +7,7 @@ import { updateShipmentStatus } from "@/app/shipments/actions/update-shipment-st
 import { Button } from "@/components/ui/button";
 import { allowedShipmentTransitions, shipmentStatuses } from "@/lib/shipments/status-transitions";
 import type { ShipmentStatus } from "@/generated/prisma/enums";
+import { LocalizedText , LocalizedInput, LocalizedTextarea} from "@/components/locale-provider";
 
 interface StatusUpdateProps {
     shipmentId: string;
@@ -58,8 +59,7 @@ export function StatusUpdate({
                     htmlFor="shipment-status"
                     className="text-xs font-medium text-slate-600"
                 >
-                    Status
-                </label>
+                    <LocalizedText text={"\n                    Status\n                "} /></label>
 
                 <select
                     id="shipment-status"
@@ -71,7 +71,7 @@ export function StatusUpdate({
                     }
                     className="mt-1 h-10 min-h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 >
-                    <option value={currentStatus}>{currentStatus.replaceAll("_", " ")}</option>
+                    <option value={currentStatus}><LocalizedText text={currentStatus.replaceAll("_", " ")} /></option>
 
                     {shipmentStatuses
                         .filter((option) => option !== currentStatus)
@@ -84,7 +84,7 @@ export function StatusUpdate({
                                 (role === "DRIVER" && option === "CANCELLED")
                             }
                         >
-                            {option.replaceAll("_", " ")}
+                            <LocalizedText text={option.replaceAll("_", " ")} />
                         </option>
                     ))}
                 </select>
@@ -95,10 +95,9 @@ export function StatusUpdate({
                     htmlFor="shipment-location"
                     className="text-xs font-medium text-slate-600"
                 >
-                    Location
-                </label>
+                    <LocalizedText text={"\n                    Location\n                "} /></label>
 
-                <input
+                <LocalizedInput
                     id="shipment-location"
                     value={location}
                     onChange={(event) =>
@@ -114,10 +113,9 @@ export function StatusUpdate({
                     htmlFor="shipment-description"
                     className="text-xs font-medium text-slate-600"
                 >
-                    Description
-                </label>
+                    <LocalizedText text={"\n                    Description\n                "} /></label>
 
-                <textarea
+                <LocalizedTextarea
                     id="shipment-description"
                     value={description}
                     onChange={(event) =>
@@ -134,9 +132,9 @@ export function StatusUpdate({
                 disabled={isPending || status === currentStatus}
                 className="w-full"
             >
-                {isPending
+                <LocalizedText text={isPending
                     ? "Updating..."
-                    : "Update Status"}
+                    : "Update Status"} />
             </Button>
 
             {message && (

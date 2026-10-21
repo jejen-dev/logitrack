@@ -6,6 +6,7 @@ import {
     markAllNotificationsRead,
     markNotificationRead,
 } from "./actions";
+import { LocalizedText } from "@/components/locale-provider";
 
 function formatDate(date: Date) {
     return new Intl.DateTimeFormat("id-ID", {
@@ -27,15 +28,13 @@ export default async function NotificationsPage() {
                     <div className="flex items-center gap-2">
                         <Bell className="h-5 w-5" />
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Notifications
-                        </h1>
+                            <LocalizedText text={"\n                            Notifications\n                        "} /></h1>
                     </div>
 
                     <p className="mt-1 text-sm text-muted-foreground">
                         {unreadCount > 0
-                            ? `${unreadCount} unread notification${unreadCount > 1 ? "s" : ""
-                            }`
-                            : "You're all caught up."}
+                            ? <LocalizedText text={`${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`} />
+                            : <LocalizedText text="You're all caught up." />}
                     </p>
                 </div>
 
@@ -46,8 +45,7 @@ export default async function NotificationsPage() {
                             className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
                         >
                             <CheckCheck className="h-4 w-4" />
-                            Mark all as read
-                        </button>
+                            <LocalizedText text={"\n                            Mark all as read\n                        "} /></button>
                     </form>
                 )}
             </div>
@@ -56,11 +54,10 @@ export default async function NotificationsPage() {
                 <div className="glass-surface flex min-h-[300px] flex-col items-center justify-center rounded-xl border border-dashed">
                     <Bell className="mb-3 h-8 w-8 text-muted-foreground" />
 
-                    <h2 className="font-medium">No notifications</h2>
+                    <h2 className="font-medium"><LocalizedText text={"No notifications"} /></h2>
 
                     <p className="mt-1 text-sm text-muted-foreground">
-                        New notifications will appear here.
-                    </p>
+                        <LocalizedText text={"\n                        New notifications will appear here.\n                    "} /></p>
                 </div>
             ) : (
                 <div className="space-y-3">
@@ -88,10 +85,10 @@ export default async function NotificationsPage() {
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-start justify-between gap-4">
                                         <div>
-                                            <h2 className="font-medium">{notification.title}</h2>
+                                            <h2 className="font-medium"><LocalizedText text={notification.title} /></h2>
 
                                             <p className="mt-1 text-sm text-muted-foreground">
-                                                {notification.message}
+                                                <LocalizedText text={notification.message} />
                                             </p>
                                         </div>
 

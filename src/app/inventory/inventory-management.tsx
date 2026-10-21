@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { InventoryFilters } from "./inventory-filters";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 interface InventoryItem {
     id: string;
@@ -109,14 +110,14 @@ export function InventoryManagement({
         <div className="space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <InventoryFilters warehouses={warehouses} />
-                <Button onClick={startCreate}>Add inventory item</Button>
+                <Button onClick={startCreate}><LocalizedText text={"Add inventory item"} /></Button>
             </div>
-            {error && !open && !stateChange && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            {error && !open && !stateChange && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"><LocalizedText text={error} /></p>}
 
             <InventoryTable items={activeItems} archived={false} onEdit={startEdit} onToggle={(item) => { setError(""); setStateChange({ item, activate: false }); }} />
             {archivedItems.length > 0 && (
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Archived inventory items</h2>
+                    <h2 className="text-lg font-semibold text-slate-800"><LocalizedText text={"Archived inventory items"} /></h2>
                     <InventoryTable items={archivedItems} archived onEdit={startEdit} onToggle={(item) => { setError(""); setStateChange({ item, activate: true }); }} />
                 </section>
             )}
@@ -128,32 +129,28 @@ export function InventoryManagement({
                 description={editing ? "Update product details and stock levels." : "Add a product to a warehouse and set its current stock level."}
             >
                 <form key={editing?.id ?? "new"} onSubmit={saveItem} className="space-y-4">
-                    <label className="block text-sm font-medium text-slate-700">SKU <span className="font-normal text-slate-500">(optional)</span>
-                        <input name="sku" maxLength={80} defaultValue={editing?.sku} placeholder="Auto-generated if left blank" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal uppercase" />
-                        {!editing && <span className="mt-1 block text-xs font-normal text-slate-500">Leave blank to generate an SKU from the product name.</span>}
+                    <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"SKU "} /><span className="font-normal text-slate-500"><LocalizedText text={"(optional)"} /></span>
+                        <LocalizedInput name="sku" maxLength={80} defaultValue={editing?.sku} placeholder="Auto-generated if left blank" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal uppercase" />
+                        {!editing && <span className="mt-1 block text-xs font-normal text-slate-500"><LocalizedText text={"Leave blank to generate an SKU from the product name."} /></span>}
                     </label>
-                    <label className="block text-sm font-medium text-slate-700">Product name
-                        <input name="name" required maxLength={160} defaultValue={editing?.name} placeholder="Industrial safety gloves" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                    <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Product name\n                        "} /><LocalizedInput name="name" required maxLength={160} defaultValue={editing?.name} placeholder="Industrial safety gloves" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                     </label>
-                    <label className="block text-sm font-medium text-slate-700">Warehouse
-                        <select name="warehouseId" required defaultValue={editing?.warehouse.id ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
-                            <option value="" disabled>Select a warehouse</option>
-                            {warehouses.map((warehouse) => <option key={warehouse.id} value={warehouse.id} disabled={!warehouse.isActive && warehouse.id !== editing?.warehouse.id}>{warehouse.name} · {warehouse.code}{warehouse.isActive ? "" : " (Archived)"}</option>)}
+                    <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Warehouse\n                        "} /><select name="warehouseId" required defaultValue={editing?.warehouse.id ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
+                            <option value="" disabled><LocalizedText text={"Select a warehouse"} /></option>
+                            {warehouses.map((warehouse) => <option key={warehouse.id} value={warehouse.id} disabled={!warehouse.isActive && warehouse.id !== editing?.warehouse.id}>{warehouse.name} <LocalizedText text={" · "} />{warehouse.code}<LocalizedText text={warehouse.isActive ? "" : " (Archived)"} /></option>)}
                         </select>
                     </label>
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <label className="block text-sm font-medium text-slate-700">On-hand quantity
-                            <input name="quantity" required type="number" min="0" step="1" defaultValue={editing?.quantity ?? ""} placeholder="0" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                        <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"On-hand quantity\n                            "} /><LocalizedInput name="quantity" required type="number" min="0" step="1" defaultValue={editing?.quantity ?? ""} placeholder="0" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                         </label>
-                        <label className="block text-sm font-medium text-slate-700">Reorder point
-                            <input name="reorderPoint" required type="number" min="0" step="1" defaultValue={editing?.reorderPoint ?? ""} placeholder="10" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
-                            <span className="mt-1 block text-xs font-normal text-slate-500">Marks the item as low stock when available stock reaches or drops below this number.</span>
+                        <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Reorder point\n                            "} /><LocalizedInput name="reorderPoint" required type="number" min="0" step="1" defaultValue={editing?.reorderPoint ?? ""} placeholder="10" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                            <span className="mt-1 block text-xs font-normal text-slate-500"><LocalizedText text={"Marks the item as low stock when available stock reaches or drops below this number."} /></span>
                         </label>
                     </div>
-                    {error && open && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+                    {error && open && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
                     <div className="flex justify-end gap-2 pt-2">
-                        <Button type="button" variant="outline" disabled={busy} onClick={() => setOpen(false)}>Cancel</Button>
-                        <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
+                        <Button type="button" variant="outline" disabled={busy} onClick={() => setOpen(false)}><LocalizedText text={"Cancel"} /></Button>
+                        <Button type="submit" disabled={busy}><LocalizedText text={busy ? "Saving…" : "Save"} /></Button>
                     </div>
                 </form>
             </Modal>
@@ -170,11 +167,11 @@ export function InventoryManagement({
                                 ? `Restore ${stateChange.item.name} (${stateChange.item.sku})? It will be available for new shipments again.`
                                 : `Archive ${stateChange.item.name} (${stateChange.item.sku})? Its history will be retained, and it will no longer be available for new shipments.`}
                         </p>
-                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" disabled={busy} onClick={() => setStateChange(null)}>Cancel</Button>
+                            <Button variant="outline" disabled={busy} onClick={() => setStateChange(null)}><LocalizedText text={"Cancel"} /></Button>
                             <Button variant={stateChange.activate ? "primary" : "danger"} disabled={busy} onClick={confirmStateChange}>
-                                {busy ? "Saving…" : stateChange.activate ? "Restore" : "Archive"}
+                                <LocalizedText text={busy ? "Saving…" : stateChange.activate ? "Restore" : "Archive"} />
                             </Button>
                         </div>
                     </div>
@@ -201,15 +198,15 @@ function InventoryTable({
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead><tr className="border-b border-slate-200 text-left">
-                            <th className="px-4 py-3 font-medium text-slate-500">SKU</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Product</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Warehouse</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">On hand</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Reserved</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Available</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Reorder point</th>
-                            <th className="px-4 py-3 font-medium text-slate-500">Stock status</th>
-                            <th className="px-4 py-3 text-right font-medium text-slate-500">Actions</th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"SKU"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Product"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Warehouse"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"On hand"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Reserved"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Available"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Reorder point"} /></th>
+                            <th className="px-4 py-3 font-medium text-slate-500"><LocalizedText text={"Stock status"} /></th>
+                            <th className="px-4 py-3 text-right font-medium text-slate-500"><LocalizedText text={"Actions"} /></th>
                         </tr></thead>
                         <tbody>
                             {items.map((item) => {
@@ -224,22 +221,22 @@ function InventoryTable({
                                         <td className="px-4 py-3 text-slate-600">{item.reservedQuantity}</td>
                                         <td className="px-4 py-3 font-medium text-slate-900">{availableQuantity}</td>
                                         <td className="px-4 py-3 text-slate-600">{item.reorderPoint}</td>
-                                        <td className="px-4 py-3"><span className={isLowStock ? "inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700" : "inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700"}>{isLowStock ? "Low Stock" : "In Stock"}</span></td>
+                                        <td className="px-4 py-3"><span className={isLowStock ? "inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700" : "inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700"}><LocalizedText text={isLowStock ? "Low Stock" : "In Stock"} /></span></td>
                                         <td className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
-                                            <Button variant="outline" size="sm" onClick={() => onEdit(item)}><Pencil aria-hidden="true" className="h-3.5 w-3.5" /> Edit</Button>
+                                            <Button variant="outline" size="sm" onClick={() => onEdit(item)}><Pencil aria-hidden="true" className="h-3.5 w-3.5" /> <LocalizedText text={" Edit"} /></Button>
                                             <Button variant={archived ? "secondary" : "danger"} size="sm" disabled={!archived && item.reservedQuantity > 0} title={!archived && item.reservedQuantity > 0 ? "Release shipment reservations before archiving." : undefined} onClick={() => onToggle(item)}>
                                                 {archived ? <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" /> : <Archive aria-hidden="true" className="h-3.5 w-3.5" />}
-                                                {archived ? "Restore" : "Archive"}
+                                                <LocalizedText text={archived ? "Restore" : "Archive"} />
                                             </Button>
                                         </div></td>
                                     </tr>
                                 );
                             })}
-                            {items.length === 0 && <tr><td colSpan={9} className="px-4 py-10 text-center text-sm text-slate-500">No {archived ? "archived" : "active"} inventory items found.</td></tr>}
+                            {items.length === 0 && <tr><td colSpan={9} className="px-4 py-10 text-center text-sm text-slate-500"><LocalizedText text={"No "} /><LocalizedText text={archived ? "archived" : "active"} /> <LocalizedText text={" inventory items found."} /></td></tr>}
                         </tbody>
                     </table>
                 </div>
-                <div className="mt-4 text-sm text-slate-500">Showing <span className="font-medium text-slate-700">{items.length}</span> {archived ? "archived " : ""}inventory item{items.length === 1 ? "" : "s"}</div>
+                <div className="mt-4 text-sm text-slate-500"><LocalizedText text={"Showing "} /><span className="font-medium text-slate-700">{items.length}</span> <LocalizedText text={archived ? "archived " : ""} /><LocalizedText text={"inventory item"} /><LocalizedText text={items.length === 1 ? "" : "s"} /></div>
             </CardContent>
         </Card>
     );

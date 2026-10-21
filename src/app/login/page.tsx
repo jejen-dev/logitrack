@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { LocalizedText } from "@/components/locale-provider";
 
 export default function LoginPage() {
     const [error, setError] = useState("");
@@ -26,11 +27,9 @@ export default function LoginPage() {
             <div className="glass-surface w-full max-w-md rounded-2xl border border-white/80 p-8 shadow-lg">
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-slate-900">
-                        LogiTrack
-                    </h1>
+                        <LocalizedText text={"\n                        LogiTrack\n                    "} /></h1>
                     <p className="mt-2 text-sm text-slate-500">
-                        Sign in or create your account with Google
-                    </p>
+                        <LocalizedText text={"\n                        Sign in or create your account with Google\n                    "} /></p>
                 </div>
 
                 <button
@@ -45,18 +44,17 @@ export default function LoginPage() {
                         <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z" />
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.87l-7.65-5.93c-2.13 1.43-4.86 2.28-8.25 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
                     </svg>
-                    {loading ? "Connecting to Google…" : "Continue with Google"}
+                    <LocalizedText text={loading ? "Connecting to Google…" : "Continue with Google"} />
                 </button>
 
                 {error && (
                     <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
-                        {error}
+                        <LocalizedText text={error} />
                     </p>
                 )}
 
                 <p className="mt-6 text-center text-xs text-slate-400">
-                    New accounts are created automatically on first sign-in.
-                </p>
+                    <LocalizedText text={"\n                    New accounts are created automatically on first sign-in.\n                "} /></p>
             </div>
         </main>
     );

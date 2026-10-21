@@ -17,6 +17,7 @@ import {
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipmentReport } from "@/lib/reports/queries";
+import { LocalizedText } from "@/components/locale-provider";
 
 export default async function ReportsPage() {
     const report = await getShipmentReport();
@@ -65,7 +66,7 @@ export default async function ReportsPage() {
                 {/* Summary */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Shipment Summary</CardTitle>
+                        <CardTitle><LocalizedText text={"Shipment Summary"} /></CardTitle>
                     </CardHeader>
 
                     <CardContent>
@@ -80,8 +81,7 @@ export default async function ReportsPage() {
                                 </p>
 
                                 <p className="text-sm text-slate-500">
-                                    Total Shipments
-                                </p>
+                                    <LocalizedText text={"\n                                    Total Shipments\n                                "} /></p>
                             </div>
                         </div>
                     </CardContent>
@@ -102,12 +102,11 @@ export default async function ReportsPage() {
 
                                         <div>
                                             <p className="text-sm font-medium text-slate-900">
-                                                {item.label}
+                                                <LocalizedText text={item.label} />
                                             </p>
 
                                             <p className="text-xs text-slate-500">
-                                                Shipments
-                                            </p>
+                                                <LocalizedText text={"\n                                                Shipments\n                                            "} /></p>
                                         </div>
                                     </div>
 

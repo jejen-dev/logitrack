@@ -1,4 +1,7 @@
+"use client";
+
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { useLocale } from "@/components/locale-provider";
 
 interface PageHeaderProps {
     title: string;
@@ -11,6 +14,7 @@ export function PageHeader({
     description,
     actions,
 }: PageHeaderProps) {
+    const { t } = useLocale();
     return (
         <div className="mb-6">
             <Breadcrumbs />
@@ -18,12 +22,12 @@ export function PageHeader({
             <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-                        {title}
+                        {t(title)}
                     </h1>
 
                     {description && (
                         <p className="mt-1.5 max-w-2xl text-sm text-slate-500">
-                            {description}
+                            {t(description)}
                         </p>
                     )}
                 </div>

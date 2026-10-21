@@ -16,6 +16,7 @@ import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { getShipmentById } from "@/lib/shipments/detail";
 import { StatusUpdate } from "./status-update";
+import { LocalizedText } from "@/components/locale-provider";
 
 interface ShipmentDetailPageProps {
     params: Promise<{
@@ -62,8 +63,7 @@ export default async function ShipmentDetailPage({
                         actions={
                             <Link href="/shipments">
                                 <Button variant="outline">
-                                    Back to Shipments
-                                </Button>
+                                    <LocalizedText text={"\n                                    Back to Shipments\n                                "} /></Button>
                             </Link>
                         }
                     />
@@ -81,8 +81,7 @@ export default async function ShipmentDetailPage({
                     actions={
                         <Link href="/shipments">
                             <Button variant="outline">
-                                Back to Shipments
-                            </Button>
+                                <LocalizedText text={"\n                                Back to Shipments\n                            "} /></Button>
                         </Link>
                     }
                 />
@@ -93,16 +92,14 @@ export default async function ShipmentDetailPage({
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Shipment Information
-                                </CardTitle>
+                                    <LocalizedText text={"\n                                    Shipment Information\n                                "} /></CardTitle>
                             </CardHeader>
 
                             <CardContent>
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Tracking Number
-                                        </p>
+                                            <LocalizedText text={"\n                                            Tracking Number\n                                        "} /></p>
 
                                         <p className="mt-1 font-medium text-slate-900">
                                             {shipment.trackingNumber}
@@ -111,8 +108,7 @@ export default async function ShipmentDetailPage({
 
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Status
-                                        </p>
+                                            <LocalizedText text={"\n                                            Status\n                                        "} /></p>
 
                                         <div className="mt-1">
                                             <Badge
@@ -120,18 +116,17 @@ export default async function ShipmentDetailPage({
                                                     shipment.status,
                                                 )}
                                             >
-                                                {shipment.status.replaceAll(
+                                                <LocalizedText text={shipment.status.replaceAll(
                                                     "_",
                                                     " ",
-                                                )}
+                                                )} />
                                             </Badge>
                                         </div>
                                     </div>
 
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Customer
-                                        </p>
+                                            <LocalizedText text={"\n                                            Customer\n                                        "} /></p>
 
                                         <p className="mt-1 font-medium text-slate-900">
                                             {shipment.customer.name}
@@ -140,11 +135,10 @@ export default async function ShipmentDetailPage({
 
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Payment Status
-                                        </p>
+                                            <LocalizedText text={"\n                                            Payment Status\n                                        "} /></p>
 
                                         <p className="mt-1 font-medium text-slate-900">
-                                            {shipment.paymentStatus}
+                                            <LocalizedText text={shipment.paymentStatus} />
                                         </p>
                                     </div>
                                 </div>
@@ -155,16 +149,14 @@ export default async function ShipmentDetailPage({
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Delivery Route
-                                </CardTitle>
+                                    <LocalizedText text={"\n                                    Delivery Route\n                                "} /></CardTitle>
                             </CardHeader>
 
                             <CardContent>
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Origin
-                                        </p>
+                                            <LocalizedText text={"\n                                            Origin\n                                        "} /></p>
 
                                         <p className="mt-1 text-sm font-medium text-slate-900">
                                             {shipment.originAddress}
@@ -173,8 +165,7 @@ export default async function ShipmentDetailPage({
 
                                     <div>
                                         <p className="text-xs text-slate-500">
-                                            Destination
-                                        </p>
+                                            <LocalizedText text={"\n                                            Destination\n                                        "} /></p>
 
                                         <p className="mt-1 text-sm font-medium text-slate-900">
                                             {shipment.destinationAddress}
@@ -188,8 +179,7 @@ export default async function ShipmentDetailPage({
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Shipment Items
-                                </CardTitle>
+                                    <LocalizedText text={"\n                                    Shipment Items\n                                "} /></CardTitle>
                             </CardHeader>
 
                             <CardContent className="p-0">
@@ -198,20 +188,16 @@ export default async function ShipmentDetailPage({
                                         <thead>
                                             <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
                                                 <th className="px-6 py-3 font-medium">
-                                                    Product
-                                                </th>
+                                                    <LocalizedText text={"\n                                                    Product\n                                                "} /></th>
 
                                                 <th className="px-6 py-3 font-medium">
-                                                    Quantity
-                                                </th>
+                                                    <LocalizedText text={"\n                                                    Quantity\n                                                "} /></th>
 
                                                 <th className="px-6 py-3 font-medium">
-                                                    Stock source
-                                                </th>
+                                                    <LocalizedText text={"\n                                                    Stock source\n                                                "} /></th>
 
                                                 <th className="px-6 py-3 font-medium">
-                                                    Weight
-                                                </th>
+                                                    <LocalizedText text={"\n                                                    Weight\n                                                "} /></th>
                                             </tr>
                                         </thead>
 
@@ -252,8 +238,7 @@ export default async function ShipmentDetailPage({
 
                                 {shipment.items.length === 0 && (
                                     <div className="px-6 py-8 text-center text-sm text-slate-500">
-                                        No shipment items.
-                                    </div>
+                                        <LocalizedText text={"\n                                        No shipment items.\n                                    "} /></div>
                                 )}
                             </CardContent>
                         </Card>
@@ -264,15 +249,13 @@ export default async function ShipmentDetailPage({
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Assignment
-                                </CardTitle>
+                                    <LocalizedText text={"\n                                    Assignment\n                                "} /></CardTitle>
                             </CardHeader>
 
                             <CardContent className="space-y-4">
                                 <div>
                                     <p className="text-xs text-slate-500">
-                                        Driver
-                                    </p>
+                                        <LocalizedText text={"\n                                        Driver\n                                    "} /></p>
 
                                     <p className="mt-1 text-sm font-medium text-slate-900">
                                         {shipment.driver?.name ??
@@ -282,8 +265,7 @@ export default async function ShipmentDetailPage({
 
                                 <div>
                                     <p className="text-xs text-slate-500">
-                                        Vehicle
-                                    </p>
+                                        <LocalizedText text={"\n                                        Vehicle\n                                    "} /></p>
 
                                     <p className="mt-1 text-sm font-medium text-slate-900">
                                         {shipment.vehicle?.plateNumber ??
@@ -295,7 +277,7 @@ export default async function ShipmentDetailPage({
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Update Status</CardTitle>
+                                <CardTitle><LocalizedText text={"Update Status"} /></CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <StatusUpdate shipmentId={shipment.id} currentStatus={shipment.status} role={role} />
@@ -305,8 +287,7 @@ export default async function ShipmentDetailPage({
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Tracking History
-                                </CardTitle>
+                                    <LocalizedText text={"\n                                    Tracking History\n                                "} /></CardTitle>
                             </CardHeader>
 
                             <CardContent>
@@ -320,10 +301,10 @@ export default async function ShipmentDetailPage({
                                                 <div className="absolute -left-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-blue-600" />
 
                                                 <p className="text-sm font-medium text-slate-900">
-                                                    {event.status.replaceAll(
+                                                    <LocalizedText text={event.status.replaceAll(
                                                         "_",
                                                         " ",
-                                                    )}
+                                                    )} />
                                                 </p>
 
                                                 {event.location && (
@@ -358,8 +339,7 @@ export default async function ShipmentDetailPage({
                                     {shipment.trackingEvents
                                         .length === 0 && (
                                             <p className="text-sm text-slate-500">
-                                                No tracking events.
-                                            </p>
+                                                <LocalizedText text={"\n                                                No tracking events.\n                                            "} /></p>
                                         )}
                                 </div>
                             </CardContent>

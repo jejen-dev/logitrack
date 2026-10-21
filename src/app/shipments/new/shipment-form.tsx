@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { createShipment } from "@/app/shipments/actions/create-shipment";
 import { Button } from "@/components/ui/button";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 interface Customer {
     id: string;
@@ -118,13 +119,12 @@ export function ShipmentForm({
         >
             {/* Shipment Information */}
             <section className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800">Shipment Information</h3>
+                <h3 className="text-sm font-semibold text-slate-800"><LocalizedText text={"Shipment Information"} /></h3>
                 <div className="grid gap-5 md:grid-cols-2">
                         {/* Customer */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Customer
-                            </label>
+                                <LocalizedText text={"\n                                Customer\n                            "} /></label>
 
                             <select
                                 required
@@ -138,8 +138,7 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             >
                                 <option value="">
-                                    Select customer
-                                </option>
+                                    <LocalizedText text={"\n                                    Select customer\n                                "} /></option>
 
                                 {customers.map((customer) => (
                                     <option
@@ -155,8 +154,7 @@ export function ShipmentForm({
                         {/* Payment Status */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Payment Status
-                            </label>
+                                <LocalizedText text={"\n                                Payment Status\n                            "} /></label>
 
                             <select
                                 value={form.paymentStatus}
@@ -169,26 +167,22 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             >
                                 <option value="UNPAID">
-                                    Unpaid
-                                </option>
+                                    <LocalizedText text={"\n                                    Unpaid\n                                "} /></option>
 
                                 <option value="PAID">
-                                    Paid
-                                </option>
+                                    <LocalizedText text={"\n                                    Paid\n                                "} /></option>
 
                                 <option value="REFUNDED">
-                                    Refunded
-                                </option>
+                                    <LocalizedText text={"\n                                    Refunded\n                                "} /></option>
                             </select>
                         </div>
 
                         {/* Origin */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Origin
-                            </label>
+                                <LocalizedText text={"\n                                Origin\n                            "} /></label>
 
-                            <input
+                            <LocalizedInput
                                 required
                                 value={form.originAddress}
                                 onChange={(event) =>
@@ -205,10 +199,9 @@ export function ShipmentForm({
                         {/* Destination */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Destination
-                            </label>
+                                <LocalizedText text={"\n                                Destination\n                            "} /></label>
 
-                            <input
+                            <LocalizedInput
                                 required
                                 value={
                                     form.destinationAddress
@@ -228,13 +221,12 @@ export function ShipmentForm({
 
             {/* Delivery Assignment */}
             <section className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800">Delivery Assignment</h3>
+                <h3 className="text-sm font-semibold text-slate-800"><LocalizedText text={"Delivery Assignment"} /></h3>
                 <div className="grid gap-5 md:grid-cols-2">
                         {/* Driver */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Driver
-                            </label>
+                                <LocalizedText text={"\n                                Driver\n                            "} /></label>
 
                             <select
                                 value={form.driverId}
@@ -247,8 +239,7 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             >
                                 <option value="">
-                                    Unassigned
-                                </option>
+                                    <LocalizedText text={"\n                                    Unassigned\n                                "} /></option>
 
                                 {drivers.map((driver) => (
                                     <option
@@ -264,8 +255,7 @@ export function ShipmentForm({
                         {/* Vehicle */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Vehicle
-                            </label>
+                                <LocalizedText text={"\n                                Vehicle\n                            "} /></label>
 
                             <select
                                 value={form.vehicleId}
@@ -278,15 +268,14 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             >
                                 <option value="">
-                                    Unassigned
-                                </option>
+                                    <LocalizedText text={"\n                                    Unassigned\n                                "} /></option>
 
                                 {vehicles.map((vehicle) => (
                                     <option
                                         key={vehicle.id}
                                         value={vehicle.id}
                                     >
-                                        {vehicle.plateNumber} —{" "}
+                                        {vehicle.plateNumber} <LocalizedText text={" —"} />{" "}
                                         {vehicle.type}
                                     </option>
                                 ))}
@@ -297,11 +286,11 @@ export function ShipmentForm({
 
             {/* Shipment Item */}
             <section className="space-y-4">
-                <h3 className="text-sm font-semibold text-slate-800">Shipment Item</h3>
+                <h3 className="text-sm font-semibold text-slate-800"><LocalizedText text={"Shipment Item"} /></h3>
                 <div className="grid gap-5 md:grid-cols-3">
                         <div className="md:col-span-3">
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Inventory stock <span className="font-normal text-slate-500">(optional)</span>
+                                <LocalizedText text={"\n                                Inventory stock "} /><span className="font-normal text-slate-500"><LocalizedText text={"(optional)"} /></span>
                             </label>
                             <select
                                 value={form.inventoryItemId}
@@ -316,27 +305,24 @@ export function ShipmentForm({
                                 }}
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             >
-                                <option value="">Manual item (not linked to inventory)</option>
+                                <option value=""><LocalizedText text={"Manual item (not linked to inventory)"} /></option>
                                 {inventoryItems.map((item) => (
                                     <option key={item.id} value={item.id}>
-                                        {item.name} · {item.sku} · {item.availableQuantity} available · {item.warehouse.name} ({item.warehouse.code})
-                                    </option>
+                                        {item.name} <LocalizedText text={" · "} />{item.sku} <LocalizedText text={" · "} />{item.availableQuantity} <LocalizedText text={" available · "} />{item.warehouse.name} <LocalizedText text={" ("} />{item.warehouse.code}<LocalizedText text={")\n                                    "} /></option>
                                 ))}
                             </select>
                             {selectedInventoryItem && (
                                 <p className="mt-1 text-xs text-slate-500">
-                                    This shipment will reserve stock from this warehouse. {selectedInventoryItem.availableQuantity} available now.
-                                </p>
+                                    <LocalizedText text={"\n                                    This shipment will reserve stock from this warehouse. "} />{selectedInventoryItem.availableQuantity} <LocalizedText text={" available now.\n                                "} /></p>
                             )}
                         </div>
 
                         {/* Product */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Product
-                            </label>
+                                <LocalizedText text={"\n                                Product\n                            "} /></label>
 
-                            <input
+                            <LocalizedInput
                                 required={!selectedInventoryItem}
                                 value={form.productName}
                                 onChange={(event) =>
@@ -354,8 +340,7 @@ export function ShipmentForm({
                         {/* Quantity */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Quantity
-                            </label>
+                                <LocalizedText text={"\n                                Quantity\n                            "} /></label>
 
                             <input
                                 required
@@ -373,17 +358,16 @@ export function ShipmentForm({
                                 className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             />
                             {selectedInventoryItem && Number(form.quantity) > selectedInventoryItem.availableQuantity && (
-                                <p className="mt-1 text-xs text-red-600">Quantity exceeds available stock.</p>
+                                <p className="mt-1 text-xs text-red-600"><LocalizedText text={"Quantity exceeds available stock."} /></p>
                             )}
                         </div>
 
                         {/* Weight */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-700">
-                                Weight (kg)
-                            </label>
+                                <LocalizedText text={"\n                                Weight (kg)\n                            "} /></label>
 
-                            <input
+                            <LocalizedInput
                                 min="0"
                                 step="0.01"
                                 type="number"
@@ -415,16 +399,15 @@ export function ShipmentForm({
                     variant="outline"
                     onClick={() => onCancel ? onCancel() : router.push("/shipments")}
                 >
-                    Cancel
-                </Button>
+                    <LocalizedText text={"\n                    Cancel\n                "} /></Button>
 
                 <Button
                     type="submit"
                     disabled={loading}
                 >
-                    {loading
+                    <LocalizedText text={loading
                         ? "Creating..."
-                        : "Create Shipment"}
+                        : "Create Shipment"} />
                 </Button>
             </div>
         </form>

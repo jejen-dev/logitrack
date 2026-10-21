@@ -5,6 +5,7 @@ import { ChevronRight, Home } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/locale-provider";
 
 const routeLabels: Record<string, string> = {
     dashboard: "Dashboard",
@@ -30,6 +31,7 @@ function formatSegment(segment: string) {
 
 export function Breadcrumbs() {
     const pathname = usePathname();
+    const { t } = useLocale();
 
     const segments = pathname.split("/").filter(Boolean);
 
@@ -38,12 +40,12 @@ export function Breadcrumbs() {
     }
 
     return (
-        <nav aria-label="Breadcrumb">
+        <nav aria-label={t("Breadcrumb")}>
             <ol className="flex items-center gap-1.5 text-sm">
                 <li>
                     <Link
                         href="/dashboard"
-                        aria-label="Dashboard"
+                        aria-label={t("Dashboard")}
                         className="flex items-center text-slate-400 transition-colors hover:text-slate-700"
                     >
                         <Home className="h-3.5 w-3.5" />
@@ -71,14 +73,14 @@ export function Breadcrumbs() {
                                         "font-medium text-slate-700",
                                     )}
                                 >
-                                    {formatSegment(segment)}
+                                    {t(formatSegment(segment))}
                                 </span>
                             ) : (
                                 <Link
                                     href={href}
                                     className="text-slate-400 transition-colors hover:text-slate-700"
                                 >
-                                    {formatSegment(segment)}
+                                    {t(formatSegment(segment))}
                                 </Link>
                             )}
                         </li>

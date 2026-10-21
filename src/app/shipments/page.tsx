@@ -14,6 +14,7 @@ import type {
     PaymentStatus,
     ShipmentStatus,
 } from "@/generated/prisma/enums";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 function getStatusVariant(
     status: string,
@@ -93,7 +94,7 @@ export default async function ShipmentsPage({
                         method="GET"
                         className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 md:flex-row"
                     >
-                        <input
+                        <LocalizedInput
                             type="search"
                             name="search"
                             defaultValue={search}
@@ -106,15 +107,14 @@ export default async function ShipmentsPage({
                             defaultValue={status ?? ""}
                             className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
-                            <option value="">All Status</option>
-                            <option value="PENDING">Pending</option>
-                            <option value="PICKED_UP">Picked Up</option>
-                            <option value="IN_TRANSIT">In Transit</option>
+                            <option value=""><LocalizedText text={"All Status"} /></option>
+                            <option value="PENDING"><LocalizedText text={"Pending"} /></option>
+                            <option value="PICKED_UP"><LocalizedText text={"Picked Up"} /></option>
+                            <option value="IN_TRANSIT"><LocalizedText text={"In Transit"} /></option>
                             <option value="OUT_FOR_DELIVERY">
-                                Out for Delivery
-                            </option>
-                            <option value="DELIVERED">Delivered</option>
-                            <option value="CANCELLED">Cancelled</option>
+                                <LocalizedText text={"\n                                Out for Delivery\n                            "} /></option>
+                            <option value="DELIVERED"><LocalizedText text={"Delivered"} /></option>
+                            <option value="CANCELLED"><LocalizedText text={"Cancelled"} /></option>
                         </select>
 
                         <select
@@ -122,15 +122,14 @@ export default async function ShipmentsPage({
                             defaultValue={paymentStatus ?? ""}
                             className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
-                            <option value="">All Payments</option>
-                            <option value="UNPAID">Unpaid</option>
-                            <option value="PAID">Paid</option>
-                            <option value="REFUNDED">Refunded</option>
+                            <option value=""><LocalizedText text={"All Payments"} /></option>
+                            <option value="UNPAID"><LocalizedText text={"Unpaid"} /></option>
+                            <option value="PAID"><LocalizedText text={"Paid"} /></option>
+                            <option value="REFUNDED"><LocalizedText text={"Refunded"} /></option>
                         </select>
 
                         <Button type="submit">
-                            Filter
-                        </Button>
+                            <LocalizedText text={"\n                            Filter\n                        "} /></Button>
                     </form>
                 </div>
 
@@ -141,36 +140,28 @@ export default async function ShipmentsPage({
                                 <thead>
                                     <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
                                         <th className="px-6 py-3 font-medium">
-                                            Tracking Number
-                                        </th>
+                                            <LocalizedText text={"\n                                            Tracking Number\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Customer
-                                        </th>
+                                            <LocalizedText text={"\n                                            Customer\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Route
-                                        </th>
+                                            <LocalizedText text={"\n                                            Route\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Driver
-                                        </th>
+                                            <LocalizedText text={"\n                                            Driver\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Vehicle
-                                        </th>
+                                            <LocalizedText text={"\n                                            Vehicle\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Status
-                                        </th>
+                                            <LocalizedText text={"\n                                            Status\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Payment
-                                        </th>
+                                            <LocalizedText text={"\n                                            Payment\n                                        "} /></th>
 
                                         <th className="px-6 py-3 font-medium">
-                                            Created
-                                        </th>
+                                            <LocalizedText text={"\n                                            Created\n                                        "} /></th>
                                     </tr>
                                 </thead>
 
@@ -199,7 +190,7 @@ export default async function ShipmentsPage({
                                                 </div>
 
                                                 <div className="mt-1 text-xs text-slate-400">
-                                                    ↓{" "}
+                                                    <LocalizedText text={"\n                                                    ↓"} />{" "}
                                                     {
                                                         shipment.destinationAddress
                                                     }
@@ -221,17 +212,17 @@ export default async function ShipmentsPage({
                                                         shipment.status,
                                                     )}
                                                 >
-                                                    {shipment.status.replaceAll(
+                                                    <LocalizedText text={shipment.status.replaceAll(
                                                         "_",
                                                         " ",
-                                                    )}
+                                                    )} />
                                                 </Badge>
                                             </td>
 
                                             <td className="whitespace-nowrap px-6 py-4">
                                                 <span className="text-xs font-medium text-slate-600">
                                                     {
-                                                        shipment.paymentStatus
+                                                        <LocalizedText text={shipment.paymentStatus} />
                                                     }
                                                 </span>
                                             </td>
@@ -247,8 +238,7 @@ export default async function ShipmentsPage({
 
                         {shipments.length === 0 && (
                             <div className="px-6 py-12 text-center text-sm text-slate-500">
-                                No shipments found.
-                            </div>
+                                <LocalizedText text={"\n                                No shipments found.\n                            "} /></div>
                         )}
                     </CardContent>
                 </Card>

@@ -12,6 +12,7 @@ import {
 import { Badge, Card, CardContent, CardHeader, CardTitle, Modal } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { driverLicenseTypes } from "@/lib/drivers/license-types";
+import { LocalizedText , LocalizedInput} from "@/components/locale-provider";
 
 interface Driver {
     id: string;
@@ -88,14 +89,12 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
         <div className="space-y-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-slate-500">
-                    {activeDrivers.length} active · {inactiveDrivers.length} archived
-                </p>
+                    {activeDrivers.length} <LocalizedText text={" active · "} />{inactiveDrivers.length} <LocalizedText text={" archived\n                "} /></p>
                 <Button onClick={() => { setError(""); setDialog({ type: "create" }); }}>
-                    Add driver
-                </Button>
+                    <LocalizedText text={"\n                    Add driver\n                "} /></Button>
             </div>
 
-            {error && !dialog && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            {error && !dialog && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"><LocalizedText text={error} /></p>}
 
             <DriverGrid
                 drivers={activeDrivers}
@@ -105,7 +104,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
 
             {inactiveDrivers.length > 0 && (
                 <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Archived drivers</h2>
+                    <h2 className="text-lg font-semibold text-slate-800"><LocalizedText text={"Archived drivers"} /></h2>
                     <DriverGrid
                         drivers={inactiveDrivers}
                         onEdit={(driver) => { setError(""); setDialog({ type: "edit", driver }); }}
@@ -118,7 +117,7 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
                 <Card>
                     <CardContent className="py-12 text-center">
                         <UserRound className="mx-auto h-8 w-8 text-slate-300" />
-                        <p className="mt-3 text-sm text-slate-500">No drivers found. Add your first driver.</p>
+                        <p className="mt-3 text-sm text-slate-500"><LocalizedText text={"No drivers found. Add your first driver."} /></p>
                     </CardContent>
                 </Card>
             )}
@@ -140,11 +139,11 @@ export function DriverManagement({ drivers }: { drivers: Driver[] }) {
                                 ? `Archive ${stateChangeDriver.name}? The driver record and shipment history will be kept, but the driver cannot be assigned to new shipments.`
                                 : `Restore ${stateChangeDriver.name}? The driver can be assigned to new shipments again when available.`}
                         </p>
-                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+                        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
                         <div className="flex justify-end gap-2">
-                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}>Cancel</Button>
+                            <Button variant="outline" disabled={busy} onClick={() => setDialog(null)}><LocalizedText text={"Cancel"} /></Button>
                             <Button variant={dialog?.type === "archive" ? "danger" : "primary"} disabled={busy} onClick={confirmDriverStateChange}>
-                                {busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"}
+                                <LocalizedText text={busy ? "Saving…" : dialog?.type === "archive" ? "Archive" : "Restore"} />
                             </Button>
                         </div>
                     </div>
@@ -178,12 +177,12 @@ function DriverGrid({
                                 <div>
                                     <CardTitle className="text-base">{driver.name}</CardTitle>
                                     <p className="mt-1 text-xs text-slate-500">
-                                        {driverLicenseTypes.find((type) => type.value === driver.licenseType)?.label} · {driver.licenseNo}
+                                        {driverLicenseTypes.find((type) => type.value === driver.licenseType)?.label} <LocalizedText text={" · "} />{driver.licenseNo}
                                     </p>
                                 </div>
                             </div>
                             <Badge variant={driver.isActive ? (driver.status === "AVAILABLE" ? "success" : "info") : "default"}>
-                                {driver.isActive ? driver.status.replaceAll("_", " ") : "ARCHIVED"}
+                                <LocalizedText text={driver.isActive ? driver.status.replaceAll("_", " ") : "ARCHIVED"} />
                             </Badge>
                         </div>
                     </CardHeader>
@@ -194,11 +193,10 @@ function DriverGrid({
                         </div>
                         <div className="mt-4 flex flex-wrap gap-2">
                             <Button variant="outline" size="sm" onClick={() => onEdit(driver)}>
-                                <Pencil aria-hidden="true" className="h-3.5 w-3.5" /> Edit
-                            </Button>
+                                <Pencil aria-hidden="true" className="h-3.5 w-3.5" /> <LocalizedText text={" Edit\n                            "} /></Button>
                             <Button variant={driver.isActive ? "danger" : "secondary"} size="sm" onClick={() => onToggle(driver)}>
                                 {driver.isActive ? <Archive aria-hidden="true" className="h-3.5 w-3.5" /> : <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />}
-                                {driver.isActive ? "Archive" : "Restore"}
+                                <LocalizedText text={driver.isActive ? "Archive" : "Restore"} />
                             </Button>
                         </div>
                     </CardContent>
@@ -224,32 +222,27 @@ function DriverForm({
     return (
         <form onSubmit={onSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-slate-700">
-                Name
-                <input name="name" required maxLength={120} defaultValue={driver?.name} placeholder="Budi Santoso" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                Name\n                "} /><LocalizedInput name="name" required maxLength={120} defaultValue={driver?.name} placeholder="Budi Santoso" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Email for driver sign-in
-                <input name="email" type="email" required maxLength={254} defaultValue={driver?.email ?? ""} placeholder="driver@company.com" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                Email for driver sign-in\n                "} /><LocalizedInput name="email" type="email" required maxLength={254} defaultValue={driver?.email ?? ""} placeholder="driver@company.com" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                Phone number
-                <input name="phone" required maxLength={40} defaultValue={driver?.phone} placeholder="0812 3456 7890" type="tel" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                Phone number\n                "} /><LocalizedInput name="phone" required maxLength={40} defaultValue={driver?.phone} placeholder="0812 3456 7890" type="tel" autoComplete="tel" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                License class
-                <select name="licenseType" required defaultValue={driver?.licenseType ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
-                    <option value="" disabled>Select a license class</option>
+                <LocalizedText text={"\n                License class\n                "} /><select name="licenseType" required defaultValue={driver?.licenseType ?? ""} className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal">
+                    <option value="" disabled><LocalizedText text={"Select a license class"} /></option>
                     {driverLicenseTypes.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
                 </select>
             </label>
             <label className="block text-sm font-medium text-slate-700">
-                License number
-                <input name="licenseNo" required maxLength={60} defaultValue={driver?.licenseNo} placeholder="123456789012" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
+                <LocalizedText text={"\n                License number\n                "} /><LocalizedInput name="licenseNo" required maxLength={60} defaultValue={driver?.licenseNo} placeholder="123456789012" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
-            {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+            {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"><LocalizedText text={error} /></p>}
             <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}>Cancel</Button>
-                <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
+                <Button type="button" variant="outline" disabled={busy} onClick={onCancel}><LocalizedText text={"Cancel"} /></Button>
+                <Button type="submit" disabled={busy}><LocalizedText text={busy ? "Saving…" : "Save"} /></Button>
             </div>
         </form>
     );

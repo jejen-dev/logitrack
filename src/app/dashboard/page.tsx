@@ -12,6 +12,7 @@ import {
     getRecentShipments,
     getShipmentStatusOverview,
 } from "@/lib/dashboard/queries";
+import { LocalizedText } from "@/components/locale-provider";
 
 export default async function DashboardPage() {
     const [stats, recentShipments, statusOverview] =
@@ -58,7 +59,7 @@ export default async function DashboardPage() {
                         <Card key={card.title}>
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-sm font-medium text-slate-500">
-                                    {card.title}
+                                    <LocalizedText text={card.title} />
                                 </CardTitle>
                             </CardHeader>
 
@@ -68,7 +69,7 @@ export default async function DashboardPage() {
                                 </div>
 
                                 <p className="mt-1 text-xs text-slate-500">
-                                    {card.description}
+                                    <LocalizedText text={card.description} />
                                 </p>
                             </CardContent>
                         </Card>
@@ -80,8 +81,7 @@ export default async function DashboardPage() {
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                Shipment Status
-                            </CardTitle>
+                                <LocalizedText text={"\n                                Shipment Status\n                            "} /></CardTitle>
                         </CardHeader>
 
                         <CardContent>
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
                                         <div key={status.label}>
                                             <div className="mb-1.5 flex items-center justify-between">
                                                 <span className="text-sm font-medium text-slate-700">
-                                                    {status.label}
+                                                    <LocalizedText text={status.label} />
                                                 </span>
 
                                                 <span className="text-sm font-semibold text-slate-900">
@@ -127,8 +127,7 @@ export default async function DashboardPage() {
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                Recent Shipments
-                            </CardTitle>
+                                <LocalizedText text={"\n                                Recent Shipments\n                            "} /></CardTitle>
                         </CardHeader>
 
                         <CardContent className="p-0">
@@ -137,24 +136,19 @@ export default async function DashboardPage() {
                                     <thead>
                                         <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
                                             <th className="px-6 py-3 font-medium">
-                                                Tracking Number
-                                            </th>
+                                                <LocalizedText text={"\n                                                Tracking Number\n                                            "} /></th>
 
                                             <th className="px-6 py-3 font-medium">
-                                                Customer
-                                            </th>
+                                                <LocalizedText text={"\n                                                Customer\n                                            "} /></th>
 
                                             <th className="px-6 py-3 font-medium">
-                                                Route
-                                            </th>
+                                                <LocalizedText text={"\n                                                Route\n                                            "} /></th>
 
                                             <th className="px-6 py-3 font-medium">
-                                                Status
-                                            </th>
+                                                <LocalizedText text={"\n                                                Status\n                                            "} /></th>
 
                                             <th className="px-6 py-3 font-medium">
-                                                Payment
-                                            </th>
+                                                <LocalizedText text={"\n                                                Payment\n                                            "} /></th>
                                         </tr>
                                     </thead>
 
@@ -178,22 +172,22 @@ export default async function DashboardPage() {
                                                     </div>
 
                                                     <div className="mt-1 text-xs text-slate-400">
-                                                        ↓ {shipment.destinationAddress}
+                                                        <LocalizedText text={"\n                                                        ↓ "} />{shipment.destinationAddress}
                                                     </div>
                                                 </td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
                                                     <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                                                        {shipment.status.replaceAll(
+                                                        <LocalizedText text={shipment.status.replaceAll(
                                                             "_",
                                                             " ",
-                                                        )}
+                                                        )} />
                                                     </span>
                                                 </td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
                                                     <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                                                        {shipment.paymentStatus}
+                                                        <LocalizedText text={shipment.paymentStatus} />
                                                     </span>
                                                 </td>
                                             </tr>
@@ -204,8 +198,7 @@ export default async function DashboardPage() {
 
                             {recentShipments.length === 0 && (
                                 <div className="px-6 py-10 text-center text-sm text-slate-500">
-                                    No shipments found.
-                                </div>
+                                    <LocalizedText text={"\n                                    No shipments found.\n                                "} /></div>
                             )}
                         </CardContent>
                     </Card>
