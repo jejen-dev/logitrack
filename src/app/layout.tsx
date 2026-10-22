@@ -12,11 +12,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "LogiTrack",
+    default: "LogiTrack — Platform Operasional Logistik",
     template: "%s | LogiTrack",
   },
   description:
-    "Modern logistics management for smarter operations.",
+    "Kelola pengiriman, inventaris, gudang, armada, dan tim operasional dalam satu platform.",
 };
 
 export default async function RootLayout({

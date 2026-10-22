@@ -99,8 +99,10 @@ export function UsersManagement({
                     {inviteLink && (
                         <div className="space-y-2 rounded-xl bg-slate-50 p-3">
                             <p className="text-sm"><LocalizedText text={"Send this link to the invited email:"} /></p>
-                            <a className="break-all text-sm text-blue-700 underline" href={inviteLink}>{inviteLink}</a>
-                            <Button type="button" variant="outline" onClick={() => navigator.clipboard.writeText(inviteLink)}><LocalizedText text={"Copy link"} /></Button>
+                            <a className="block break-all text-sm text-blue-700 underline" href={inviteLink}>{inviteLink}</a>
+                            <div className="pt-1">
+                                <Button type="button" variant="outline" onClick={() => navigator.clipboard.writeText(inviteLink)}><LocalizedText text={"Copy link"} /></Button>
+                            </div>
                         </div>
                     )}
                 </CardContent>

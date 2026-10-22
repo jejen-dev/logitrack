@@ -66,7 +66,7 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !isJoinPage) {
     const isOwnerUsersPage = pathname.startsWith("/users") && token?.isMerchantOwner === true;
     if (!canAccessRoute(pathname, role) && !isOwnerUsersPage) {
       return NextResponse.redirect(
@@ -80,6 +80,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|icon.svg).*)",
   ],
 };
