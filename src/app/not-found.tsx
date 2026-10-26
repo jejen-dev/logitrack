@@ -5,9 +5,9 @@ import { LocalizedText } from "@/components/locale-provider";
 
 export default function NotFound() {
     return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-            <div className="w-full max-w-md text-center">
-                <p className="text-sm font-semibold text-blue-600">
+        <main className="flex min-h-screen items-center justify-center px-4">
+            <div className="glass-surface w-full max-w-md rounded-2xl border p-8 text-center">
+                <p className="bg-gradient-to-br from-blue-500 to-indigo-600 bg-clip-text text-5xl font-bold tracking-tight text-transparent">
                     <LocalizedText text={"\n                    404\n                "} /></p>
 
                 <h1 className="mt-2 text-2xl font-semibold text-slate-900">

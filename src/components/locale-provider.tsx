@@ -27,6 +27,8 @@ const messages: Record<AppLocale, Record<string, string>> = {
 const idExtraMessages: Record<string, string> = {
     'Close dialog': 'Tutup dialog',
     'Breadcrumb': 'Navigasi',
+    'Primary navigation': 'Navigasi utama',
+    'Menu': 'Menu',
     'Loading': 'Memuat',
     "You're all caught up.": 'Semua notifikasi sudah dibaca.',
     'No address provided': 'Alamat belum diisi',

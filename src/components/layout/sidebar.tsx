@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
@@ -22,7 +22,7 @@ import { useLocale , LocalizedText} from "@/components/locale-provider";
 import { canAccessRoute } from "@/lib/auth/permissions";
 import type { UserRole } from "@/generated/prisma/enums";
 
-type NavigationItem = {
+export type NavigationItem = {
     label: string;
     href: string;
     icon: React.ComponentType<{ className?: string }>;
@@ -111,10 +111,28 @@ const navigation: NavigationSection[] = [
     },
 ];
 
-export function Sidebar() {
-    const pathname = usePathname();
+// Navigation has no route-level loading screen, so show which link is pending instead.
+function NavPendingIndicator() {
+    const { pending } = useLinkStatus();
+
+    return (
+        <span
+            aria-hidden="true"
+            className={cn(
+                "ml-auto h-3.5 w-3.5 shrink-0 rounded-full border-2 border-blue-500/25 border-t-blue-600",
+                pending ? "animate-spin opacity-100" : "opacity-0",
+            )}
+        />
+    );
+}
+
+export function isNavigationItemActive(pathname: string, href: string) {
+    return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** Navigation sections the current user may open, shared by the sidebar and the mobile tab bar. */
+export function useNavigation() {
     const { data: session } = useSession();
-    const { t } = useLocale();
 
     const role = session?.user?.role as UserRole | undefined;
 
@@ -129,17 +147,25 @@ export function Sidebar() {
         .filter((section) => section.items.length > 0);
 
     const canAccessSettings =
-        role && canAccessRoute("/settings", role);
+        !!role && canAccessRoute("/settings", role);
+
+    return { visibleSections, canAccessSettings };
+}
+
+export function Sidebar() {
+    const pathname = usePathname();
+    const { t } = useLocale();
+    const { visibleSections, canAccessSettings } = useNavigation();
 
     return (
-        <aside className="glass-surface flex h-screen w-64 shrink-0 flex-col border-r border-white/70 bg-white/70 shadow-[8px_0_32px_rgba(30,64,110,0.06)] backdrop-blur-xl">
+        <aside className="glass-surface flex h-dvh w-64 shrink-0 flex-col border-r pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]">
             {/* Brand */}
-            <div className="flex h-16 items-center border-b border-white/70 px-5">
+            <div className="flex h-16 items-center border-b border-white/60 px-5">
                 <Link
                     href="/dashboard"
                     className="flex items-center gap-3"
                 >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-600">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/30">
                         <Truck className="h-4 w-4 text-white" />
                     </div>
 
@@ -169,27 +195,28 @@ export function Sidebar() {
                                 {section.items.map((item) => {
                                     const Icon = item.icon;
 
-                                    const isActive =
-                                        pathname === item.href ||
-                                        pathname.startsWith(
-                                            `${item.href}/`,
-                                        );
+                                    const isActive = isNavigationItemActive(
+                                        pathname,
+                                        item.href,
+                                    );
 
                                     return (
                                         <Link
                                             key={item.href}
                                             href={item.href}
                                             className={cn(
-                                                "flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium",
-                                                "transition-colors duration-150",
+                                                "flex h-9 items-center gap-3 rounded-xl px-3 text-sm font-medium",
+                                                "transition-all duration-150",
                                                 isActive
-                                                    ? "bg-blue-600/10 text-blue-700 ring-1 ring-inset ring-blue-500/15"
-                                                    : "text-slate-600 hover:bg-white/60 hover:text-slate-900",
+                                                    ? "bg-gradient-to-r from-blue-500/20 to-indigo-500/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
+                                                    : "text-slate-600 hover:bg-white/65 hover:text-slate-900",
                                             )}
                                         >
                                             <Icon className="h-4 w-4 shrink-0" />
 
                                             <span>{t(item.label)}</span>
+
+                                            <NavPendingIndicator />
                                         </Link>
                                     );
                                 })}
@@ -201,18 +228,22 @@ export function Sidebar() {
 
             {/* Settings */}
             {canAccessSettings && (
-                <div className="border-t border-white/70 p-3">
+                <div className="border-t border-white/60 p-3">
                     <Link
                         href="/settings"
                         className={cn(
-                            "flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium",
-                            "text-slate-600 transition-colors duration-150",
-                            "hover:bg-white/60 hover:text-slate-900",
+                            "flex h-9 items-center gap-3 rounded-xl px-3 text-sm font-medium",
+                            "transition-all duration-150",
+                            pathname === "/settings"
+                                ? "bg-gradient-to-r from-blue-500/20 to-indigo-500/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
+                                : "text-slate-600 hover:bg-white/65 hover:text-slate-900",
                         )}
                     >
                         <Settings className="h-4 w-4" />
 
                         <span><LocalizedText text={"Settings"} /></span>
+
+                        <NavPendingIndicator />
                     </Link>
                 </div>
             )}

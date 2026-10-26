@@ -34,7 +34,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
             <PageContainer>
                 <PageHeader title="Tracking" description="Search shipment updates and follow each delivery timeline." />
 
-                <form method="GET" className="mb-5 flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 sm:flex-row">
+                <form method="GET" className="mb-5 flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 md:flex-row">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
                         <LocalizedInput name="search" type="search" defaultValue={search} placeholder="Tracking number, customer, location..." className="h-10 w-full rounded-md border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />

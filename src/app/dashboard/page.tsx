@@ -64,7 +64,7 @@ export default async function DashboardPage() {
                             </CardHeader>
 
                             <CardContent>
-                                <div className="text-2xl font-bold tracking-tight text-slate-900">
+                                <div className="bg-gradient-to-br from-slate-900 to-blue-800 bg-clip-text text-3xl font-bold tracking-tight text-transparent">
                                     {card.value}
                                 </div>
 
@@ -106,9 +106,9 @@ export default async function DashboardPage() {
                                                 </span>
                                             </div>
 
-                                            <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                                            <div className="h-2 overflow-hidden rounded-full bg-slate-900/[0.06] shadow-inner">
                                                 <div
-                                                    className="h-full rounded-full bg-blue-600 transition-all"
+                                                    className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_12px_rgba(59,130,246,0.45)] transition-all"
                                                     style={{
                                                         width: `${percentage}%`,
                                                     }}
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
+                                        <tr className="border-b text-left text-xs text-slate-500">
                                             <th className="px-6 py-3 font-medium">
                                                 <LocalizedText text={"\n                                                Tracking Number\n                                            "} /></th>
 
@@ -156,7 +156,7 @@ export default async function DashboardPage() {
                                         {recentShipments.map((shipment) => (
                                             <tr
                                                 key={shipment.id}
-                                                className="border-b border-slate-100 last:border-0"
+                                                className="border-b last:border-0"
                                             >
                                                 <td className="whitespace-nowrap px-6 py-4 font-medium text-slate-900">
                                                     {shipment.trackingNumber}
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
                                                 </td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                                                    <span className="inline-flex rounded-full bg-white/60 px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-500/15">
                                                         <LocalizedText text={shipment.status.replaceAll(
                                                             "_",
                                                             " ",
@@ -186,7 +186,7 @@ export default async function DashboardPage() {
                                                 </td>
 
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                                                    <span className="inline-flex rounded-full bg-white/60 px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-500/15">
                                                         <LocalizedText text={shipment.paymentStatus} />
                                                     </span>
                                                 </td>

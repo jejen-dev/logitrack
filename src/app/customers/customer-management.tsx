@@ -249,7 +249,7 @@ function CustomerForm({
             <label className="block text-sm font-medium text-slate-700">
                 <LocalizedText text={"\n                Name\n                "} /><LocalizedInput name="name" required maxLength={120} defaultValue={customer?.name} placeholder="PT Logistik Nusantara" autoComplete="name" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
                     <LocalizedText text={"\n                    Email\n                    "} /><LocalizedInput name="email" type="email" maxLength={254} defaultValue={customer?.email ?? ""} placeholder="operasional@perusahaan.co.id" autoComplete="email" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>
@@ -260,7 +260,7 @@ function CustomerForm({
             <label className="block text-sm font-medium text-slate-700">
                 <LocalizedText text={"\n                Address\n                "} /><LocalizedInput name="address" maxLength={300} defaultValue={customer?.address ?? ""} placeholder="Jl. Jenderal Sudirman No. 10" autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
             </label>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
                 <label className="block text-sm font-medium text-slate-700">
                     <LocalizedText text={"\n                    City\n                    "} /><LocalizedInput name="city" maxLength={100} defaultValue={customer?.city ?? ""} placeholder="Jakarta Selatan" autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                 </label>

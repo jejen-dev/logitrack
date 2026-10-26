@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 import "./globals.css";
 import Providers from "@/components/providers";
 import { cookies } from "next/headers";
 
-const inter = Inter({
-  variable: "--font-inter",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
 });
 
@@ -17,6 +17,18 @@ export const metadata: Metadata = {
   },
   description:
     "Kelola pengiriman, inventaris, gudang, armada, dan tim operasional dalam satu platform.",
+  appleWebApp: {
+    capable: true,
+    title: "LogiTrack",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#e9f0fb",
 };
 
 export default async function RootLayout({
@@ -28,7 +40,7 @@ export default async function RootLayout({
   const locale = localeCookie === "en" ? "en" : "id";
   return (
     <html lang={locale}>
-      <body className={inter.variable}>
+      <body className={plusJakartaSans.variable}>
         <Providers initialLocale={locale}>{children}</Providers>
       </body>
     </html>

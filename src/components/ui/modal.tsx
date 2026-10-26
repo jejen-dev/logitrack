@@ -46,12 +46,15 @@ export function Modal({
                 if (event.target === event.currentTarget) onOpenChange(false);
             }}
             className={cn(
-                "glass-surface m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border p-0 text-slate-900 backdrop:bg-slate-950/40",
-                "max-h-[calc(100dvh-2rem)] overflow-y-auto",
+                "glass-surface m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border p-0 text-slate-900",
+                "max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain",
+                // Bottom sheet on phones.
+                "max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:border-b-0 max-sm:pb-[env(safe-area-inset-bottom)]",
+                "max-sm:max-h-[calc(100dvh-env(safe-area-inset-top)-1rem)]",
                 className,
             )}
         >
-            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+            <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-900/[0.06] bg-white/70 px-5 py-4 backdrop-blur-xl sm:px-6 sm:py-5">
                 <div>
                     <h2 id={titleId} className="text-lg font-semibold">{t(title)}</h2>
                     {description && <p id={descriptionId} className="mt-1 text-sm text-slate-500">{t(description)}</p>}
@@ -60,12 +63,12 @@ export function Modal({
                     type="button"
                     aria-label={t("Close dialog")}
                     onClick={() => onOpenChange(false)}
-                    className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                    className="rounded-md p-1.5 text-slate-500 hover:bg-white/70 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                 >
                     <X aria-hidden="true" className="h-5 w-5" />
                 </button>
             </div>
-            <div className="p-6">{children}</div>
+            <div className="p-5 sm:p-6">{children}</div>
         </dialog>
     );
 }

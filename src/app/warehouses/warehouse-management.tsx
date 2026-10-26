@@ -115,7 +115,7 @@ export function WarehouseManagement({ warehouses }: { warehouses: Warehouse[] })
                         </label>
                         <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Street address\n                            "} /><LocalizedInput name="address" maxLength={240} defaultValue={editing?.address ?? ""} placeholder="Jl. Raya Bekasi No. 18" autoComplete="street-address" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                         </label>
-                        <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="grid gap-4 md:grid-cols-2">
                             <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"City\n                                "} /><LocalizedInput name="city" maxLength={100} defaultValue={editing?.city ?? ""} placeholder="Jakarta Timur" autoComplete="address-level2" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                             </label>
                             <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Postal code\n                                "} /><LocalizedInput name="postalCode" maxLength={20} defaultValue={editing?.postalCode ?? ""} placeholder="13920" autoComplete="postal-code" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />

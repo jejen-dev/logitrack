@@ -108,9 +108,9 @@ export function InventoryManagement({
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                 <InventoryFilters warehouses={warehouses} />
-                <Button onClick={startCreate}><LocalizedText text={"Add inventory item"} /></Button>
+                <Button onClick={startCreate} className="shrink-0 md:order-first md:self-end xl:order-none xl:self-auto"><LocalizedText text={"Add inventory item"} /></Button>
             </div>
             {error && !open && !stateChange && <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"><LocalizedText text={error} /></p>}
 
@@ -140,7 +140,7 @@ export function InventoryManagement({
                             {warehouses.map((warehouse) => <option key={warehouse.id} value={warehouse.id} disabled={!warehouse.isActive && warehouse.id !== editing?.warehouse.id}>{warehouse.name} <LocalizedText text={" · "} />{warehouse.code}<LocalizedText text={warehouse.isActive ? "" : " (Archived)"} /></option>)}
                         </select>
                     </label>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"On-hand quantity\n                            "} /><LocalizedInput name="quantity" required type="number" min="0" step="1" defaultValue={editing?.quantity ?? ""} placeholder="0" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />
                         </label>
                         <label className="block text-sm font-medium text-slate-700"><LocalizedText text={"Reorder point\n                            "} /><LocalizedInput name="reorderPoint" required type="number" min="0" step="1" defaultValue={editing?.reorderPoint ?? ""} placeholder="10" inputMode="numeric" className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 font-normal" />

@@ -60,9 +60,9 @@ export function InventoryFilters({
         stockStatus !== "ALL";
 
     return (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <div className="flex flex-col gap-3 md:flex-1 md:flex-row md:items-center">
             {/* Search */}
-            <div className="relative flex-1">
+            <div className="relative min-w-0 flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
                 <LocalizedInput
@@ -90,7 +90,7 @@ export function InventoryFilters({
                         event.target.value,
                     )
                 }
-                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 md:w-44 md:shrink-0"
             >
                 <option value="">
                     <LocalizedText text={"\n                    All Warehouses\n                "} /></option>
@@ -114,7 +114,7 @@ export function InventoryFilters({
                         event.target.value,
                     )
                 }
-                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="h-10 min-h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 md:w-44 md:shrink-0"
             >
                 <option value="ALL">
                     <LocalizedText text={"\n                    All Stock\n                "} /></option>

@@ -87,7 +87,7 @@ export function UsersManagement({
                         <h2 className="text-lg font-semibold"><LocalizedText text={"Invite a user"} /></h2>
                         <p className="mt-1 text-sm text-slate-500"><LocalizedText text={"The invite link expires after 7 days and only works for the invited email."} /></p>
                     </div>
-                    <form action={invite} className="grid gap-3 sm:grid-cols-[1fr_180px_auto]">
+                    <form action={invite} className="grid gap-3 md:grid-cols-[1fr_180px_auto]">
                         <LocalizedInput name="email" type="email" required placeholder="Email address" className="h-11 rounded-xl border border-slate-200 bg-white/70 px-3 text-sm" />
                         <select name="role" defaultValue="OPERATOR" className="h-11 rounded-xl border border-slate-200 bg-white/70 px-3 text-sm">
                             <option value="MANAGER"><LocalizedText text={"Manager"} /></option>

@@ -5,20 +5,17 @@ import { signOut, useSession } from "next-auth/react";
 import {
     Bell,
     ChevronDown,
-    Menu,
     Search,
+    Truck,
     User,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useLocale , LocalizedInput} from "@/components/locale-provider";
 
-interface HeaderProps {
-    onMenuClick?: () => void;
-}
-
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header() {
     const router = useRouter();
     const { data: session } = useSession();
     const { t } = useLocale();
@@ -108,17 +105,14 @@ export function Header({ onMenuClick }: HeaderProps) {
             .toUpperCase() || "U";
 
     return (
-        <header className="glass-surface sticky top-0 z-30 flex h-16 items-center border-x-0 border-t-0 border-b-white/70 bg-white/65 px-4 backdrop-blur-xl md:px-6">
-            {/* Mobile menu */}
-            <Button
-                variant="ghost"
-                size="sm"
-                className="mr-2 md:hidden"
-                aria-label={t("Open navigation menu")}
-                onClick={onMenuClick}
-            >
-                <Menu className="h-5 w-5" />
-            </Button>
+        <header className="glass-surface sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center border-b px-4 pt-[env(safe-area-inset-top)] md:px-6 lg:h-16">
+            {/* Mobile/tablet brand; navigation lives in the bottom tab bar */}
+            <Link href="/dashboard" className="mr-4 flex shrink-0 items-center gap-2.5 lg:hidden">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/30">
+                    <Truck className="h-4 w-4 text-white" />
+                </span>
+                <span className="text-base font-bold tracking-tight text-slate-900">LogiTrack</span>
+            </Link>
 
             {/* Global Search */}
             <div className="hidden flex-1 md:block">
@@ -136,7 +130,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                         }
                         placeholder={t("Search shipments, tracking numbers...")}
                         aria-label={t("Search shipments")}
-                        className="h-10 min-h-10 w-full rounded-lg border border-white/80 bg-white/60 pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white/90 focus:ring-2 focus:ring-blue-100"
+                        className="h-10 min-h-10 w-full rounded-xl border pl-9 pr-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400"
                     />
                 </form>
             </div>
@@ -161,7 +155,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     {unreadCount > 0 && (
                         <span
                             aria-hidden="true"
-                            className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-blue-600"
+                            className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-blue-600 ring-2 ring-white"
                         />
                     )}
                 </Button>
@@ -173,11 +167,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                         onClick={() =>
                             setAccountOpen((open) => !open)
                         }
-                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 outline-none transition-colors hover:bg-slate-50 focus:ring-2 focus:ring-blue-100"
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 outline-none transition-colors hover:bg-white/60 focus:ring-2 focus:ring-blue-200"
                         aria-expanded={accountOpen}
                         aria-haspopup="menu"
                     >
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
                             {initials}
                         </div>
 
@@ -199,9 +193,9 @@ export function Header({ onMenuClick }: HeaderProps) {
                             className="account-menu-surface absolute right-0 top-11 z-50 w-64 rounded-xl p-2"
                             role="menu"
                         >
-                            <div className="border-b border-slate-100 px-3 py-3">
+                            <div className="border-b border-slate-900/[0.06] px-3 py-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
                                         {initials}
                                     </div>
 
@@ -216,7 +210,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                                     </div>
                                 </div>
 
-                                <div className="mt-3 rounded-md bg-slate-50 px-3 py-2">
+                                <div className="mt-3 rounded-lg bg-blue-50/60 px-3 py-2 ring-1 ring-inset ring-blue-500/10">
                                     <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
                                         {t("Role")}
                                     </p>
@@ -234,7 +228,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                                     setAccountOpen(false);
                                     router.push("/settings");
                                 }}
-                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-white/70 hover:text-slate-900"
                             >
                                 <User className="h-4 w-4" />
                                 {t("Account Settings")}
@@ -244,7 +238,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                                 type="button"
                                 role="menuitem"
                                 onClick={handleLogout}
-                                className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-500/10"
                             >
                                 {t("Logout")}
                             </button>
