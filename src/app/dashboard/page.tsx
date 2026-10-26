@@ -64,7 +64,7 @@ export default async function DashboardPage() {
                             </CardHeader>
 
                             <CardContent>
-                                <div className="bg-gradient-to-br from-slate-900 to-blue-800 bg-clip-text text-3xl font-bold tracking-tight text-transparent">
+                                <div className="text-3xl font-bold tracking-tight text-slate-900">
                                     {card.value}
                                 </div>
 
@@ -108,7 +108,7 @@ export default async function DashboardPage() {
 
                                             <div className="h-2 overflow-hidden rounded-full bg-slate-900/[0.06] shadow-inner">
                                                 <div
-                                                    className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_12px_rgba(59,130,246,0.45)] transition-all"
+                                                    className="h-full rounded-full bg-blue-600 transition-all"
                                                     style={{
                                                         width: `${percentage}%`,
                                                     }}

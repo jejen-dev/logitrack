@@ -1,11 +1,29 @@
 @import "tailwindcss";
 
+/*
+ * Brand blue: a clear, professional cobalt, slightly calmer than Tailwind's default.
+ * Overriding the `blue` scale keeps every existing `blue-*` utility on-brand.
+ */
+@theme {
+  --color-blue-50: #eff5fe;
+  --color-blue-100: #dce8fc;
+  --color-blue-200: #bed4f8;
+  --color-blue-300: #92b6f2;
+  --color-blue-400: #5f91e8;
+  --color-blue-500: #3b74de;
+  --color-blue-600: #2a5fcf;
+  --color-blue-700: #234db0;
+  --color-blue-800: #213f8c;
+  --color-blue-900: #1f366f;
+  --color-blue-950: #152346;
+}
+
 :root {
-  --background: #e9f0fb;
+  --background: #eef3fa;
   --foreground: #0f172a;
 
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
+  --primary: #2a5fcf;
+  --primary-dark: #234db0;
 
   --muted: #64748b;
   --border: #e2e8f0;
@@ -40,28 +58,14 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  /* Calm, near-solid canvas; two faint corner glows are enough for the glass to read. */
   background:
-    radial-gradient(38rem circle at 8% 6%, rgba(96, 165, 250, 0.55), transparent 60%),
-    radial-gradient(34rem circle at 92% 12%, rgba(129, 140, 248, 0.42), transparent 60%),
-    radial-gradient(40rem circle at 78% 92%, rgba(34, 211, 238, 0.34), transparent 60%),
-    radial-gradient(30rem circle at 18% 88%, rgba(167, 139, 250, 0.3), transparent 60%),
-    linear-gradient(150deg, #f3f7ff 0%, var(--background) 50%, #e6eefb 100%);
+    radial-gradient(48rem circle at 0% 0%, rgba(146, 182, 242, 0.22), transparent 60%),
+    radial-gradient(42rem circle at 100% 100%, rgba(165, 180, 252, 0.16), transparent 60%),
+    var(--background);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-plus-jakarta-sans), sans-serif;
-}
-
-/* Soft colour orbs behind every surface give the glass something to refract. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(18rem circle at 30% 30%, rgba(59, 130, 246, 0.22), transparent 70%),
-    radial-gradient(22rem circle at 70% 55%, rgba(99, 102, 241, 0.16), transparent 70%);
-  filter: blur(40px);
 }
 
 .glass-surface {
@@ -178,11 +182,11 @@ textarea {
 :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="range"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select:not([multiple]), textarea):focus {
   outline: 2px solid transparent;
   outline-offset: 0;
-  border-color: rgba(59, 130, 246, 0.75);
+  border-color: rgba(59, 116, 222, 0.75);
   background-color: rgba(255, 255, 255, 0.92);
   box-shadow:
-    0 0 0 4px rgba(59, 130, 246, 0.16),
-    0 4px 14px rgba(37, 99, 235, 0.08);
+    0 0 0 4px rgba(59, 116, 222, 0.18),
+    0 4px 14px rgba(42, 95, 207, 0.08);
 }
 
 :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="range"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select:not([multiple]), textarea):disabled {
@@ -202,7 +206,7 @@ select:not([multiple]) {
 }
 
 select:not([multiple]):focus {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232a5fcf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 option {
@@ -211,8 +215,8 @@ option {
 }
 
 option:checked {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+  background-color: #dce8fc;
+  color: #234db0;
 }
 
 input[type="checkbox"],

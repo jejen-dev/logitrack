@@ -30,7 +30,7 @@ function TabIcon({
             className={cn(
                 "flex h-8 w-12 items-center justify-center rounded-full transition-all duration-200",
                 isActive
-                    ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-600/30"
+                    ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md shadow-blue-600/30"
                     : "text-slate-500",
                 pending && "animate-pulse",
             )}

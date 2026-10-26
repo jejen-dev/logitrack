@@ -4,9 +4,9 @@
 LogiTrack is an operational logistics dashboard. Preserve the truck icon plus LogiTrack wordmark, information hierarchy, dense data tables, status cues, and direct navigation. Use a calm, trustworthy glassmorphism treatment rather than decorative blur everywhere.
 
 ## Visual foundation
-- App canvas: light blue canvas lit by vivid blue, indigo, cyan, and violet radial orbs so glass has color to refract.
+- App canvas: calm, near-solid pale blue (`#eef3fa`) with two faint corner glows; avoid busy multi-color gradients.
 - Glass surfaces: driven by `--glass-*` tokens in `globals.css` — translucent white (`.56`, `.86` for menus/dialogs), diagonal white sheen, white edge highlight, `blur(22px) saturate(170%)`, layered blue-tinted shadow. Keep text high contrast; reduced-transparency and no-backdrop-filter fallbacks go near-opaque.
-- Primary: blue→indigo gradient with soft glow for primary actions, brand mark, avatar, and active navigation; solid blue for links and focus.
+- Primary: professional cobalt blue (`blue-600` = `#2a5fcf`, overridden via `@theme` in `globals.css`); single-hue `blue-600→blue-700` depth on primary actions, brand mark, and avatar; no indigo/cyan gradients.
 - Semantic colors: preserve status colors; badges use lightly tinted surfaces and readable text.
 - Typography: Plus Jakarta Sans and the existing compact dashboard hierarchy.
 - Radius: 12–18px for panels/cards, 10–12px for controls; avoid excessive pills.

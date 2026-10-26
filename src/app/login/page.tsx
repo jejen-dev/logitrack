@@ -28,7 +28,7 @@ export default function LoginPage() {
         <main className="flex min-h-screen items-center justify-center px-4">
             <div className="glass-surface w-full max-w-md rounded-3xl border p-8 sm:p-10">
                 <div className="mb-8 text-center">
-                    <span className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/30">
+                    <span className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/30">
                         <Truck aria-hidden="true" className="h-6 w-6" />
                     </span>
                     <h1 className="text-3xl font-bold text-slate-900">

@@ -108,7 +108,7 @@ export function Header() {
         <header className="glass-surface sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center border-b px-4 pt-[env(safe-area-inset-top)] md:px-6 lg:h-16">
             {/* Mobile/tablet brand; navigation lives in the bottom tab bar */}
             <Link href="/dashboard" className="mr-4 flex shrink-0 items-center gap-2.5 lg:hidden">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/30">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-md shadow-blue-600/30 ring-1 ring-inset ring-white/30">
                     <Truck className="h-4 w-4 text-white" />
                 </span>
                 <span className="text-base font-bold tracking-tight text-slate-900">LogiTrack</span>
@@ -171,7 +171,7 @@ export function Header() {
                         aria-expanded={accountOpen}
                         aria-haspopup="menu"
                     >
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
                             {initials}
                         </div>
 
@@ -195,7 +195,7 @@ export function Header() {
                         >
                             <div className="border-b border-slate-900/[0.06] px-3 py-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-xs font-semibold text-white shadow-md shadow-blue-600/25 ring-2 ring-white/70">
                                         {initials}
                                     </div>
 

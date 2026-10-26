@@ -19,7 +19,7 @@ interface ButtonProps
 
 const variantStyles: Record<ButtonVariant, string> = {
     primary:
-        "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-600/25 ring-1 ring-inset ring-white/20 hover:from-blue-600 hover:to-indigo-700 hover:shadow-blue-600/35 focus-visible:ring-blue-600",
+        "bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 ring-1 ring-inset ring-white/20 hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-600/35 focus-visible:ring-blue-600",
     secondary:
         "border border-white/70 bg-white/55 text-slate-900 shadow-sm shadow-slate-900/5 backdrop-blur-md hover:bg-white/80 focus-visible:ring-slate-400",
     outline:

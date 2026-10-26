@@ -165,7 +165,7 @@ export function Sidebar() {
                     href="/dashboard"
                     className="flex items-center gap-3"
                 >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/30">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-600/30 ring-1 ring-inset ring-white/30">
                         <Truck className="h-4 w-4 text-white" />
                     </div>
 
@@ -208,7 +208,7 @@ export function Sidebar() {
                                                 "flex h-9 items-center gap-3 rounded-xl px-3 text-sm font-medium",
                                                 "transition-all duration-150",
                                                 isActive
-                                                    ? "bg-gradient-to-r from-blue-500/20 to-indigo-500/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
+                                                    ? "bg-blue-600/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
                                                     : "text-slate-600 hover:bg-white/65 hover:text-slate-900",
                                             )}
                                         >
@@ -235,7 +235,7 @@ export function Sidebar() {
                             "flex h-9 items-center gap-3 rounded-xl px-3 text-sm font-medium",
                             "transition-all duration-150",
                             pathname === "/settings"
-                                ? "bg-gradient-to-r from-blue-500/20 to-indigo-500/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
+                                ? "bg-blue-600/10 text-blue-800 shadow-sm shadow-blue-600/10 ring-1 ring-inset ring-blue-500/20"
                                 : "text-slate-600 hover:bg-white/65 hover:text-slate-900",
                         )}
                     >
