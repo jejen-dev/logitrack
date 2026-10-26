@@ -349,18 +349,16 @@ export function LandingPage() {
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(35,77,176,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(35,77,176,0.06)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_70%)]" />
 
                 <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:pb-24 lg:pt-24">
-                    <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
+                    <div className="mx-auto min-w-0 max-w-2xl text-center lg:mx-0 lg:text-left">
                         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/70 bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-blue-800 shadow-sm backdrop-blur">
                             <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-blue-600" />
                             {copy.eyebrow}
                         </div>
-                        <h1 className="text-[2.6rem] font-extrabold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-[4.1rem]">
+                        <h1 className="text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-950 sm:text-6xl sm:leading-[1.05] lg:text-[4.1rem]">
                             {copy.heroLead}{" "}
-                            <span className="relative whitespace-nowrap text-blue-600">
+                            {/* Text decoration (not an absolutely positioned SVG) so the emphasis can wrap on narrow phones. */}
+                            <span className="text-blue-600 underline decoration-blue-300/80 decoration-[0.09em] underline-offset-[0.14em]">
                                 {copy.heroEmphasis}
-                                <svg aria-hidden="true" viewBox="0 0 300 12" preserveAspectRatio="none" className="absolute -bottom-1 left-0 h-3 w-full text-blue-300/80">
-                                    <path d="M2 9c60-6 120-8 296-4" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                                </svg>
                             </span>
                         </h1>
                         <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8 lg:mx-0">
@@ -391,18 +389,18 @@ export function LandingPage() {
                     </div>
 
                     {/* Product preview (illustrative) */}
-                    <div className="relative mx-auto w-full max-w-2xl">
+                    <div className="relative mx-auto w-full min-w-0 max-w-2xl">
                         <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-blue-500/15 via-blue-300/10 to-transparent blur-2xl" />
                         <figure className="glass-surface rounded-[1.75rem] border p-2 shadow-[0_40px_100px_rgba(35,77,176,0.22)] sm:p-3" aria-label={copy.preview}>
                             <div className="overflow-hidden rounded-[1.25rem] border border-slate-200/70 bg-[#f7faff]">
                                 <div className="flex h-11 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4">
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex shrink-0 items-center gap-1.5">
                                         <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
                                         <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
                                         <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
                                     </div>
-                                    <span className="rounded-full bg-slate-100 px-3 py-0.5 text-[10px] font-medium text-slate-500">logitrack.app/dashboard</span>
-                                    <span className="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">{copy.illustrative}</span>
+                                    <span className="mx-2 min-w-0 truncate rounded-full bg-slate-100 px-3 py-0.5 text-[10px] font-medium text-slate-500">logitrack.app/dashboard</span>
+                                    <span className="shrink-0 rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">{copy.illustrative}</span>
                                 </div>
                                 <div className="flex">
                                     <div aria-hidden="true" className="hidden w-14 shrink-0 flex-col items-center gap-3 border-r border-slate-200/70 bg-white/60 py-4 sm:flex">
@@ -418,7 +416,7 @@ export function LandingPage() {
                                                 { label: copy.inTransit, value: "86", tone: "text-blue-700" },
                                                 { label: copy.delivered, value: "1.117", tone: "text-emerald-700" },
                                             ].map((stat) => (
-                                                <div key={stat.label} className="rounded-xl border border-white bg-white/80 p-3 shadow-sm">
+                                                <div key={stat.label} className="min-w-0 rounded-xl border border-white bg-white/80 p-3 shadow-sm">
                                                     <p className="truncate text-[10px] text-slate-500 sm:text-xs">{stat.label}</p>
                                                     <p className={`mt-1 text-lg font-bold tracking-tight sm:text-2xl ${stat.tone}`}>{stat.value}</p>
                                                 </div>
